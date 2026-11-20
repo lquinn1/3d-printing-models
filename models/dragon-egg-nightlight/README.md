@@ -24,6 +24,7 @@ A nursery nightlight with three printed parts: a dragon-egg shade with overlappi
 | [`files/dragon_egg_shell.step.zip`](files/dragon_egg_shell.step.zip) | The egg as a STEP file, zipped (113 MB unzipped). Less detailed than the STL, so use it for CAD only, not for printing. |
 | [`files/nightlight_base.stl`](files/nightlight_base.stl) / [`.step`](files/nightlight_base.step) | Base with the engraved quote, a collar for the egg and a notch for the cord |
 | [`files/socket_deck.stl`](files/socket_deck.stl) / [`.step`](files/socket_deck.step) | Deck with a press-fit sleeve that holds the socket |
+| [`files/socket_deck.3mf`](files/socket_deck.3mf) | OrcaSlicer project for the deck, with the settings of the print that worked |
 | [`files/socket_hole_test_coupon.stl`](files/socket_hole_test_coupon.stl) / [`.step`](files/socket_hole_test_coupon.step) | Optional fit test: four sleeves with ribs at 37.00, 37.15, 37.30 and 37.45 mm |
 | [`source/`](source/) | CadQuery scripts: `egg.py` (egg STEP), `egg_mesh.py` (high-res egg STL) and `base.py` (base, deck, coupon) |
 
@@ -61,9 +62,33 @@ The deck holds the socket by its smooth casing, not the threads. The hole is 37.
 |------|-------------|----------|
 | Socket deck | Flat, with the sleeve pointing **up** | None |
 | Test coupon | Flat | None |
-| Egg / base | Not recorded | Not recorded |
+| Egg / base | Not recorded yet | Not recorded yet |
 
-Layer height, walls and infill weren't recorded. Fill them in after the first successful print.
+### Socket deck: tested ✅
+
+Printed on the Voron 2.4 350 in OrcaSlicer 2.5, and the socket fit is good. The full slicer project is in [`files/socket_deck.3mf`](files/socket_deck.3mf): open it in OrcaSlicer to reuse these settings.
+
+| Setting | Value |
+|---------|-------|
+| Printer profile | Voron 2.4 350, 0.4 mm nozzle |
+| Process profile | 0.20mm Standard @Voron - EnderwireParts |
+| Filament | SunLu HighSpeed ABS (white) |
+| Nozzle temp | 255 °C |
+| Bed | High Temp Plate, 105 °C |
+| Chamber | 40 °C |
+| Layer height | 0.2 mm (first layer 0.2 mm) |
+| Walls | 4 (Arachne), 0.4 mm line width |
+| Top / bottom layers | 4 / 4 |
+| Infill | 40% gyroid |
+| Supports | None |
+| Brim | Painted, 5 mm |
+| Part cooling fan | 5–50%, off for the first 3 layers |
+| Speeds | Walls 100 mm/s, infill 150 mm/s, acceleration 3500 mm/s² |
+| Flow | Filament 0.977 × print 1.01 |
+| Elephant-foot compensation | 0.15 mm |
+| Hole / contour compensation | 0 (all sizing is in the model) |
+
+The egg and base haven't been printed yet. Add their settings after the first good print.
 
 ## Assembly
 
@@ -74,7 +99,7 @@ Layer height, walls and infill weren't recorded. Fill them in after the first su
 
 ## Revision History
 
-- **v10** (2026-11-19): crush ribs on the deck set to 37.00 mm, the size chosen with the fit coupon.
+- **v10** (2026-11-19): crush ribs on the deck set to 37.00 mm, the size chosen with the fit coupon. Deck printed and tested on 2026-11-20, and the socket fits well.
 - **v9**: deck redesigned to grip the socket casing (measured 37.45 mm) with crush ribs and a sleeve. New 4-size fit coupon.
 - **v8**: scales flipped to open upward. Egg STL rebuilt at high resolution (about 1.95M triangles).
 - **v7**: overlapping pointed scales replaced the earlier cushion pattern. Light holes moved to the scale tips.

@@ -54,7 +54,7 @@ These come from the V3 project file, which is the print shown in the photo. The 
 
 | Setting | Value |
 |---------|-------|
-| Printer / process profile | Voron 2.4 350, 0.4 mm nozzle / 0.20mm Standard @Voron - BambuSettings2 |
+| Printer / process profile | Voron 2.4 350, 0.4 mm nozzle / 0.20mm Standard @Voron - BambuSettings2 (OrcaSlicer 2.5) |
 | Filament | SunLu HighSpeed ABS (black) |
 | Nozzle / bed / chamber | 250 °C / 100 °C (High Temp Plate) / 40 °C |
 | Layer height | 0.2 mm |

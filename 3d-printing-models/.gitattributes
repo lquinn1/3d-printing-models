@@ -1,0 +1,14 @@
+# Treat model/CAD files as binary (no diffs, no line-ending changes)
+*.stl   binary
+*.3mf   binary
+*.step  binary
+*.stp   binary
+*.f3d   binary
+*.f3z   binary
+*.blend binary
+*.gcode binary
+
+# Optional: if models get large (>50 MB) enable Git LFS ("git lfs install"),
+# then replace the lines above with e.g.:
+# *.stl  filter=lfs diff=lfs merge=lfs -text
+# *.3mf  filter=lfs diff=lfs merge=lfs -text

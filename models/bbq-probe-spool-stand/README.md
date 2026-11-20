@@ -4,7 +4,7 @@ category: Kitchen & BBQ
 status: Working
 material: ABS
 printer: Voron 2.4 R2 350
-tags: [bbq, thermometer, probe, organizer, storage]
+tags: [bbq, thermometer, probe, organizer, storage, inkbird, alpha-grillers]
 summary: Stand for rotary BBQ probe spools, with front clips for the probe tips and a storage box with two pockets and an engraved label (V3).
 ---
 
@@ -12,7 +12,7 @@ summary: Stand for rotary BBQ probe spools, with front clips for the probe tips 
 
 ![In use](images/photo.jpg)
 
-A stand for BBQ thermometer probes. Each probe's cable winds onto a [rotary probe spool](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) that sits behind the panel, and the probe tip hangs in a clip on the front. The box on one end has two open-top pockets, one of which holds the thermometer's receiver, and *"Luke's BBQ Probe Rack V3"* engraved on its end face.
+A stand for BBQ thermometer probes. Each probe's cable winds onto a [rotary probe spool](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) that sits behind the panel, and the probe tip hangs in a clip on the front. The box on one end has two open-top pockets, one for an INKBIRD WiFi thermometer base and one for an Alpha Grillers instant-read thermometer, and *"Luke's BBQ Probe Rack V3"* engraved on its end face.
 
 ![Model](images/preview.png)
 
@@ -36,8 +36,8 @@ This version is a single solid model. In V3, the pockets and the label were cut 
 |---------|-----------|-------|
 | Overall | 229.7 × 130.4 × 104.6 tall | |
 | Storage box | 46 × 128 × 60 tall | Attached to the end of the stand |
-| Pocket A (long) | **31.54 × 90**, open top | 1.5 mm floor, 58.5 mm deep. Walls 6.6 / 7.9 mm on the sides, 6.8 mm at the front |
-| Pocket B (small) | **40 × 20**, open top | 1.5 mm floor, 58.5 mm deep. Walls 3.2 / 2.9 mm on the sides, 6.2 mm at the back |
+| Pocket A (long) | **31.54 × 90**, open top | For the INKBIRD 6-probe WiFi thermometer base. 1.5 mm floor, 58.5 mm deep. Walls 6.6 / 7.9 mm on the sides, 6.8 mm at the front |
+| Pocket B (small) | **40 × 20**, open top | For the Alpha Grillers instant-read thermometer, standing upright. 1.5 mm floor, 58.5 mm deep. Walls 3.2 / 2.9 mm on the sides, 6.2 mm at the back |
 | Divider between pockets | 5.0 thick | |
 | Engraved label | 1.9 deep | "Luke's / BBQ Probe / Rack / V3", Rockwell Condensed, on the box's end face |
 | Spool pegs | 3 × Ø12, 41 mm apart | On the base plate |
@@ -67,6 +67,8 @@ These come from the V3 project file, which is the print shown in the photo. The 
 
 | Qty | Item | Notes |
 |-----|------|-------|
+| 1 | INKBIRD 5GHz/2.4GHz WiFi & Bluetooth 5.1 meat thermometer, 6 probes | [Amazon](https://a.co/d/09NBpvpq). The base fits in pocket A, and the probes go on the spools. |
+| 1 | Alpha Grillers instant-read digital meat thermometer | [Amazon](https://a.co/d/00PKUNLD). Fits in pocket B. |
 | 1 per probe | Printed rotary probe spool | [BBQ Probe Rotary Spool (remix)](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix). Printed separately and not included here. |
 
 ## Credits

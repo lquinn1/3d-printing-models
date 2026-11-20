@@ -73,11 +73,18 @@ These come from the V3 project file, which is the print shown in the photo. The 
 
 ## Credits
 
-- **Stand:** [Storage Stand for BBQ Probe Rotary Spool](https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool) on Printables. The angled panel, the probe clips and the base come from this model.
-- **Spools:** [BBQ Probe Rotary Spool (remix)](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) on Printables.
-- **Added here:** the pegs, the storage box with its two pockets, and the engraved label.
+- **Stand:** [Storage Stand for BBQ Probe Rotary Spool](https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool) by **OakenSkull_1238480** on Printables. Original files: https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool. The author marks it as an original design, made to hold 6 rotary spools. This remix uses its angled panel, probe clips and base.
+- **Spools:** [BBQ Probe Rotary Spool (remix)](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) on Printables. The spools aren't included in this folder. Download them from that page.
+- **Added in this remix:** the pegs, the storage box with its two pockets, and the engraved label.
 
-Check the license on both Printables pages before you share or sell anything made from this remix. I couldn't open the pages to confirm the authors or licenses.
+## License
+
+The original stand is licensed [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (Attribution-ShareAlike). That license requires this remix to:
+
+- **Credit the original:** "Storage Stand for BBQ Probe Rotary Spool" by OakenSkull_1238480, linked above.
+- **Use the same license:** this remix is licensed **CC BY-SA 4.0** too.
+
+Commercial use and further remixing are allowed, as long as the credit and the license stay with it. See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 

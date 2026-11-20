@@ -2,7 +2,7 @@
 title: Multiboard LED Light Bar
 category: Multiboard
 status: Working
-material: PETG or ABS
+material: PLA (tested), PETG or ABS
 printer: Voron 2.4 R2 350
 tags: [multiboard, led, light-bar, wall-wash, push-fit]
 summary: One wedge bracket that holds an 18 x 8.5 mm LED channel on a Multiboard, aimed down the wall at 30°. The channel passes through, so use as many as you need, anywhere along the bar.
@@ -61,7 +61,7 @@ Printed and tested. The bracket fits the channel and works well. These are the s
 | Orientation | **Lay the bracket on either side face.** The plug is the same thickness as the bracket, so it lies flat on the bed, the way Multiboard push-fit parts are designed to print. |
 | Supports | None |
 | Walls / infill | 4 walls, 25–40% gyroid |
-| Material | PETG or ABS. LED strips get warm, so avoid PLA if the strip runs bright. |
+| Material | **PLA works:** v1.2 was printed and tested in PLA. Use PETG or ABS if the strip runs bright and gets hot. |
 
 ## Assembly
 
@@ -72,11 +72,11 @@ Printed and tested. The bracket fits the channel and works well. These are the s
 
 ## Notes
 
-- The opening has 0.1 mm of clearance per side, for a snug sliding fit. The first print used 0.2 mm, which worked but was a little loose. To stop the bar from sliding sideways, add a drop of glue or a wrap of tape on the channel at one bracket. If the channel is too tight, change `CLR` in the script.
+- The opening has 0.1 mm of clearance per side. **Tested in PLA, it fits the channel perfectly.** The first print used 0.2 mm, which worked but was a little loose. To stop the bar from sliding sideways, add a drop of glue or a wrap of tape on the channel at one bracket. If the channel is too tight, change `CLR` in the script.
 - Multiboard is a trademark of its creator. These brackets are an original design made to fit the Multiboard push-fit system. Selling printed Multiboard parts may need Multiboard's commercial license.
 
 ## Revision History
 
-- **v1.2** (2026-11-20): tightened the channel opening to 0.1 mm clearance per side (18.2 × 8.7 mm). Not printed yet.
+- **v1.2** (2026-11-20): tightened the channel opening to 0.1 mm clearance per side (18.2 × 8.7 mm). Printed in PLA, and the channel fits perfectly.
 - **v1.1** (2026-11-20): printed and tested. It fits the channel and works, with the channel a little loose (see Notes). The channel now passes through the bracket, and the push-fit plug is centred on the back face. Left and right are now one part that works anywhere along the bar. The bracket is 13.5 mm thick so the plug prints flat.
 - **v1.0** (2026-11-20): first version. 30° downward wall wash, push-fit plug, left and right (wire) brackets.

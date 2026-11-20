@@ -24,7 +24,7 @@ A collection of 3D printable models — source files, print-ready files, and pri
 
 | Model | Description | Material | Status | Tags |
 |-------|-------------|----------|--------|------|
-| [Multiboard LED Light Bar](models/multiboard-led-light-bar/README.md) | One wedge bracket that holds an 18 x 8.5 mm LED channel on a Multiboard, aimed down the wall at 30°. The channel passes through, so use as many as you need, anywhere along the bar. | PETG or ABS | Working | `multiboard` `led` `light-bar` `wall-wash` `push-fit` |
+| [Multiboard LED Light Bar](models/multiboard-led-light-bar/README.md) | One wedge bracket that holds an 18 x 8.5 mm LED channel on a Multiboard, aimed down the wall at 30°. The channel passes through, so use as many as you need, anywhere along the bar. | PLA (tested), PETG or ABS | Working | `multiboard` `led` `light-bar` `wall-wash` `push-fit` |
 
 ### Organization
 

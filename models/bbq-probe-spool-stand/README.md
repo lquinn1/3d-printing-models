@@ -30,7 +30,8 @@ This version is a single solid model. In V3, the pockets were cut by negative vo
 |------|-------------|
 | [`files/bbq_probe_spool_stand_v3.stl`](files/bbq_probe_spool_stand_v3.stl) | **Print this.** One watertight solid, with the pockets already cut. |
 | [`files/bbq_probe_spool_stand_v3.step`](files/bbq_probe_spool_stand_v3.step) | STEP for CAD. Flat faces, such as the box and pockets, are real planes. Curved surfaces from the original stand mesh are still made of facets. |
-| [`files/bbq_probe_spool_stand_negative_volumes.3mf`](files/bbq_probe_spool_stand_negative_volumes.3mf) | The original V3 slicer project, with negative volumes. Kept for reference. |
+| [`files/bbq_probe_spool_stand_v3.2.3mf`](files/bbq_probe_spool_stand_v3.2.3mf) | **Slicer project (OrcaSlicer).** It has the V3.2 model, the print settings and the peg modifiers, so you can open it and print. |
+| [`files/bbq_probe_spool_stand_negative_volumes.3mf`](files/bbq_probe_spool_stand_negative_volumes.3mf) | The original V3 slicer project, which used negative volumes. Kept for reference; `source/bake_pockets.py` builds the STL from it. |
 | [`source/bake_pockets.py`](source/bake_pockets.py) | Rebuilds the STL from the 3MF: joins the parts and cuts the pockets and text |
 | [`source/mesh_to_step.py`](source/mesh_to_step.py) | Converts the STL to the STEP file |
 
@@ -49,22 +50,22 @@ The pocket sizes and positions are taken directly from the negative volumes in t
 
 ## Print Settings
 
-These come from the V3 project file, which is the print shown in the photo. The new STL has the same shape, so it should print the same.
+The slicer project is [`files/bbq_probe_spool_stand_v3.2.3mf`](files/bbq_probe_spool_stand_v3.2.3mf) (OrcaSlicer 2.5). It contains the V3.2 model and the peg modifiers, so you can open it and print.
 
 | Setting | Value |
 |---------|-------|
-| Printer / process profile | Voron 2.4 350, 0.4 mm nozzle / 0.20mm Standard @Voron - BambuSettings2 (OrcaSlicer 2.5) |
+| Printer / process profile | Voron 2.4 350, 0.4 mm nozzle / 0.20mm Standard @Voron - BambuSettings2 |
 | Filament | SunLu HighSpeed ABS (black) |
-| Nozzle / bed / chamber | 250 °C / 100 °C (High Temp Plate) / 40 °C |
+| Nozzle / bed / chamber | 255 °C / 100 °C (High Temp Plate) / 40 °C |
 | Layer height | 0.2 mm |
-| Walls | 3 |
+| Walls | 3 (classic wall generator) |
 | Top / bottom layers | 5 / 3 |
 | Infill | 40% gyroid |
 | Supports | Tree (auto), on build plate only, 25° threshold. These hold up the angled back panel. |
 | Brim | None |
 | Orientation | Flat on the base plate (as exported) |
 
-**Pegs:** in the V3 project, the three pegs were separate parts set to 5 walls and 60% infill. That setting is lost when everything becomes one solid. To keep the pegs strong, add a modifier around them in the slicer, or raise the wall count for the whole print.
+**Peg modifiers:** each clip peg has a Ø15 × 15 mm cylinder modifier around it, set to **5 walls and 60% infill**, so the pegs stay strong while clips go on and off. These are already in the 3MF. If you slice the STL on its own instead, add them yourself.
 
 ## Hardware / Bill of Materials
 
@@ -93,7 +94,7 @@ Commercial use and further remixing of the stand are allowed, as long as the cre
 
 ## Revision History
 
-- **V3.2** (2026-11-20): removed the engraved label from the end of the box, so that face is now plain. To bring it back, set `ENGRAVE_LABEL = True` in `source/bake_pockets.py` and rebuild.
+- **V3.2** (2026-11-20): added a slicer project with 40% infill and peg modifiers (5 walls, 60% infill). Removed the engraved label from the end of the box, so that face is now plain. To bring it back, set `ENGRAVE_LABEL = True` in `source/bake_pockets.py` and rebuild.
 - **V3.1** (2026-11-20): rounded the storage box's four vertical corners (R3.75) to match the stand's rounded edges.
 - **V3** (2026-11-20): pockets and label built into the model as one solid. STL and STEP exported, so no slicer negative volumes are needed.
 - **V3** (earlier): storage box added, with the pockets and label cut by negative volumes in the slicer.

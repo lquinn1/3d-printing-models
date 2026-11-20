@@ -60,7 +60,7 @@ These come from the V3 project file, which is the print shown in the photo. The 
 | Layer height | 0.2 mm |
 | Walls | 3 |
 | Top / bottom layers | 5 / 3 |
-| Infill | 15% gyroid |
+| Infill | 40% gyroid |
 | Supports | Tree (auto), on build plate only, 25° threshold. These hold up the angled back panel. |
 | Brim | None |
 | Orientation | Flat on the base plate (as exported) |

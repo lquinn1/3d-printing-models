@@ -1,7 +1,7 @@
 ---
 title: Multiboard LED Light Bar
 category: Multiboard
-status: Draft
+status: Working
 material: PETG or ABS
 printer: Voron 2.4 R2 350
 tags: [multiboard, led, light-bar, wall-wash, push-fit]
@@ -31,10 +31,12 @@ Use one bracket at each end, plus one about every **250–300 mm** in between. A
 
 | Qty | Item | Notes |
 |-----|------|-------|
-| 1 | Aluminium LED channel with diffuser, **18 × 8.5 mm outer** (16 × 7 mm inside) | Typical 1 m U-channel kits. Use the kit's end caps (one with a hole for the wire) on the channel ends. The mounting clips aren't needed. |
+| 1 | Aluminium LED channel with diffuser, **18 × 8.5 mm outer** (16 × 7 mm inside) | [Amazon](https://link.amazon/B0h3UVMNb): a kit of 1 m U-channels with diffusers, end caps and clips. Use the kit's end caps (one with a hole for the wire) on the channel ends. The mounting clips aren't needed. |
 | 1 | LED strip, up to about 15 mm wide | Sits in the channel |
 | 1 per bracket | Light bar bracket | This model |
 | 1 per bracket | Multiboard **13 mm Big Thread – Flat Head – Push-Fit Hole – Bolt** | Printed. These screw into the Multiboard's big holes, and the brackets press into them. |
+
+*Disclosure: the Amazon link above is an affiliate link. I may earn a commission on purchases made through it, at no extra cost to you.*
 
 ## Design
 
@@ -52,7 +54,7 @@ The channel can be any length, because it passes through the brackets. Just let 
 
 ## Print Settings
 
-Not printed yet. Suggested settings:
+Printed and tested. The bracket fits the channel and works well. These are the suggested settings:
 
 | Setting | Value |
 |---------|-------|
@@ -70,10 +72,10 @@ Not printed yet. Suggested settings:
 
 ## Notes
 
-- The opening has 0.2 mm of clearance per side, so the channel slides through easily. To stop the bar from sliding sideways, add a drop of glue or a wrap of tape on the channel at one bracket. If the channel is too tight, change `CLR` in the script.
+- The opening has 0.2 mm of clearance per side, so the channel slides through easily. On the first print the fit worked but was a little loose. For a snugger fit, set `CLR` to 0.1 in the script. To stop the bar from sliding sideways, add a drop of glue or a wrap of tape on the channel at one bracket. If the channel is too tight, change `CLR` in the script.
 - Multiboard is a trademark of its creator. These brackets are an original design made to fit the Multiboard push-fit system. Selling printed Multiboard parts may need Multiboard's commercial license.
 
 ## Revision History
 
-- **v1.1** (2026-11-20): the channel now passes through the bracket, and the push-fit plug is centred on the back face. Left and right are now one part that works anywhere along the bar. The bracket is 13.5 mm thick so the plug prints flat.
+- **v1.1** (2026-11-20): printed and tested. It fits the channel and works, with the channel a little loose (see Notes). The channel now passes through the bracket, and the push-fit plug is centred on the back face. Left and right are now one part that works anywhere along the bar. The bracket is 13.5 mm thick so the plug prints flat.
 - **v1.0** (2026-11-20): first version. 30° downward wall wash, push-fit plug, left and right (wire) brackets.

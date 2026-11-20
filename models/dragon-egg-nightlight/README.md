@@ -2,7 +2,7 @@
 title: Dragon Egg Nightlight
 category: Lighting
 status: Working
-material: PLA egg / ABS deck
+material: PLA egg / ABS base and deck
 printer: Voron 2.4 R2 350
 tags: [nightlight, lamp, nursery, dragon-egg, e26]
 summary: Scaled dragon-egg lamp shade with an engraved base and a press-fit E26 socket deck, about 264 mm tall assembled.
@@ -66,7 +66,7 @@ The deck holds the socket by its smooth casing, not the threads. The hole is 37.
 | Socket deck | Flat, with the sleeve pointing **up** | None |
 | Test coupon | Flat | None |
 | Egg | Upright, standing on its skirt with the open end down (as exported) | None |
-| Base | Not recorded yet | Not recorded yet |
+| Base | Upright, with the wide foot on the bed (as exported) | None |
 
 ### Socket deck: tested ✅
 
@@ -115,7 +115,11 @@ Printed in rainbow translucent PLA. The color bands come from the filament itsel
 | Pressure advance | 0.025 |
 | Elephant-foot compensation | 0.15 mm |
 
-The base's print settings haven't been recorded yet.
+### Base: tested ✅
+
+Printed with the same filament and settings as the socket deck: SunLu HighSpeed ABS (white), 255 °C nozzle, 105 °C bed, 40 °C chamber, 4 walls, 40% gyroid infill. See the deck table above and [`files/socket_deck.3mf`](files/socket_deck.3mf).
+
+![Base with socket installed](images/photo_base.jpg)
 
 ## Assembly
 
@@ -126,7 +130,7 @@ The base's print settings haven't been recorded yet.
 
 ## Revision History
 
-- **v10** (2026-11-19): crush ribs on the deck set to 37.00 mm, the size chosen with the fit coupon. Deck (ABS) and egg (rainbow translucent PLA) printed and tested on 2026-11-20. The lamp is assembled and working.
+- **v10** (2026-11-19): crush ribs on the deck set to 37.00 mm, the size chosen with the fit coupon. Base and deck (ABS) and egg (rainbow translucent PLA) printed and tested on 2026-11-20. The lamp is assembled and working.
 - **v9**: deck redesigned to grip the socket casing (measured 37.45 mm) with crush ribs and a sleeve. New 4-size fit coupon.
 - **v8**: scales flipped to open upward. Egg STL rebuilt at high resolution (about 1.95M triangles).
 - **v7**: overlapping pointed scales replaced the earlier cushion pattern. Light holes moved to the scale tips.

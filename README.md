@@ -12,7 +12,7 @@ A collection of 3D printable models — source files, print-ready files, and pri
 
 | Model | Description | Material | Status | Tags |
 |-------|-------------|----------|--------|------|
-| [Dragon Egg Nightlight](models/dragon-egg-nightlight/README.md) | Scaled dragon-egg lamp shade with an engraved base and a press-fit E26 socket deck, about 264 mm tall assembled. | PLA egg / ABS deck | Working | `nightlight` `lamp` `nursery` `dragon-egg` `e26` |
+| [Dragon Egg Nightlight](models/dragon-egg-nightlight/README.md) | Scaled dragon-egg lamp shade with an engraved base and a press-fit E26 socket deck, about 264 mm tall assembled. | PLA egg / ABS base and deck | Working | `nightlight` `lamp` `nursery` `dragon-egg` `e26` |
 
 ### Organization
 

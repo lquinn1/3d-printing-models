@@ -1,8 +1,8 @@
 ---
 title: Dragon Egg Nightlight
 category: Lighting
-status: Testing
-material: ABS
+status: Working
+material: PLA egg / ABS deck
 printer: Voron 2.4 R2 350
 tags: [nightlight, lamp, nursery, dragon-egg, e26]
 summary: Scaled dragon-egg lamp shade with an engraved base and a press-fit E26 socket deck, about 264 mm tall assembled.
@@ -10,17 +10,20 @@ summary: Scaled dragon-egg lamp shade with an engraved base and a press-fit E26 
 
 # Dragon Egg Nightlight
 
-![Assembled](images/preview.png)
+![Finished nightlight, lit](images/photo_lit.jpg)
 
 A nursery nightlight with three printed parts: a dragon-egg shade with overlapping scales, a bell-shaped base engraved with *"Dream bravely, little one."*, and a deck that holds an E26 lamp socket. The light shows through 156 small holes at the tips of the scales and through the thinner parts of each scale.
 
-![Egg](images/egg.png)
+![Egg on the printer](images/photo_printed.jpg)
+
+Rendered previews: [assembled](images/preview.png), [egg](images/egg.png).
 
 ## Files
 
 | File | Description |
 |------|-------------|
 | [`files/dragon_egg_shell.stl.zip`](files/dragon_egg_shell.stl.zip) | The egg shade, zipped. **Unzip to get the STL to print.** About 1.95M triangles, 98 MB unzipped. |
+| [`files/dragon_egg_shell.3mf`](files/dragon_egg_shell.3mf) | OrcaSlicer project for the egg, with the settings of the print that worked. Opens directly, no unzipping needed. |
 | [`files/dragon_egg_shell.step.zip`](files/dragon_egg_shell.step.zip) | The egg as a STEP file, zipped (113 MB unzipped). Less detailed than the STL, so use it for CAD only, not for printing. |
 | [`files/nightlight_base.stl`](files/nightlight_base.stl) / [`.step`](files/nightlight_base.step) | Base with the engraved quote, a collar for the egg and a notch for the cord |
 | [`files/socket_deck.stl`](files/socket_deck.stl) / [`.step`](files/socket_deck.step) | Deck with a press-fit sleeve that holds the socket |
@@ -35,18 +38,18 @@ The egg files are zipped because unzipped they're too big for GitHub, which warn
 | Item | Value |
 |------|-------|
 | Height assembled | About 264 mm (10.4 in) |
-| Egg | 139.5 mm wide × 196 mm tall, 1.6 mm wall, about 300 g of ABS |
+| Egg | 139.5 mm wide × 196 mm tall, 1.6 mm wall, about 300 g of filament |
 | Base | 145 mm wide × 80 mm tall |
 | Scales | 12 around, getting smaller toward the top, open (thick) edge facing up |
 | Light holes | 156 holes, 2.6 mm, at the scale tips |
-| Shrinkage compensation | **ABS: every part is scaled up 0.6% (×1.006).** Don't scale again in the slicer. To print in another material, change `SHRINK` in the scripts and rebuild. |
+| Shrinkage compensation | **Every part is scaled up 0.6% (×1.006) for ABS.** Don't scale again in the slicer. The egg was printed in PLA at this scale, which shrinks less, and it still fits the base collar, so no change is needed. |
 
 ## Hardware / Bill of Materials
 
 | Qty | Item | Notes |
 |-----|------|-------|
 | 1 | E26 lamp socket with cord and switch | [Sopoby socket, Amazon B01M5F3DA2](https://www.amazon.com/dp/B01M5F3DA2). The casing measures 37.45 mm across. The shade rings aren't used. |
-| 1 | E26 LED bulb | Use a low-wattage LED bulb. An incandescent bulb gets too hot for an ABS shade. |
+| 1 | E26 LED bulb | Use a low-wattage LED bulb. An incandescent bulb gets too hot for the shade, especially a PLA one, which softens at around 55–60 °C. |
 
 ## Socket Fit
 
@@ -62,7 +65,8 @@ The deck holds the socket by its smooth casing, not the threads. The hole is 37.
 |------|-------------|----------|
 | Socket deck | Flat, with the sleeve pointing **up** | None |
 | Test coupon | Flat | None |
-| Egg / base | Not recorded yet | Not recorded yet |
+| Egg | Upright, standing on its skirt with the open end down (as exported) | None |
+| Base | Not recorded yet | Not recorded yet |
 
 ### Socket deck: tested ✅
 
@@ -88,7 +92,30 @@ Printed on the Voron 2.4 350 in OrcaSlicer 2.5, and the socket fit is good. The 
 | Elephant-foot compensation | 0.15 mm |
 | Hole / contour compensation | 0 (all sizing is in the model) |
 
-The egg and base haven't been printed yet. Add their settings after the first good print.
+### Egg: tested ✅
+
+Printed in rainbow translucent PLA. The color bands come from the filament itself, not from color changes in the slicer. The full slicer project is in [`files/dragon_egg_shell.3mf`](files/dragon_egg_shell.3mf). Settings that differ from the deck are in **bold**.
+
+| Setting | Value |
+|---------|-------|
+| Printer / process profile | Same as the deck |
+| Filament | **[Amolen PLA, Rainbow Translucent](https://www.amazon.com/dp/B0HCBPBG2Y)** |
+| Nozzle temp | **240 °C (230 °C first layer)** |
+| Bed | High Temp Plate, **60 °C** |
+| Chamber | **None (PLA)** |
+| Layer height | 0.2 mm (first layer 0.2 mm) |
+| Walls | **3** (Arachne), 0.4 mm line width |
+| Top / bottom layers | 4 / 4 |
+| Infill | **30%** gyroid |
+| Supports | None |
+| Brim | **Outer only, 5 mm** |
+| Part cooling fan | **100%**, off for the first layer only. Auxiliary fan 70%. |
+| Speeds | **Outer wall 50 mm/s**, inner walls 100 mm/s, infill 150 mm/s, acceleration 3500 mm/s² |
+| Flow | Filament 0.98 × print 1.01 |
+| Pressure advance | 0.025 |
+| Elephant-foot compensation | 0.15 mm |
+
+The base's print settings haven't been recorded yet.
 
 ## Assembly
 
@@ -99,7 +126,7 @@ The egg and base haven't been printed yet. Add their settings after the first go
 
 ## Revision History
 
-- **v10** (2026-11-19): crush ribs on the deck set to 37.00 mm, the size chosen with the fit coupon. Deck printed and tested on 2026-11-20, and the socket fits well.
+- **v10** (2026-11-19): crush ribs on the deck set to 37.00 mm, the size chosen with the fit coupon. Deck (ABS) and egg (rainbow translucent PLA) printed and tested on 2026-11-20. The lamp is assembled and working.
 - **v9**: deck redesigned to grip the socket casing (measured 37.45 mm) with crush ribs and a sleeve. New 4-size fit coupon.
 - **v8**: scales flipped to open upward. Egg STL rebuilt at high resolution (about 1.95M triangles).
 - **v7**: overlapping pointed scales replaced the earlier cushion pattern. Light holes moved to the scale tips.

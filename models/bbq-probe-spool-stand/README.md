@@ -74,7 +74,7 @@ These come from the V3 project file, which is the print shown in the photo. The 
 ## Credits
 
 - **Stand:** [Storage Stand for BBQ Probe Rotary Spool](https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool) by **OakenSkull_1238480** on Printables. Original files: https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool. The author marks it as an original design, made to hold 6 rotary spools. This remix uses its angled panel, probe clips and base.
-- **Spools:** [BBQ Probe Rotary Spool Remix](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) by **OakenSkull** (@OakenSkull_1238480) on Printables. It's a remix of T_om's "BBQ Meat Probe Spool" on Thingiverse, with a taller, tapered spindle so it press-fits without glue, plus a cutout to fit this stand. It works with FireBoard and Weber iGrill probes, and should fit most straight and right-angle probes. The spools aren't included in this folder. Download them from that page. *Their license wasn't recorded.*
+- **Spools:** [BBQ Probe Rotary Spool Remix](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) by **OakenSkull** (@OakenSkull_1238480) on Printables. It's a remix of T_om's "BBQ Meat Probe Spool" on Thingiverse, with the spindle made taller and its taper reversed so it press-fits without glue, plus a cutout to fit this stand. It works with FireBoard and Weber iGrill probes, and should fit most straight and right-angle probes. The spools aren't included in this folder. Download them from that page. Licensed [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), which means no commercial use.
 - **Added in this remix:** the pegs, the storage box with its two pockets, and the engraved label.
 
 ## License
@@ -84,7 +84,9 @@ The original stand is licensed [CC BY-SA 4.0](https://creativecommons.org/licens
 - **Credit the original:** "Storage Stand for BBQ Probe Rotary Spool" by OakenSkull_1238480, linked above.
 - **Use the same license:** this remix is licensed **CC BY-SA 4.0** too.
 
-Commercial use and further remixing are allowed, as long as the credit and the license stay with it. See [`LICENSE.md`](LICENSE.md).
+Commercial use and further remixing of the stand are allowed, as long as the credit and the license stay with it. See [`LICENSE.md`](LICENSE.md).
+
+**The spools are licensed differently.** The rotary spools are [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (Attribution-NonCommercial-ShareAlike), so they **can't be sold or used commercially**. That includes selling them bundled with this stand. You can sell the stand on its own, but not with the spools.
 
 ## Revision History
 

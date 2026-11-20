@@ -10,9 +10,11 @@ summary: Stand for rotary BBQ probe spools, with front clips for the probe tips 
 
 # BBQ Probe Spool Stand
 
+**On Printables:** [Storage Stand for BBQ Probe Rotary Spool (Deluxe Remix)](https://www.printables.com/model/1923551-storage-stand-for-bbq-probe-rotary-spool-deluxe-re)
+
 ![In use](images/photo.jpg)
 
-A stand for BBQ thermometer probes. Each probe's cable winds onto a [rotary probe spool](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) that sits behind the panel, and the probe tip hangs in a clip on the front. The box on one end has two open-top pockets, one for an INKBIRD WiFi thermometer base and and one for an Alpha Grillers instant-read thermometer. The three pegs on the base plate, behind the spools, hold the stainless probe grate clips.
+A stand for BBQ thermometer probes. Each probe's cable winds onto a [rotary probe spool](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) that sits behind the panel, and the probe tip hangs in a clip on the front. The box on one end has two open-top pockets, one for an INKBIRD WiFi thermometer base and one for an Alpha Grillers instant-read thermometer. The three pegs on the base plate, behind the spools, hold the stainless probe grate clips.
 
 | Pockets | Six probes | Clip pegs |
 |---|---|---|
@@ -81,6 +83,7 @@ The slicer project is [`files/bbq_probe_spool_stand_v3.2.3mf`](files/bbq_probe_s
 
 - **Stand:** [Storage Stand for BBQ Probe Rotary Spool](https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool) by **OakenSkull_1238480** on Printables. Original files: https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool. The author marks it as an original design, made to hold 6 rotary spools. This remix uses its angled panel, probe clips and base.
 - **Spools:** [BBQ Probe Rotary Spool Remix](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) by **OakenSkull** (@OakenSkull_1238480) on Printables. It's a remix of T_om's "BBQ Meat Probe Spool" on Thingiverse, with the spindle made taller and its taper reversed so it press-fits without glue, plus a cutout to fit this stand. It works with FireBoard and Weber iGrill probes, and should fit most straight and right-angle probes. The spools aren't included in this folder. Download them from that page. Licensed [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), which means no commercial use.
+- **This remix on Printables:** https://www.printables.com/model/1923551-storage-stand-for-bbq-probe-rotary-spool-deluxe-re
 - **Added in this remix:** the clip pegs, and the storage box with its two pockets.
 
 ## License

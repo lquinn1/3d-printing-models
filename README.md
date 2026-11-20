@@ -12,7 +12,7 @@ A collection of 3D printable models — source files, print-ready files, and pri
 
 | Model | Description | Material | Status | Tags |
 |-------|-------------|----------|--------|------|
-| [BBQ Probe Spool Stand](models/bbq-probe-spool-stand/README.md) | Stand for rotary BBQ probe spools, with front clips for the probe tips and a storage box with two pockets and an engraved label (V3). | ABS | Working | `bbq` `thermometer` `probe` `organizer` `storage` `inkbird` `alpha-grillers` |
+| [BBQ Probe Spool Stand](models/bbq-probe-spool-stand/README.md) | Stand for rotary BBQ probe spools, with front clips for the probe tips and a storage box with two pockets (V3). | ABS | Working | `bbq` `thermometer` `probe` `organizer` `storage` `inkbird` `alpha-grillers` |
 
 ### Lighting
 

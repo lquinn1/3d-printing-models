@@ -2,7 +2,8 @@
 
 Usage:  python3 bake_pockets.py ../files/bbq_probe_spool_stand_negative_volumes.3mf out.stl
 Unions the normal parts (stand, 3 pegs, box) and subtracts the negative parts
-(engraved text, pocket A 31.54 x 90 x 65 mm, pocket B 40 x 20 x 65 mm).
+(pocket A 31.54 x 90 x 65 mm, pocket B 40 x 20 x 65 mm; the engraved label is optional,
+see ENGRAVE_LABEL).
 The storage box's four vertical corners are rounded (CORNER_R, matching the ~3.75 mm
 rounded edges on the stand's base plate and panel).
 Needs numpy, trimesh, manifold3d.
@@ -37,7 +38,8 @@ if __name__=='__main__':
     for n,m in parts.items():
         mm=M(m); print(f'{n:12s} watertight {m.is_watertight} manifold status {mm.status()} vol {round(mm.volume(),1)}')
     CORNER_R = 3.75
-    pos=['stand','cyl1','cyl2','cyl3']; neg=['TEXT neg','neg cube A','neg cube B']
+    ENGRAVE_LABEL = False   # True cuts "Luke's BBQ Probe Rack V3" into the box's end face (removed in V3.2)
+    pos=['stand','cyl1','cyl2','cyl3']; neg=(['TEXT neg'] if ENGRAVE_LABEL else [])+['neg cube A','neg cube B']
     (x0,y0,z0),(x1,y1,z1) = parts['cube(box)'].bounds
     import math
     pts=[]
@@ -56,4 +58,5 @@ if __name__=='__main__':
     out.export(sys.argv[2])
     # also export cut-only of the pocket region check
     for n in neg:
+        if n not in parts: continue
         b=parts[n].bounds; print(n,'bed-z', (b[0][2]-parts['stand'].bounds[0][2]).round(2), (b[1][2]-parts['stand'].bounds[0][2]).round(2))

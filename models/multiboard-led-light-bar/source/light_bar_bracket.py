@@ -1,10 +1,12 @@
-"""Multiboard LED light bar end brackets.
+"""Multiboard LED light bar bracket (one part, use as many as you like).
 
-Wedge-shaped end brackets that hold an aluminium LED channel (18 x 8.5 mm outer)
+Wedge-shaped brackets that hold an aluminium LED channel (18 x 8.5 mm outer)
 with its diffuser facing back toward the wall, angled so the light grazes DOWN the
 wall at LIGHT_ANGLE degrees to the wall surface. Each bracket has a Multiboard
-push-fit plug (octagon 13.5 mm across flats) that presses into a
-"Big Thread - Push-Fit Hole" bolt screwed into a Multiboard big hole.
+push-fit plug (octagon 13.5 mm across flats) centred on its back face that presses
+into a "Big Thread - Push-Fit Hole" bolt screwed into a Multiboard big hole. The
+channel passes straight through the bracket, so the same part works at either end
+or anywhere along the bar.
 
 Coordinates (as installed): X along the bar, Y out from the board, Z up.
 Usage: python3 light_bar_bracket.py [out_dir]
@@ -17,14 +19,13 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else "out"
 # ---- LED channel (aluminium profile, from the product drawing) ----
 CH_W, CH_H = 18.0, 8.5          # outer width / height incl. diffuser
 CLR = 0.2                       # per-side clearance in the pocket
-POCKET_DEPTH = 10.5             # how far the channel end slides in; floor sits 1 mm outboard of the plug centre
 
 # ---- light direction ----
 LIGHT_ANGLE = 30.0              # angle between the light axis and the wall surface (deg)
 CH_CENTER = (30.0, -8.0)        # channel centre (Y out from board, Z) relative to plug centre
 
 # ---- bracket body ----
-THICK = 16.0                    # bracket thickness along X
+THICK = 13.5                    # bracket thickness along X (= plug size, so the plug prints flat on the bed)
 WALL = 3.0                      # material around the pocket in the side profile
 PLATE_H, PLATE_D = 40.0, 6.0    # back plate height (Z) and depth (Y) that sits on the bolt head
 EDGE_R = 1.5                    # outer edge rounding
@@ -32,9 +33,8 @@ EDGE_R = 1.5                    # outer edge rounding
 # ---- Multiboard push-fit plug (measured from the official push-fit holder) ----
 PLUG_AF_BASE, PLUG_AF_TIP = 13.5, 13.24
 PLUG_LEN, PLUG_CHAMFER = 8.5, 0.6
-PLUG_X = PLUG_AF_BASE / 2       # plug centre X: plug's lower flat sits on the print bed (outer face)
+PLUG_X = THICK / 2              # plug centred on the back face
 
-WIRE_HOLE_D = 6.0               # wire exit through the end wall (wire version only)
 
 a = math.radians(LIGHT_ANGLE)
 # unit vectors in the (Y, Z) side plane
@@ -58,7 +58,7 @@ def hull(pts):
         up.append(p)
     return lo[:-1] + up[:-1]
 
-def bracket(wire_hole=False, pocket_side=+1):
+def bracket():
     # side profile: hull of the back plate and the channel + wall
     plate = [(0, -PLATE_H/2), (0, PLATE_H/2), (PLATE_D, PLATE_H/2), (PLATE_D, -PLATE_H/2)]
     prof = hull(plate + rect_pts(CH_W/2 + WALL, CH_H/2 + WALL))
@@ -66,31 +66,23 @@ def bracket(wire_hole=False, pocket_side=+1):
     body = cq.Workplane("YZ").polyline(prof).close().extrude(THICK)
     body = body.edges().fillet(EDGE_R)
 
-    # channel pocket, open on the inner face
+    # channel opening straight through the bracket
     hw, hh = CH_W/2 + CLR, CH_H/2 + CLR
-    x0 = THICK - POCKET_DEPTH if pocket_side > 0 else 0
-    pocket = (cq.Workplane("YZ").workplane(offset=x0)
-              .polyline(rect_pts(hw, hh)).close().extrude(POCKET_DEPTH + 0.01))
-    body = body.cut(pocket)
+    tunnel = (cq.Workplane("YZ").workplane(offset=-1)
+              .polyline(rect_pts(hw, hh)).close().extrude(THICK + 2))
+    body = body.cut(tunnel)
 
-    if wire_hole:
-        xw = 0 if pocket_side > 0 else THICK - POCKET_DEPTH
-        hole = (cq.Workplane("YZ").workplane(offset=xw - 0.01)
-                .center(yc, zc).circle(WIRE_HOLE_D/2).extrude(THICK - POCKET_DEPTH + 0.02))
-        body = body.cut(hole)
-
-    # push-fit plug: tapered octagon along -Y from the back face
-    px = PLUG_X if pocket_side > 0 else THICK - PLUG_X
+    # push-fit plug: tapered octagon along -Y from the back face, centred on it
+    px = PLUG_X
     def octo(af, y):
         r = af / 2 / math.cos(math.pi/8)          # circumradius from across-flats
-        return (cq.Workplane("XZ", origin=(px, y, 0)).polygon(8, 2*r).val())
-    # XZ normal is -Y; build with loft between sections
-    y_base, y_cham, y_tip = 0.0, -(PLUG_LEN - PLUG_CHAMFER), -PLUG_LEN
-    secs = [cq.Wire.assembleEdges(octo(PLUG_AF_BASE, -0.0 + 0.5).Edges()),  # 0.5 mm into the body
+        return cq.Workplane("XZ", origin=(px, y, 0)).polygon(8, 2*r).val()
+    y_cham, y_tip = -(PLUG_LEN - PLUG_CHAMFER), -PLUG_LEN
+    secs = [cq.Wire.assembleEdges(octo(PLUG_AF_BASE, 0.5).Edges()),     # starts 0.5 mm inside the body
             cq.Wire.assembleEdges(octo(PLUG_AF_TIP, y_cham).Edges()),
             cq.Wire.assembleEdges(octo(PLUG_AF_TIP - 2*PLUG_CHAMFER, y_tip).Edges())]
     plug = cq.Solid.makeLoft(secs, True)
-    # rotate octagon by 22.5 deg so flats (not corners) face the bed
+    # rotate 22.5 deg so flats (not corners) face the bed and the sides
     plug = plug.rotate(cq.Vector(px, 0, 0), cq.Vector(px, 1, 0), 22.5)
     body = body.union(cq.Workplane().add(plug))
     return body.val().clean()
@@ -109,10 +101,7 @@ def watertight_stl(path):
 if __name__ == "__main__":
     import os
     os.makedirs(OUT, exist_ok=True)
-    parts = {
-        "light_bar_bracket_left": bracket(False, +1),
-        "light_bar_bracket_right_wire": bracket(True, -1),
-    }
+    parts = {"light_bar_bracket": bracket()}
     for name, s in parts.items():
         cq.exporters.export(s, f"{OUT}/{name}.step")
         cq.exporters.export(s, f"{OUT}/{name}.stl", tolerance=0.02, angularTolerance=0.1)

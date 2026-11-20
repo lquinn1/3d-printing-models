@@ -51,7 +51,7 @@ The egg files are zipped because unzipped they're too big for GitHub, which warn
 | 1 | E26 lamp socket with cord and switch | [Sopoby socket on Amazon](https://link.amazon/B00PT0elm). The casing measures 37.45 mm across. The shade rings aren't used. |
 | 1 | E26 LED bulb | Use a low-wattage LED bulb. An incandescent bulb gets too hot for the shade, especially a PLA one, which softens at around 55–60 °C. |
 
-*Disclosure: the Amazon lamp socket link above is an affiliate link. I may earn a commission on purchases made through it, at no extra cost to you.*
+*Disclosure: the Amazon links on this page (the lamp socket above and the filament under Print Settings) are affiliate links. I may earn a commission on purchases made through them, at no extra cost to you.*
 
 ## Socket Fit
 
@@ -101,7 +101,7 @@ Printed in rainbow translucent PLA. The color bands come from the filament itsel
 | Setting | Value |
 |---------|-------|
 | Printer / process profile | Same as the deck |
-| Filament | **[Amolen PLA, Rainbow Translucent](https://www.amazon.com/dp/B0HCBPBG2Y)** |
+| Filament | **[Amolen PLA, Rainbow Translucent](https://link.amazon/B01m4blD7)** (affiliate link) |
 | Nozzle temp | **240 °C (230 °C first layer)** |
 | Bed | High Temp Plate, **60 °C** |
 | Chamber | **None (PLA)** |

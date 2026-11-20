@@ -35,7 +35,7 @@ This version is a single solid model. In V3, the pockets and the label were cut 
 | Feature | Size (mm) | Notes |
 |---------|-----------|-------|
 | Overall | 229.7 × 130.4 × 104.6 tall | |
-| Storage box | 46 × 128 × 60 tall | Attached to the end of the stand |
+| Storage box | 46 × 128 × 60 tall | Attached to the end of the stand. The vertical corners are rounded to R3.75, matching the rounded edges on the stand's base plate and panel. |
 | Pocket A (long) | **31.54 × 90**, open top | For the INKBIRD 6-probe WiFi thermometer base. 1.5 mm floor, 58.5 mm deep. Walls 6.6 / 7.9 mm on the sides, 6.8 mm at the front |
 | Pocket B (small) | **40 × 20**, open top | For the Alpha Grillers instant-read thermometer, standing upright. 1.5 mm floor, 58.5 mm deep. Walls 3.2 / 2.9 mm on the sides, 6.2 mm at the back |
 | Divider between pockets | 5.0 thick | |
@@ -90,5 +90,6 @@ Commercial use and further remixing of the stand are allowed, as long as the cre
 
 ## Revision History
 
+- **V3.1** (2026-11-20): rounded the storage box's four vertical corners (R3.75) to match the stand's rounded edges.
 - **V3** (2026-11-20): pockets and label built into the model as one solid. STL and STEP exported, so no slicer negative volumes are needed.
 - **V3** (earlier): storage box added, with the pockets and label cut by negative volumes in the slicer.

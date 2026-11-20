@@ -3,6 +3,8 @@
 Usage:  python3 bake_pockets.py ../files/bbq_probe_spool_stand_negative_volumes.3mf out.stl
 Unions the normal parts (stand, 3 pegs, box) and subtracts the negative parts
 (engraved text, pocket A 31.54 x 90 x 65 mm, pocket B 40 x 20 x 65 mm).
+The storage box's four vertical corners are rounded (CORNER_R, matching the ~3.75 mm
+rounded edges on the stand's base plate and panel).
 Needs numpy, trimesh, manifold3d.
 """
 import xml.etree.ElementTree as ET, numpy as np, trimesh, re, sys, zipfile
@@ -34,8 +36,18 @@ if __name__=='__main__':
         return mf.Manifold(mf.Mesh(vert_properties=np.asarray(tm.vertices,np.float32), tri_verts=np.asarray(tm.faces,np.uint32)))
     for n,m in parts.items():
         mm=M(m); print(f'{n:12s} watertight {m.is_watertight} manifold status {mm.status()} vol {round(mm.volume(),1)}')
-    pos=['stand','cyl1','cyl2','cyl3','cube(box)']; neg=['TEXT neg','neg cube A','neg cube B']
-    solid=mf.Manifold.batch_boolean([M(parts[n]) for n in pos], mf.OpType.Add)
+    CORNER_R = 3.75
+    pos=['stand','cyl1','cyl2','cyl3']; neg=['TEXT neg','neg cube A','neg cube B']
+    (x0,y0,z0),(x1,y1,z1) = parts['cube(box)'].bounds
+    import math
+    pts=[]
+    for (cx,cy,a0) in ((x1-CORNER_R,y1-CORNER_R,0),(x0+CORNER_R,y1-CORNER_R,90),(x0+CORNER_R,y0+CORNER_R,180),(x1-CORNER_R,y0+CORNER_R,270)):
+        for k in range(25):
+            a=math.radians(a0+90*k/24); pts.append((cx+CORNER_R*math.cos(a), cy+CORNER_R*math.sin(a)))
+    # start 0.02 mm below the stand's bottom so the two coplanar bottoms don't create slivers
+    box=mf.Manifold.extrude(mf.CrossSection([pts]), z1-z0+0.02).translate((0,0,z0-0.02))
+    print('rounded box bounds', np.round(box.bounding_box(),2))
+    solid=mf.Manifold.batch_boolean([M(parts[n]) for n in pos]+[box], mf.OpType.Add)
     print('union vol', round(solid.volume(),1), 'genus', solid.genus())
     cut=solid - mf.Manifold.batch_boolean([M(parts[n]) for n in neg], mf.OpType.Add)
     cut=cut.translate((0,0,-cut.bounding_box()[2]))

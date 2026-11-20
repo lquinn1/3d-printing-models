@@ -48,8 +48,10 @@ The egg files are zipped because unzipped they're too big for GitHub, which warn
 
 | Qty | Item | Notes |
 |-----|------|-------|
-| 1 | E26 lamp socket with cord and switch | [Sopoby socket, Amazon B01M5F3DA2](https://www.amazon.com/dp/B01M5F3DA2). The casing measures 37.45 mm across. The shade rings aren't used. |
+| 1 | E26 lamp socket with cord and switch | [Sopoby socket on Amazon](https://link.amazon/B00PT0elm). The casing measures 37.45 mm across. The shade rings aren't used. |
 | 1 | E26 LED bulb | Use a low-wattage LED bulb. An incandescent bulb gets too hot for the shade, especially a PLA one, which softens at around 55–60 °C. |
+
+*Disclosure: the Amazon lamp socket link above is an affiliate link. I may earn a commission on purchases made through it, at no extra cost to you.*
 
 ## Socket Fit
 

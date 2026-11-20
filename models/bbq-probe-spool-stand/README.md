@@ -1,18 +1,20 @@
 ---
 title: BBQ Probe Spool Stand
 category: Kitchen & BBQ
-status: Testing
+status: Working
 material: ABS
 printer: Voron 2.4 R2 350
 tags: [bbq, thermometer, probe, organizer, storage]
-summary: Angled rack for wound-up BBQ probe cables, with an attached storage box with two pockets and an engraved label (V3).
+summary: Stand for rotary BBQ probe spools, with front clips for the probe tips and a storage box with two pockets and an engraved label (V3).
 ---
 
 # BBQ Probe Spool Stand
 
-![Stand](images/preview.png)
+![In use](images/photo.jpg)
 
-A stand for BBQ thermometer probes. Probe cables wind onto spools that sit on the angled, slotted back panel, and three pegs on the base plate locate them. The box on one end has two open-top pockets and *"Luke's BBQ Probe Rack V3"* engraved on its end face.
+A stand for BBQ thermometer probes. Each probe's cable winds onto a [rotary probe spool](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) that sits behind the panel, and the probe tip hangs in a clip on the front. The box on one end has two open-top pockets, one of which holds the thermometer's receiver, and *"Luke's BBQ Probe Rack V3"* engraved on its end face.
+
+![Model](images/preview.png)
 
 This version is a single solid model. In V3, the pockets and the label were cut by negative volumes in the slicer. Now they're part of the model itself, so the STL slices correctly in any slicer.
 
@@ -44,7 +46,7 @@ The pocket sizes and positions are taken directly from the negative volumes in t
 
 ## Print Settings
 
-These come from the V3 project file. They haven't been tested with the new STL yet.
+These come from the V3 project file, which is the print shown in the photo. The new STL has the same shape, so it should print the same.
 
 | Setting | Value |
 |---------|-------|
@@ -63,11 +65,17 @@ These come from the V3 project file. They haven't been tested with the new STL y
 
 ## Hardware / Bill of Materials
 
-None. The stand is a single printed part.
+| Qty | Item | Notes |
+|-----|------|-------|
+| 1 per probe | Printed rotary probe spool | [BBQ Probe Rotary Spool (remix)](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix). Printed separately and not included here. |
 
 ## Credits
 
-The angled stand and spool shape come from a downloaded model ("BBQ Probe Spool Stand.stl"). The pegs, storage box, pockets and label were added on top of it. *Source link not recorded yet.*
+- **Stand:** [Storage Stand for BBQ Probe Rotary Spool](https://www.printables.com/model/716595-storage-stand-for-bbq-probe-rotary-spool) on Printables. The angled panel, the probe clips and the base come from this model.
+- **Spools:** [BBQ Probe Rotary Spool (remix)](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) on Printables.
+- **Added here:** the pegs, the storage box with its two pockets, and the engraved label.
+
+Check the license on both Printables pages before you share or sell anything made from this remix. I couldn't open the pages to confirm the authors or licenses.
 
 ## Revision History
 

@@ -71,9 +71,11 @@ The slicer project is [`files/bbq_probe_spool_stand_v3.2.3mf`](files/bbq_probe_s
 
 | Qty | Item | Notes |
 |-----|------|-------|
-| 1 | INKBIRD 5GHz/2.4GHz WiFi & Bluetooth 5.1 meat thermometer, 6 probes | [Amazon](https://a.co/d/09NBpvpq). The base fits in pocket A, and the probes go on the spools. |
+| 1 | INKBIRD 5GHz/2.4GHz WiFi & Bluetooth 5.1 meat thermometer, 6 probes | [Amazon](https://link.amazon/B05wN2Ffz). The base fits in pocket A, and the probes go on the spools. |
 | 1 | Alpha Grillers instant-read digital meat thermometer | [Amazon](https://link.amazon/B096ifVpx). Fits in pocket B. |
 | 1 per probe | Printed rotary probe spool | [BBQ Probe Rotary Spool Remix](https://www.printables.com/model/714295-bbq-probe-rotary-spool-remix) by OakenSkull. Printed separately and not included here. |
+
+*Disclosure: the Amazon links above are affiliate links. I may earn a commission on purchases made through them, at no extra cost to you.*
 
 ## Credits
 

@@ -43,7 +43,7 @@ Use one bracket at each end, plus one about every **250–300 mm** in between. A
 | Feature | Value |
 |---------|-------|
 | Light direction | Diffuser faces the wall. The light reaches the wall at 30° to its surface, aimed downward. |
-| Channel opening | 18.4 × 8.9 mm through-hole (0.2 mm clearance per side), tilted to match the light angle |
+| Channel opening | 18.2 × 8.7 mm through-hole (0.1 mm clearance per side), tilted to match the light angle |
 | Channel position | Centre about 30 mm out from the board and 8 mm below the bolt centre |
 | Bracket | 13.5 mm thick (the same as the plug, so the plug prints flat), 40 mm tall where it meets the board, about 44 mm deep. Edges rounded R1.5. |
 | Push-fit plug | **Centred on the back face.** Octagon 13.5 mm across the flats at the base, tapering to 13.24 mm, 8.5 mm long, 0.6 mm tip chamfer. The size comes from the official Multiboard push-fit holder. |
@@ -72,10 +72,11 @@ Printed and tested. The bracket fits the channel and works well. These are the s
 
 ## Notes
 
-- The opening has 0.2 mm of clearance per side, so the channel slides through easily. On the first print the fit worked but was a little loose. For a snugger fit, set `CLR` to 0.1 in the script. To stop the bar from sliding sideways, add a drop of glue or a wrap of tape on the channel at one bracket. If the channel is too tight, change `CLR` in the script.
+- The opening has 0.1 mm of clearance per side, for a snug sliding fit. The first print used 0.2 mm, which worked but was a little loose. To stop the bar from sliding sideways, add a drop of glue or a wrap of tape on the channel at one bracket. If the channel is too tight, change `CLR` in the script.
 - Multiboard is a trademark of its creator. These brackets are an original design made to fit the Multiboard push-fit system. Selling printed Multiboard parts may need Multiboard's commercial license.
 
 ## Revision History
 
+- **v1.2** (2026-11-20): tightened the channel opening to 0.1 mm clearance per side (18.2 × 8.7 mm). Not printed yet.
 - **v1.1** (2026-11-20): printed and tested. It fits the channel and works, with the channel a little loose (see Notes). The channel now passes through the bracket, and the push-fit plug is centred on the back face. Left and right are now one part that works anywhere along the bar. The bracket is 13.5 mm thick so the plug prints flat.
 - **v1.0** (2026-11-20): first version. 30° downward wall wash, push-fit plug, left and right (wire) brackets.

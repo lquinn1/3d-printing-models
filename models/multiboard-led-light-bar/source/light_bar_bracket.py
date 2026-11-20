@@ -18,7 +18,7 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else "out"
 
 # ---- LED channel (aluminium profile, from the product drawing) ----
 CH_W, CH_H = 18.0, 8.5          # outer width / height incl. diffuser
-CLR = 0.2                       # per-side clearance in the pocket
+CLR = 0.1                       # per-side clearance around the channel (0.2 printed a little loose)
 
 # ---- light direction ----
 LIGHT_ANGLE = 30.0              # angle between the light axis and the wall surface (deg)

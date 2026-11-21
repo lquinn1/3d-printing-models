@@ -30,6 +30,13 @@ WALL = 3.0                      # material around the pocket in the side profile
 PLATE_H, PLATE_D = 40.0, 6.0    # back plate height (Z) and depth (Y) that sits on the bolt head
 EDGE_R = 1.5                    # outer edge rounding
 
+# ---- honeycomb side faces ----
+HEX = True                      # cut a honeycomb of through-hexagons into the side faces
+HEX_AF = 5.0                    # hexagon size across flats
+HEX_RIB = 1.6                   # rib width between hexagons (4 lines at 0.4 mm)
+HEX_MIN_FRAC = 0.35             # drop clipped cells smaller than this fraction of a full hexagon
+HEX_BORDER = 2.4                # solid border kept around the outside, the channel and the back plate
+
 # ---- Multiboard push-fit plug (measured from the official push-fit holder) ----
 PLUG_AF_BASE, PLUG_AF_TIP = 13.5, 13.24
 PLUG_LEN, PLUG_CHAMFER = 8.5, 0.6
@@ -58,6 +65,42 @@ def hull(pts):
         up.append(p)
     return lo[:-1] + up[:-1]
 
+def honeycomb(prof):
+    """Through-hexagon prisms (along X) filling the side profile (cells at the edge are clipped),
+    keeping HEX_BORDER of solid material at the edges, round the channel and at the back plate."""
+    from shapely.geometry import Polygon as SP
+    from shapely import affinity
+    region = (SP(prof).buffer(-(EDGE_R + HEX_BORDER), join_style=2)
+              .difference(SP(rect_pts(CH_W/2 + CLR, CH_H/2 + CLR)).buffer(HEX_BORDER + 0.6, join_style=2))
+              .difference(SP([(-1, -PLATE_H), (PLATE_D + HEX_BORDER, -PLATE_H),
+                               (PLATE_D + HEX_BORDER, PLATE_H), (-1, PLATE_H)])))
+    # flat-topped hexagons (flats horizontal, so they print cleanly either way up)
+    R = HEX_AF / math.sqrt(3)                       # circumradius
+    base = SP([(R * math.cos(math.radians(60*k)), R * math.sin(math.radians(60*k))) for k in range(6)])
+    Rp = (HEX_AF + HEX_RIB) / math.sqrt(3)          # circumradius of the cell incl. half a rib each side
+    pitch_y, pitch_z = 1.5 * Rp, HEX_AF + HEX_RIB   # column spacing / row spacing
+    minx, miny, maxx, maxy = region.bounds
+    cells = []
+    col = 0
+    y = minx - pitch_y
+    while y < maxx + pitch_y:
+        z = miny - pitch_z + (pitch_z/2 if col % 2 else 0)
+        while z < maxy + pitch_z:
+            h = affinity.translate(base, y, z)
+            c = h.intersection(region)
+            if not c.is_empty and c.geom_type == "Polygon" and c.area >= HEX_MIN_FRAC * h.area:
+                c = c.buffer(-0.2, join_style=2).buffer(0.2, join_style=2)   # tidy slivers
+                if c.geom_type == "Polygon" and not c.is_empty:
+                    cells.append(list(c.exterior.coords)[:-1])
+            z += pitch_z
+        y += pitch_y; col += 1
+    cut = None
+    for c in cells:
+        prism = cq.Workplane("YZ").workplane(offset=-1).polyline(c).close().extrude(THICK + 2)
+        cut = prism if cut is None else cut.union(prism)
+    print("honeycomb cells:", len(cells))
+    return cut if cut is not None else cq.Workplane("YZ")
+
 def bracket():
     # side profile: hull of the back plate and the channel + wall
     plate = [(0, -PLATE_H/2), (0, PLATE_H/2), (PLATE_D, PLATE_H/2), (PLATE_D, -PLATE_H/2)]
@@ -71,6 +114,9 @@ def bracket():
     tunnel = (cq.Workplane("YZ").workplane(offset=-1)
               .polyline(rect_pts(hw, hh)).close().extrude(THICK + 2))
     body = body.cut(tunnel)
+
+    if HEX:
+        body = body.cut(honeycomb(prof))
 
     # push-fit plug: tapered octagon along -Y from the back face, centred on it
     px = PLUG_X

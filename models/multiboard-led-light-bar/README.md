@@ -4,7 +4,7 @@ category: Multiboard
 status: Working
 material: PLA (tested), PETG or ABS
 printer: Voron 2.4 R2 350
-tags: [multiboard, led, light-bar, wall-wash, push-fit]
+tags: [multiboard, led, light-bar, wall-wash, push-fit, honeycomb]
 summary: One wedge bracket that holds an 18 x 8.5 mm LED channel on a Multiboard, aimed down the wall at 30°. The channel passes through, so use as many as you need, anywhere along the bar.
 ---
 
@@ -46,6 +46,7 @@ Use one bracket at each end, plus one about every **250–300 mm** in between. A
 | Channel opening | 18.2 × 8.7 mm through-hole (0.1 mm clearance per side), tilted to match the light angle |
 | Channel position | Centre about 30 mm out from the board and 8 mm below the bolt centre |
 | Bracket | 13.5 mm thick (the same as the plug, so the plug prints flat), 40 mm tall where it meets the board, about 44 mm deep. Edges rounded R1.5. |
+| Honeycomb | Through-hexagons, 5 mm across the flats, with 1.6 mm ribs and flats horizontal. Cells at the edge are clipped to fit. A 2.4 mm solid border runs around the outside and the channel, and the back plate behind the plug stays solid. To go back to solid faces, set `HEX = False` in the script. |
 | Push-fit plug | **Centred on the back face.** Octagon 13.5 mm across the flats at the base, tapering to 13.24 mm, 8.5 mm long, 0.6 mm tip chamfer. The size comes from the official Multiboard push-fit holder. |
 
 ### Channel length
@@ -58,7 +59,7 @@ Printed and tested. The bracket fits the channel and works well. These are the s
 
 | Setting | Value |
 |---------|-------|
-| Orientation | **Lay the bracket on either side face.** The plug is the same thickness as the bracket, so it lies flat on the bed, the way Multiboard push-fit parts are designed to print. |
+| Orientation | **Lay the bracket on either side face.** The plug is the same thickness as the bracket, so it lies flat on the bed, the way Multiboard push-fit parts are designed to print. The honeycomb holes then run straight up, so they need no supports. |
 | Supports | None |
 | Walls / infill | 4 walls, 25–40% gyroid |
 | Material | **PLA works:** v1.2 was printed and tested in PLA. Use PETG or ABS if the strip runs bright and gets hot. |
@@ -77,6 +78,7 @@ Printed and tested. The bracket fits the channel and works well. These are the s
 
 ## Revision History
 
+- **v1.3** (2026-11-21): the side faces now have a honeycomb of through-hexagons instead of being solid. The channel fit (0.1 mm) is unchanged. Not printed yet.
 - **v1.2** (2026-11-20): tightened the channel opening to 0.1 mm clearance per side (18.2 × 8.7 mm). Printed in PLA, and the channel fits perfectly.
 - **v1.1** (2026-11-20): printed and tested. It fits the channel and works, with the channel a little loose (see Notes). The channel now passes through the bracket, and the push-fit plug is centred on the back face. Left and right are now one part that works anywhere along the bar. The bracket is 13.5 mm thick so the plug prints flat.
 - **v1.0** (2026-11-20): first version. 30° downward wall wash, push-fit plug, left and right (wire) brackets.

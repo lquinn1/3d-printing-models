@@ -16,6 +16,8 @@ Wedge-shaped brackets hold an aluminium LED channel out from a Multiboard, with 
 
 ![Side section](images/section.png) ![Bracket](images/bracket.png)
 
+![v1.3 test print: two honeycomb brackets on the bed](images/photo_test_print.jpg)
+
 ## Files
 
 | File | Description |
@@ -78,7 +80,7 @@ Printed and tested. The bracket fits the channel and works well. These are the s
 
 ## Revision History
 
-- **v1.3** (2026-11-21): the side faces now have a honeycomb of through-hexagons instead of being solid. The channel fit (0.1 mm) is unchanged. Not printed yet.
+- **v1.3** (2026-11-21): the side faces now have a honeycomb of through-hexagons instead of being solid. The channel fit (0.1 mm) is unchanged. A test print came out clean.
 - **v1.2** (2026-11-20): tightened the channel opening to 0.1 mm clearance per side (18.2 × 8.7 mm). Printed in PLA, and the channel fits perfectly.
 - **v1.1** (2026-11-20): printed and tested. It fits the channel and works, with the channel a little loose (see Notes). The channel now passes through the bracket, and the push-fit plug is centred on the back face. Left and right are now one part that works anywhere along the bar. The bracket is 13.5 mm thick so the plug prints flat.
 - **v1.0** (2026-11-20): first version. 30° downward wall wash, push-fit plug, left and right (wire) brackets.

@@ -35,7 +35,7 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 
 **There's 85 mm of lift room above the back row**, so you can lift a back spool up and over the front spool to take it out. **Kept in v0.2**, since your shelves allow 20 in. Without it, the cabinet would be 409 mm / 16.1 in tall.
 
-### Overall size (recommended layout A)
+### Overall size (layout A)
 
 | | mm | in |
 |---|---|---|

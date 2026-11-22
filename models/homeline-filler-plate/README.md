@@ -1,7 +1,7 @@
 ---
 title: Homeline Load Center Filler Plate
 category: Electrical
-status: Draft
+status: Working
 material: ABS / ASA / PC (not PLA)
 printer: Voron 2.4 R2 350
 tags: [electrical, load-center, breaker-panel, filler-plate, square-d, homeline, snap-fit]
@@ -10,13 +10,17 @@ summary: Snap-in filler plates (1- and 2-pole) for empty breaker openings in a S
 
 # Homeline Load Center Filler Plate
 
-![Single- and double-pole filler plates (back)](images/preview.png)
+![Two single-pole plates installed in the panel cover](images/photo_installed.jpg)
 
 Snap-in plates that close empty breaker openings in a **Square D Homeline** load center cover. They're designed for the **HOM1224L125PGCVP** and inspired by Square D's **HOMFPCP**. There are two versions: **single-pole** (one 1 in space) and **double-pole** (two spaces). A folded spring latch at each end snaps behind the cover steel.
 
 > ⚠️ **Safety and code.** Unused openings in a panel cover must be closed. The NEC (408.7) calls for closures *identified* for the purpose, meaning a listed part like the Square D **HOMFPCP** (about $7 for a 3-pack). These printed plates are **not listed**, so an inspector may reject them. They're best used as a temporary closure until the real part is in place. Print them in **ABS, ASA or PC (ideally a flame-retardant / V-0 grade), not PLA**, and check that each one snaps in firmly. Live parts sit right behind the opening, so always **turn off the main and remove the cover** before fitting or removing a plate.
 
-![Section through the cover opening](images/section.png)
+| Printed on edge, with brims | Installed |
+|---|---|
+| ![Printed on edge with brims](images/photo_printed.jpg) | ![Installed in the cover](images/photo_installed.jpg) |
+
+![Section through the cover opening](images/section.png) ![Render](images/preview.png)
 
 ## Files
 
@@ -40,7 +44,7 @@ Snap-in plates that close empty breaker openings in a **Square D Homeline** load
 
 ## Print Settings
 
-Not printed yet. Suggested settings:
+Printed on edge and fitted to the HOM1224L125PGCVP cover. They snap in and sit flush.
 
 | Setting | Value |
 |---------|-------|
@@ -48,6 +52,7 @@ Not printed yet. Suggested settings:
 | Material | ABS / ASA / PC, preferably flame-retardant (V-0). **Not PLA.** It creeps and softens, and it's a poor choice inside an electrical enclosure. |
 | Walls | 3 or more, so the 1.2 mm leaves print as solid perimeters |
 | Infill | 100% (the part is almost all walls anyway) |
+| **Brim** | **Use a brim, or mouse ears at the ends.** Standing on edge, the plate has a narrow footprint and grows tall, so a brim keeps it from lifting or tipping. |
 | Layer height | 0.2 mm or finer |
 
 ## Installing
@@ -66,4 +71,4 @@ To remove a plate, take the cover off and squeeze the two spring leaves inward f
 
 ## Revision History
 
-- **v1.0** (2026-11-21): first version, single- and double-pole.
+- **v1.0** (2026-11-21): first version, single- and double-pole. Printed on edge with a brim and installed in the cover, where they snap in and fit well.

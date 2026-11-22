@@ -37,7 +37,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | PTFE ports | 12 on top (one per slot) + 12 on the back. Each one takes a PTFE pass-through module (PC4-M10) or a sealed blank plug. |
 | Stacking | Feet nest into pockets in the cabinet below, with optional side links. Stacks of 2–3. |
 | Drying | 24 V PTC heater, 150 W in every cabinet with PID (autotune), + PWM fan + about 700 g of silica gel |
-| Control | ESP32-S3, SHT45/SHT40, 3.2 in IPS capacitive touchscreen TFT (shows the label; touch firmware later) + encoder, ESPHome |
+| Control | ESP32-S3, SHT45/SHT40, 3.5 in IPS capacitive touchscreen TFT, 480 × 320 (shows the label; touch firmware later) + encoder, ESPHome |
 | NFC | **PN5180 tap pad** in the header for **OpenPrintTag** (ISO 15693) and NTAG tags. Tap a spool and pick a slot, and Spoolman's Location updates. |
 | Power | 120 V IEC C14 fused and switched inlet → Mean Well 24 V PSU in a rear pod outside the chamber |
 | Safety | Hardware thermal cutouts (85 °C auto-reset + 102 °C fuse) and firmware interlocks |
@@ -56,6 +56,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 ## Revision History
 
+- **v0.9.1** (2026-11-22): display chosen: **3.5 in IPS 480 × 320 SPI TFT with FT6336U capacitive touch** (Haldzemo, 98 × 55.5 mm board). It still fits the 68 mm header. Mounting, bezel window, pinout and wiring notes are in DESIGN §6.6, and the vendor drawing and pinout are in `docs/`.
 - **v0.9** (2026-11-22): display changed to a **3.2 in IPS capacitive touch TFT** (FT6336U boards are mostly 3.2 in). The header grows from 60 to 68 mm to fit it, so the cabinet is 494 mm (19.4 in) tall, 484 mm per cabinet when stacked. Figures and renders updated.
 - **v0.8.1** (2026-11-22): the BOM uses the **capacitive touchscreen** version of the 2.8 in display (FT6336U on I2C, INT/RST pins reserved) so touch can be added in firmware later. The rotary encoder stays.
 - **v0.8** (2026-11-22): the printed label plate is replaced by a **2.8 in IPS TFT that shows the material name** on a colour band, with status below. Added cabinet name, label colour and idle brightness settings, the screen behaviour, a backup tag on the door rail, and updated the header layout, figures and renders.

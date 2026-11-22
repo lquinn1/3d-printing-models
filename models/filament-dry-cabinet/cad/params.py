@@ -57,9 +57,29 @@ PC4_HOLE_D = 9.0            # PC4-M10 couplers self-thread into ~9 mm in ABS FIT
 PC4_HOLE_DEPTH = 8.0
 PTFE_BORE = 4.4             # 4 mm OD PTFE guide tube passes through
 
+# ---------------------------------------------------------------- header + display
+# 3.5 in 480x320 SPI TFT, capacitive touch (FT6336U), from the vendor drawing in docs/.
+# Dimensions in the board's portrait frame: X across the 55.5 side, Y down the 98 side
+# from the top edge (the 14-pin header is at the bottom). Mounted landscape in the header.
+HEADER_H = 68.0
+TFT_PCB = (55.5, 98.0)              # W x L
+TFT_LENS = (55.5, 84.96)            # touch lens outline; starts 6.54 from the top edge
+TFT_LENS_Y0 = 6.54
+TFT_VA = (49.56, 74.04)             # touch / viewing area; starts 9.65 from the top, centred in X
+TFT_VA_Y0 = 9.65
+TFT_AA = (48.96, 73.44)             # LCD active area
+TFT_HOLES = (49.5, 92.0)            # 4 x 3.2 mm holes, pad 4.7, pattern centred on the PCB
+TFT_HOLE_D = 3.2
+TFT_PINS_FROM_EDGE = 11.24          # first pin of the 14 x 2.54 header from the board edge
+BEZEL_WIN_CLR = 0.5                 # window = VA + 0.5 each side, so a finger reaches the edges
+# window centre is offset from the hole-pattern centre along the long axis:
+TFT_VA_OFFSET = (TFT_VA_Y0 + TFT_VA[1]/2) - TFT_PCB[1]/2     # = -2.33 (towards the top edge)
+
 if __name__ == "__main__":
     A = L.stadium(6, 120)
     ew = A['iw'] + 2*WALL; ed = A['idepth'] + WALL + L.DOOR; eh = A['ih'] + 2*WALL + L.FEET
     print(f"WALL {WALL:.1f} mm")
     print(f"exterior {ew:.0f} W x {ed:.0f} D (+50 pod = {ed+50:.0f}) x {eh:.0f} H mm"
           f" = {ew/IN:.1f} x {ed/IN:.1f} ({(ed+50)/IN:.1f}) x {eh/IN:.1f} in")
+    print(f"TFT in header: {TFT_PCB[1]} x {TFT_PCB[0]} mm board, {(HEADER_H-TFT_PCB[0])/2:.2f} mm free above/below;"
+          f" window {TFT_VA[1]+2*BEZEL_WIN_CLR:.1f} x {TFT_VA[0]+2*BEZEL_WIN_CLR:.1f}, offset {TFT_VA_OFFSET:+.2f} mm")

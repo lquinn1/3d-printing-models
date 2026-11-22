@@ -38,7 +38,7 @@ box(102, 47, 24, 12, 'Door reed switch', 'light on when open\nheater/fan pause',
 wire((39, 50), (44, 50), SIG); wire((44, 50), (44, 44.5), SIG); wire((44, 44.5), (114, 44.5), SIG, 'I2C / ADC / GPIO (3.3 V)')
 for x in (61, 87, 114): wire((x, 44.5), (x, 46.6), SIG)
 # UI and LEDs
-box(50, 24, 24, 15, 'Front header UI', '3.2" IPS SPI TFT + FT6336U touch\n(label + menu), backlight PWM, EC11\ngraphical_display_menu', fc='#e7f5ff', ec=SIG)
+box(50, 24, 24, 15, 'Front header UI', '3.5" IPS SPI TFT 480x320 + FT6336U\n(label + menu), backlight PWM, EC11\ngraphical_display_menu', fc='#e7f5ff', ec=SIG)
 wire((29, 47), (29, 31), SIG); wire((29, 31), (50, 31), SIG, 'SPI + encoder')
 box(80, 24, 24, 15, 'SK6812 RGBW 5 V', '60 LED/m, ~30 LEDs\n74AHCT125 level shift\n330 R + 1000 uF', fc='#ebfbee', ec=V5)
 wire((35, 47), (35, 21.5), SIG); wire((35, 21.5), (86, 21.5), SIG, 'LED data (RMT)'); wire((86, 21.5), (86, 23.6), SIG)

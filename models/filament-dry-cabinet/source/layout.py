@@ -16,7 +16,7 @@ WALL = 15.7                             # 2.4 skin + 1/2 in XPS + 0.6 (cad/param
 DOOR = 28.0                             # door frame with twin-wall polycarbonate
 FEET = 10.0                             # stacking feet (nest into the cabinet below)
 CLR = 15.0                              # clearance spool <-> wall/door
-HEADER = 68.0                           # front header (3.2 in TFT); 60 + 8 mm, added to the top clearance
+HEADER = 68.0                           # front header (3.5 in TFT, 55.5 mm board); 60 + 8 mm, added to the top clearance
 
 def stadium(n_across, h_offset, lift_access=True):
     """Two rows (front low, back raised by h_offset)."""

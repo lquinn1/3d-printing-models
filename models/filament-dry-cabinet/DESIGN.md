@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.3)
+# Filament Dry Cabinet: Design Spec (v0.4)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -194,7 +194,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Material preset | select | Sets the defaults in §5. The label plate is the physical match. |
 | Heater max power % | number (restored) | Optional cap on top of PID, for example 60 % in a PLA cabinet |
 | Chamber heater | climate (`pid`) | PID on chamber temperature, with **autotune** |
-| PID autotune | button | Runs `climate.pid.autotune`. Results are logged, then saved as the cabinet's kp/ki/kd. |
+| PID autotune | **local menu item** (not an HA button) | Started from the encoder menu (see the menu below). Runs `climate.pid.autotune`. Progress and results show on the TFT. |
 | Dry timer (h) | number | For `Dry` mode |
 | Desiccant days since recharge | sensor + reset button | Reminder |
 | Door | binary_sensor | |
@@ -206,9 +206,22 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 2. Once the RH is 3 % below target, the heater stops and the fan drops to its minimum circulation speed. The fan keeps air moving through the desiccant.
 3. If absolute humidity keeps rising with the heater off, the cabinet flags that the desiccant needs recharging.
 
-**PID tuning:** every cabinet uses the same heater, but cabinets differ in where they stand, their ambient temperature and how many spools they hold. Run **autotune once per cabinet** with it loaded and the door closed. ESPHome's `pid` climate drives the heater in a relay cycle around the setpoint and logs the suggested kp, ki and kd. Put those into the YAML substitutions, or into the restored `number` entities if you'd rather tune it live. The firmware interlocks (§6.3) stay active during autotune.
+**PID tuning:** every cabinet uses the same heater, but cabinets differ in where they stand, their ambient temperature and how many spools they hold. Run **autotune once per cabinet** with it loaded and the door closed. Start it from the **encoder menu (Tuning → PID autotune → Start)**. It asks you to confirm, so a stray knob press can't start it. The screen then shows the progress. ESPHome's `pid` climate drives the heater in a relay cycle around the setpoint, and the suggested kp, ki and kd are shown on the TFT and written to the log. Put those into the YAML substitutions, or into the restored `number` entities if you'd rather tune it live. The firmware interlocks (§6.3) stay active during autotune.
 
-**Local UI:** the TFT shows a status page (T, RH, absolute humidity, heater %, fan RPM, mode, material). Pressing the encoder opens a **`graphical_display_menu`**, where you adjust the setpoints with the knob. Everything also works without Wi-Fi. The local `web_server` shows status on the network.
+**Local UI:** the TFT shows a status page (T, RH, absolute humidity, heater %, fan RPM, mode, material). Pressing the encoder opens a **`graphical_display_menu`**, where you adjust the setpoints with the knob.
+
+**Menu (draft):**
+
+| Menu | Items |
+|---|---|
+| Mode | Off / Maintain / Dry (timed) |
+| Setpoints | Target RH · Max chamber temp · Fan minimum % · Heater max % · Dry timer (h) |
+| Material preset | PLA · PETG · ABS/ASA · TPU · Nylon/PC (loads the defaults in §5) |
+| Lights | On/off · Brightness · Find slot (choose F1–B6 to light it) |
+| Desiccant | Days since recharge · **Reset after recharge** (asks to confirm) |
+| **Tuning** | **PID autotune → Start** (asks to confirm) · Abort · Last result (kp / ki / kd) |
+| Info | IP address · Wi-Fi signal · firmware version · last fault |
+| Exit | Back to the status page | Everything also works without Wi-Fi. The local `web_server` shows status on the network.
 
 **Version note:** recent ESPHome releases are changing how `esp32_rmt_led_strip` sets channel order (`rgb_order` + `is_rgbw` versus a single `GRBW`-style setting). The YAML will target whichever version you run.
 

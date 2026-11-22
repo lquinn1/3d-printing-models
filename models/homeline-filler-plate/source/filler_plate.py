@@ -5,9 +5,13 @@ The opening in the cover runs across the breaker row; removed twist-outs leave
 a continuous slot, so the plate latches only on the two side edges. Each end has
 a folded (U-shaped) spring leaf with a hook that snaps behind the cover steel.
 
-The part is a single 2D profile extruded through its height, so it prints lying
-on its long edge (height = print Z) with the spring leaves flexing in the layer
-plane, which makes them much stronger than leaves printed across the layers.
+Two print options:
+  * "edge" version: the part is a single 2D profile extruded through its height, so it
+    prints standing on its long edge with the spring leaves flexing in the layer plane
+    (strongest).
+  * "flat" version: prints face-down. The spring leaf's free end would otherwise start
+    in mid-air 0.6 mm above the face, so small break-away pins tie it to the face
+    while printing. Snap them off afterwards by pushing each leaf inward.
 
 Coordinates: X across the opening (width), Z into the panel (0 = front of face),
 Y = height (one breaker space per pole).
@@ -42,6 +46,11 @@ HOOK_FLAT = 0.5         # flat on the hook before the lead-in ramp
 RAMP = 4.0              # lead-in ramp length (along Z)
 BRIDGE_T = 1.2          # thickness of the U bend that joins post and leaf
 
+# ---- break-away print supports (face-down "flat" version) ----
+PIN_W = 0.8             # pin size (X and Y); about two extrusion widths
+PIN_PITCH = 3.0         # pin spacing along the leaf
+PIN_EDGE = 1.0          # first/last pin distance from the plate's top/bottom edges
+
 def latch_profile(sign):
     """Closed (x, z) polygons for one end; sign=+1 right, -1 left."""
     xo = OPEN_W / 2 - EDGE_CLR                 # leaf outer surface
@@ -56,7 +65,7 @@ def latch_profile(sign):
     ]
     return [[(sign * x, z) for x, z in p] for p in polys]
 
-def plate(poles=1):
+def plate(poles=1, breakaway=False):
     H = poles * SPACE_H - FACE_GAP
     # face: XZ profile extruded along Y (height)
     wp = lambda: cq.Workplane("XZ", origin=(0, H / 2, 0))   # XZ normal is -Y, so extrude H goes -Y
@@ -68,7 +77,24 @@ def plate(poles=1):
         for poly in latch_profile(sign):
             pts = poly if sign > 0 else poly[::-1]
             body = body.union(wp().polyline(pts).close().extrude(H))
+    if breakaway:
+        body = body.union(breakaway_pins(H))
     return body.val().clean(), H
+
+def breakaway_pins(H):
+    """Small pins joining each spring leaf's free end to the face, so the leaf has
+    something to print on when the plate is printed face-down."""
+    xc = OPEN_W / 2 - EDGE_CLR - LEAF_T / 2           # leaf centreline
+    n = int((H - 2 * PIN_EDGE - PIN_W) // PIN_PITCH) + 1
+    span = (n - 1) * PIN_PITCH
+    pins = None
+    for sign in (+1, -1):
+        for i in range(n):
+            y = -span / 2 + i * PIN_PITCH
+            pin = cq.Workplane("XY").box(PIN_W, PIN_W, FREE_GAP + 0.2, centered=(True, True, False)) \
+                    .translate((sign * xc, y, FACE_T - 0.1))
+            pins = pin if pins is None else pins.union(pin)
+    return pins
 
 def leaf_check(H):
     """Bending strain and insertion force for the spring leaf (simple cantilever)."""
@@ -92,8 +118,9 @@ def watertight_stl(path):
 
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
-    for poles, name in ((1, "homeline_filler_plate_1pole"), (2, "homeline_filler_plate_2pole")):
-        s, H = plate(poles)
+    for poles, flat in ((1, False), (2, False), (1, True), (2, True)):
+        name = f"homeline_filler_plate_{poles}pole_{'flat' if flat else 'edge'}"
+        s, H = plate(poles, breakaway=flat)
         cq.exporters.export(s, f"{OUT}/{name}.step")
         cq.exporters.export(s, f"{OUT}/{name}.stl", tolerance=0.01, angularTolerance=0.1)
         watertight_stl(f"{OUT}/{name}.stl")

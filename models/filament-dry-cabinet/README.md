@@ -12,7 +12,7 @@ summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one pe
 
 ![Concept render](images/render_front.jpg)
 
-A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.4 in deep and 19.1 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
+A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.4 in deep and 19.4 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
 
 **Status: CAD phase 1. Fit-test coupons are ready to print** (DESIGN.md §12). See **[DESIGN.md](DESIGN.md)** for the full spec.
 
@@ -31,13 +31,13 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | | |
 |---|---|
 | Capacity | 12 spools: two rows of 6, with the back row raised 120 mm |
-| Size | 531 W × 442 D (492 with rear control pod) × 485 H mm (20.9 × 17.4 / 19.4 × 19.1 in) |
+| Size | 531 W × 442 D (492 with rear control pod) × 494 H mm (20.9 × 17.4 / 19.4 × 19.4 in) |
 | Shelves | 3/4 in Sch 40 PVC rods in printed cradles, with printed index collars every 80 mm |
 | Shell | Printed ABS/ASA tile panels (≤ 330 mm) with 1/2 in XPS foam, and a twin-pane polycarbonate door |
 | PTFE ports | 12 on top (one per slot) + 12 on the back. Each one takes a PTFE pass-through module (PC4-M10) or a sealed blank plug. |
 | Stacking | Feet nest into pockets in the cabinet below, with optional side links. Stacks of 2–3. |
 | Drying | 24 V PTC heater, 150 W in every cabinet with PID (autotune), + PWM fan + about 700 g of silica gel |
-| Control | ESP32-S3, SHT45/SHT40, 2.8 in IPS touchscreen TFT (shows the label; touch firmware later) + encoder, ESPHome |
+| Control | ESP32-S3, SHT45/SHT40, 3.2 in IPS capacitive touchscreen TFT (shows the label; touch firmware later) + encoder, ESPHome |
 | NFC | **PN5180 tap pad** in the header for **OpenPrintTag** (ISO 15693) and NTAG tags. Tap a spool and pick a slot, and Spoolman's Location updates. |
 | Power | 120 V IEC C14 fused and switched inlet → Mean Well 24 V PSU in a rear pod outside the chamber |
 | Safety | Hardware thermal cutouts (85 °C auto-reset + 102 °C fuse) and firmware interlocks |
@@ -56,6 +56,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 ## Revision History
 
+- **v0.9** (2026-11-22): display changed to a **3.2 in IPS capacitive touch TFT** (FT6336U boards are mostly 3.2 in). The header grows from 60 to 68 mm to fit it, so the cabinet is 494 mm (19.4 in) tall, 484 mm per cabinet when stacked. Figures and renders updated.
 - **v0.8.1** (2026-11-22): the BOM uses the **capacitive touchscreen** version of the 2.8 in display (FT6336U on I2C, INT/RST pins reserved) so touch can be added in firmware later. The rotary encoder stays.
 - **v0.8** (2026-11-22): the printed label plate is replaced by a **2.8 in IPS TFT that shows the material name** on a colour band, with status below. Added cabinet name, label colour and idle brightness settings, the screen behaviour, a backup tag on the door rail, and updated the header layout, figures and renders.
 - **v0.7** (2026-11-22): CAD phase 1, fit-test coupons for the port thread and O-ring, PC4-M10 hole, rod cradle, index collar, tile joint, inserts and foam pocket. Walls are now 15.7 mm (2.4 mm skin + 1/2 in foam), so the outside is 531 × 442 (492) × 485 mm. The O-ring is now 22 × 2 mm. Index collars now slide on from the rod end.

@@ -2,12 +2,12 @@
 with a small perspective z-buffer renderer (opaque pass + tinted glass pass)."""
 import sys, math, numpy as np, trimesh
 import os; sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))  # source/layout.py
-from layout import stadium, ROD_OD, ROD_CC, PITCH, WALL, DOOR, FEET
+from layout import stadium, ROD_OD, ROD_CC, PITCH, WALL, DOOR, FEET, HEADER
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 A = stadium(6, 120)
 IW, ID, IH = A['iw'], A['idepth'], A['ih']
-T = WALL; HEADER = 60.0
+T = WALL
 MAT_COL = {'PLA': '#2f9e44', 'PETG': '#e8590c', 'ABS': '#c92a2a', 'ASA': '#c92a2a', 'TPU': '#1971c2', 'Nylon': '#6741d9'}
 X0, X1 = -T, IW + T                 # exterior x
 YF, YB = -DOOR, ID + T              # exterior y (front of door .. back)
@@ -103,13 +103,13 @@ def cabinet(ox=0, oz=0, material='PETG', spool_cols=SPOOL_COLS, ports_open=(2, 9
     add(box(X0+95, X0+165, YF-1.6, YF-1, ZT-HEADER+6, ZT-6), hexc('#7048e8'))
     add(box(X0+98, X0+162, YF-2.2, YF-1.2, ZT-HEADER+9, ZT-9), hexc('#25262b'))
     labels.append(((X0+130+ox, YF-2.3, ZT-HEADER/2+oz), 'NFC', 'nfc'))
-    # 2.8 in IPS TFT (57.6 x 43.2 active), centred: the material name is shown on it
+    # 3.2 in IPS touch TFT (64.8 x 48.6 active), centred: the material name is shown on it
     cx = (X0+X1)/2; zc = ZT-HEADER/2
-    add(box(cx-33, cx+33, YF-1.8, YF-1, zc-26, zc+26), hexc('#111214'))             # bezel
-    add(box(cx-28.8, cx+28.8, YF-2.4, YF-1.6, zc-21.6, zc+21.6), hexc('#050608'))   # panel
-    add(box(cx-28.8, cx+28.8, YF-2.6, YF-2.2, zc-1, zc+21.6), hexc(MAT_COL.get(material, '#868e96')))
-    labels.append(((cx+ox, YF-2.8, zc+10.5+oz), material, 'tftname'))
-    labels.append(((cx+ox, YF-2.8, zc-11+oz), '45°C  14%RH\nMaintain', 'tftinfo'))
+    add(box(cx-37, cx+37, YF-1.8, YF-1, zc-29, zc+29), hexc('#111214'))             # bezel
+    add(box(cx-32.4, cx+32.4, YF-2.4, YF-1.6, zc-24.3, zc+24.3), hexc('#050608'))   # panel
+    add(box(cx-32.4, cx+32.4, YF-2.6, YF-2.2, zc-1, zc+24.3), hexc(MAT_COL.get(material, '#868e96')))
+    labels.append(((cx+ox, YF-2.8, zc+11.8+oz), material, 'tftname'))
+    labels.append(((cx+ox, YF-2.8, zc-12+oz), '45°C  14%RH\nMaintain', 'tftinfo'))
     # encoder knob
     add(cyl_y(X0+395, YF-16, YF-1, ZT-HEADER/2, 13), hexc('#9aa0a6'))
     add(cyl_y(X0+395, YF-17, YF-16, ZT-HEADER/2, 11), hexc('#b8bdc2'))
@@ -225,9 +225,9 @@ def render(items, glass, labels, out, eye, target, fov=32, W=1500, H=1150, ss=2,
         if not (0 <= xi < Wr and 0 <= yi < Hr) or z > zb[yi, xi] + 6: continue   # occluded
         scale = f/z
         if kind == 'tftname':
-            fnt = ImageFont.truetype(F_B, int(17*scale)); dr.text((x, y), txt, font=fnt, fill=(255, 255, 255), anchor='mm')
+            fnt = ImageFont.truetype(F_B, int(19*scale)); dr.text((x, y), txt, font=fnt, fill=(255, 255, 255), anchor='mm')
         elif kind == 'tftinfo':
-            fnt = ImageFont.truetype(F_M, int(6.5*scale))
+            fnt = ImageFont.truetype(F_M, int(7*scale))
             dr.multiline_text((x, y), txt, font=fnt, fill=(105, 219, 124), anchor='mm', align='center', spacing=2)
         elif kind == 'nfc':
             fnt = ImageFont.truetype(F_B, int(11*scale)); dr.text((x, y), '((·)) ' + txt, font=fnt, fill=(177, 151, 252), anchor='mm')

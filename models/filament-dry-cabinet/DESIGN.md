@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.5)
+# Filament Dry Cabinet: Design Spec (v0.6)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -18,6 +18,7 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 | R10 | PTFE feed ports that can be closed off, on the **top and back** | **12 top ports** (one per slot) and **12 back ports**, all using one plug-in **port module**: PTFE or sealed blank (§4.6) |
 | R11 | Stackable | Feet nest into **pockets in the cabinet below**, with optional side links (§4.7) |
 | R12 | 120 V mains only | Inlet, fuse and PSU are specified for 120 V (§6.1) |
+| R13 | Works with **OpenPrintTag** NFC spool tags | A **PN5180 NFC tap pad** in the front header. Tap a spool to check it into a slot, and the slot is written to Spoolman's Location field (§4.4, §6.5, §8). |
 
 ## 2. Concept
 
@@ -77,7 +78,12 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 - **Index collars:** printed split rings that clip onto the PVC every **80 mm** (75 mm spool plus 5 mm gap). They keep spools in their slots and carry the slot number moulded on top.
 
 ### 4.4 Front header and label plate
-- A 60 mm header above the door holds a **swappable label plate** on the left: multicolour printed text such as "PETG" that slides into a groove. On the right are the **2.0 in TFT** and the **encoder knob**.
+- A 60 mm header above the door holds, from left to right:
+  - a **swappable label plate**: multicolour printed text such as "PETG" that slides into a groove
+  - the **NFC tap pad**, a recessed area with a printed tap icon over the PN5180 antenna
+  - the **2.0 in TFT**
+  - the **encoder knob**
+- **The tap pad has no metal over it**, and the plastic covering the antenna is no more than 2–3 mm thick. If the PN5180 module you buy doesn't fit behind a 60 mm header, the header grows by up to 10 mm. The cabinet would then be 504 mm (19.8 in) tall, still under 20 in.
 - The **slot numbers 1–6** are also moulded into the door's bottom rail, lined up with the columns.
 
 ### 4.5 Rear control pod (outside the chamber)
@@ -179,6 +185,17 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 - **Colour options:** choose a preset colour or a custom RGB colour from the encoder menu (**Lights → Colour / Custom colour**), or with the colour picker in Home Assistant. "White" uses the SK6812's **dedicated white LED** for the cleanest light, which is best when you're reading labels. The colours mix the RGB LEDs. A colour is a nice way to match each cabinet to its material (for example amber for PETG). The choice is saved and restored after a power cut.
 - **Find slot** uses a contrasting highlight colour, so the chosen slot stands out against whatever colour the cabinet is set to.
 
+### 6.5 NFC reader (OpenPrintTag)
+
+- **Why the PN5180:** OpenPrintTag uses **NFC-V tags (ISO 15693, NXP ICODE SLIX/SLIX2)**. The common RC522 and PN532 readers only handle ISO 14443 tags (MIFARE/NTAG). The **NXP PN5180** reads **both ISO 15693 and ISO 14443A**, so the same pad also works with NTAG-based formats such as OpenSpool and TigerTag.
+- **Wiring:** it shares the **SPI bus** with the TFT and adds its own **NSS, BUSY and RST** pins. It needs **5 V** (RF) and **3.3 V** (logic) from the existing rails.
+- **Range:** a few centimetres. This is tap-to-check-in at the front of the cabinet, not automatic detection of each slot.
+- **Firmware: an ESPHome external component (new work).** ESPHome has no built-in PN5180 support. The plan is a small external component that wraps an existing open-source **ESP-IDF PN5180 driver** (ISO 15693 inventory, read blocks, NDEF Type 5). It would publish:
+  - the tag's **UID**, and the **raw OpenPrintTag payload** (CBOR in an NDEF record)
+  - a few decoded fields for the screen: brand, material, colour, and nominal and remaining weight
+- **Decoding:** full decoding is done in Home Assistant or a small helper service, which keeps the firmware simple.
+- **Tags:** spools that don't come with an OpenPrintTag get a **blank ICODE SLIX2 tag**. NTAG215 won't work for OpenPrintTag. Write it once with a phone app (Prusa app, SimplyPrint) or a USB reader.
+
 ## 7. ESPHome (planned entities)
 
 | Entity | Type | Notes |
@@ -201,6 +218,9 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Desiccant days since recharge | sensor + reset button | Reminder |
 | Door | binary_sensor | |
 | Fault | text_sensor | Last interlock that tripped |
+| NFC tag UID / last scan | text_sensor | From the PN5180 component |
+| NFC tag data | text_sensor (+ HA event `drybox_tag_scanned`) | Raw OpenPrintTag payload, plus decoded brand, material, colour and weight |
+| NFC check-in / check-out | event to HA | Carries the cabinet, slot and tag UID. HA updates Spoolman. |
 | Cabinet light, Slot F1…B6 lights | light | Full strip + per-slot partitions. Home Assistant gets the full RGBW colour picker. |
 | Light colour | select (restored) | **White (W channel)** · Warm white · Red · Orange · Amber · Yellow · Green · Cyan · Blue · Purple · Magenta · **Custom** |
 | Custom colour R / G / B | number × 3 (0–255, restored) | Used when Colour = Custom. Set from the encoder or from HA. |
@@ -223,6 +243,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Material preset | PLA · PETG · ABS/ASA · TPU · Nylon/PC (loads the defaults in §5) |
 | Lights | On/off · Brightness · **Colour** (preset list) · **Custom colour** (R / G / B, 0–255) · Find slot (choose F1–B6 to light it) |
 | Desiccant | Days since recharge · **Reset after recharge** (asks to confirm) |
+| **Spools** | **Check in** (tap, choose a slot, confirm) · **Check out** (tap or choose a slot) · Last scanned tag · Slot map (F1–B6 with what's in each) |
 | **Tuning** | **PID autotune → Start** (asks to confirm) · Abort · Last result (kp / ki / kd) |
 | Info | IP address · Wi-Fi signal · firmware version · last fault |
 | Exit | Back to the status page | Everything also works without Wi-Fi. The local `web_server` shows status on the network.
@@ -233,7 +254,19 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 
 - **Slot ID = `<cabinet>-<row><position>`**, for example **`PETG-F3`** or **`ABS-B6`**. Put it in Spoolman's **Location** field for the spool. F is the front row and B is the back row, and positions run 1–6 from left to right.
 - **On the cabinet:** the label plate shows the cabinet name ("PETG"). Index collars and the door rail show 1–6. The rows are physically obvious: front is low, back is high.
-- **Spoolman QR labels** go on the spool sides that face the door.
+- **Spoolman QR labels** go on the spool sides that face the door. They're still useful for spools without an NFC tag.
+
+### 8.1 NFC check-in / check-out flow (OpenPrintTag)
+
+1. **Tap the spool** on the header pad. The screen shows the brand, material and colour from the tag. A material that doesn't match the cabinet's preset gets a warning, for example "PLA in the PETG cabinet?".
+2. **Pick a slot** with the encoder. It suggests the first empty slot from the slot map, and that slot **lights up** as you scroll.
+3. **Confirm** with a press. The ESP32 sends a `check_in` event (cabinet, slot, UID and tag data) to Home Assistant.
+4. **Home Assistant → Spoolman:** an automation looks up the spool by the tag's UID, which is stored in a Spoolman **extra field**. If it isn't there yet, the automation **creates the vendor, filament and spool** from the tag data. Then it sets **Location = `PETG-B4`** (for example).
+5. **Check out:** tap the spool (or pick its slot) and confirm. The automation clears the Location or sets it to the printer's name.
+
+The slot map on the cabinet is rebuilt from Spoolman's Location fields at startup and after each change, so Spoolman stays the single source of truth.
+
+**Spoolman support:** upstream Spoolman doesn't read OpenPrintTag yet (there's a fork with NFC lookup that hasn't been merged), so this flow uses Spoolman's existing REST API and extra fields through Home Assistant. If upstream adds native NFC lookup later, step 4 gets simpler, and nothing on the cabinet changes.
 - **Home Assistant (phase 5):** use the Spoolman integration plus a script that, when you pick a spool, **lights its slot** in that cabinet. It can also show each cabinet's spool list and remaining weight on a dashboard.
 
 ## 9. Bill of materials (one cabinet, draft)
@@ -260,6 +293,8 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 - 24 V 4-pin PWM fan (60–80 mm)
 - SK6812 RGBW 5 V strip (60/m, 0.5 m), 74AHCT125, 330 Ω, 1000 µF
 - 2.0 in SPI TFT (ILI9341/ST7789), EC11 encoder, reed switch + magnet
+- **PN5180 NFC module** (ISO 15693 + 14443A, SPI). Check the board size against the header (§4.4).
+- **Blank ICODE SLIX2 tags** for spools that don't ship with OpenPrintTag
 - Wire: 18 AWG for mains, 20 AWG for 24 V. Ferrules, connectors.
 
 **Consumables**
@@ -277,10 +312,12 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Mains | **120 V only** |
 | Shell material | **ABS or ASA** for all printed parts |
 | Heater | **150 W in every cabinet**, with the same PSU and parts. **PID with autotune** adjusts it for each cabinet. |
+| NFC | **Add an OpenPrintTag reader:** a PN5180 tap pad in the header for checking spools in and out (§6.5, §8.1) |
 
 Still open (not blocking CAD):
 - **Which material cabinet to build first?** This now only changes the label plate and the firmware preset.
 - **Port socket thread:** this will be confirmed with a fit-test print.
+- **PN5180 module size:** this decides whether the header stays at 60 mm or grows to 70 mm.
 
 ## 11. Plan
 
@@ -289,5 +326,6 @@ Still open (not blocking CAD):
 | **1 (this)** | Design spec, layout, electrical plan, BOM |
 | 2 | CAD: tiles, corner posts, front frame, door, hinges, rod cradles and risers, index collars, label plate, header with display, heater duct, desiccant cartridges, rear pod, **port sockets and modules with a fit-test coupon**, **stacking feet, pockets and links**. STEP and STL. |
 | 3 | ESPHome YAML, pin map and wiring diagram |
+| 3b | **ESPHome PN5180 external component**: ISO 15693 inventory and read, plus OpenPrintTag payload. Tested on a bench board before it goes in the cabinet. |
 | 4 | Prototype: one cabinet. Test the fit, the heat-up and holding RH. |
-| 5 | Home Assistant and Spoolman: slot lighting, dashboards, desiccant alerts |
+| 5 | Home Assistant and Spoolman: **NFC check-in/out automation** (find or create the spool, set Location), slot lighting, dashboards, desiccant alerts |

@@ -4,7 +4,7 @@ category: Storage
 status: Design
 material: ABS / ASA
 printer: Voron 2.4 R2 350
-tags: [filament, dry-box, dehumidifier, esphome, esp32, sk6812, spoolman, pvc, modular, stackable, ptfe]
+tags: [filament, dry-box, dehumidifier, esphome, esp32, sk6812, spoolman, openprinttag, nfc, pvc, modular, stackable, ptfe]
 summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one per material). ESPHome control, SK6812 lighting, closable PTFE ports and Spoolman slot IDs. Under 20 in deep and tall.
 ---
 
@@ -30,6 +30,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | Stacking | Feet nest into pockets in the cabinet below, with optional side links. Stacks of 2–3. |
 | Drying | 24 V PTC heater, 150 W in every cabinet with PID (autotune), + PWM fan + about 700 g of silica gel |
 | Control | ESP32-S3, SHT45/SHT40, 2.0 in TFT + encoder, ESPHome |
+| NFC | **PN5180 tap pad** in the header for **OpenPrintTag** (ISO 15693) and NTAG tags. Tap a spool and pick a slot, and Spoolman's Location updates. |
 | Power | 120 V IEC C14 fused and switched inlet → Mean Well 24 V PSU in a rear pod outside the chamber |
 | Safety | Hardware thermal cutouts (85 °C auto-reset + 102 °C fuse) and firmware interlocks |
 
@@ -44,6 +45,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 ## Revision History
 
+- **v0.6** (2026-11-22): added an OpenPrintTag NFC reader: a PN5180 tap pad in the header, a Spools menu for checking spools in and out, an HA → Spoolman flow, and the ESPHome PN5180 component as new firmware work.
 - **v0.5** (2026-11-22): RGB colour options for the lights: a preset colour list and a custom RGB colour, set from the encoder menu or Home Assistant.
 - **v0.4** (2026-11-22): PID autotune now starts from the encoder menu (Tuning → PID autotune), with a confirmation step, instead of a button. Added a draft menu layout.
 - **v0.3** (2026-11-22): every cabinet uses the same parts: a 150 W heater and Mean Well LRS-200-24, with PID control and autotune for each cabinet.

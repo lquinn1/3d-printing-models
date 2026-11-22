@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: MIT
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
 """Rebuild the model index in the root README.md.
 
 Scans models/<name>/README.md, reads the YAML-style front matter at the top

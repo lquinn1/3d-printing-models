@@ -172,7 +172,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Heater | logic-level N-MOSFET, low side | GPIO, `slow_pwm` (about 5 s period) |
 | Fan | 4-pin PWM | LEDC at 25 kHz, tach to `pulse_counter` |
 | LEDs | SK6812 RGBW, about 30 LEDs | `esp32_rmt_led_strip`, via a **74AHCT125** level shifter, 330 Ω series resistor and 1000 µF at the strip |
-| Display | **3.5 in IPS SPI TFT, 480 × 320, with FT6336U capacitive touch** (§6.6) (ST7789 or ILI9341 IPS panel + FT6336U touch controller) | SPI (shared with the PN5180, own CS) + **backlight on an LEDC PWM pin** via a small transistor |
+| Display | **3.5 in IPS SPI TFT, 480 × 320, ST7796 controller, FT6336U capacitive touch** (§6.6) (ST7789 or ILI9341 IPS panel + FT6336U touch controller) | SPI (shared with the PN5180, own CS) + **backlight on an LEDC PWM pin** via a small transistor |
 | Touch (wired now, firmware later) | FT6336U capacitive, on the **I2C bus** (shared with the sensors) + **INT and RST pins reserved**. A resistive XPT2046 board also works: it goes on SPI with its own CS + IRQ pin. | ESPHome `ft63x6` (or `xpt2046`) touchscreen, enabled in a later phase |
 | Local control | EC11 rotary encoder with push switch | `rotary_encoder` + GPIO |
 | Door | reed switch + magnet | GPIO (`binary_sensor`) |
@@ -244,7 +244,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 - **Leave SDO (MISO) unconnected.** ESPHome never reads from the display, and some display controllers don't release MISO, which would upset the PN5180 on the same SPI bus.
 - **SD_CS:** not used. Tie it to 3.3 V so the card slot stays off the bus.
 - **Touch:** CTP_SCL / CTP_SDA to the I2C bus, CTP_INT and CTP_RST to reserved GPIOs (touch firmware is phase 6).
-- **Controller:** the listing doesn't name the display controller; 3.5 in 480 × 320 SPI boards are usually **ST7796S** (or ILI9488). Read the markings or the seller's demo code before writing the YAML.
+- **Display controller: ST7796(S)** (confirmed by the seller's information). Touch controller: **FT6336U**. In ESPHome the display uses the ST7796 model and touch uses the `ft63x6` platform (phase 6). If the first test shows a blank or scrambled screen, the fallback is the ILI9488 model.
 - **Memory:** a full 480 × 320 colour frame buffer is about 300 KB, so it goes in the PSRAM of the ESP32-S3 N16R8.
 
 ## 7. ESPHome (planned entities)

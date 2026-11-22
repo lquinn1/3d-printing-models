@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Fit-test coupons for the dry cabinet. Print these before the tiles.
 
   port_socket_coupon   three threaded sockets, radial clearance 0.15 / 0.25 / 0.35

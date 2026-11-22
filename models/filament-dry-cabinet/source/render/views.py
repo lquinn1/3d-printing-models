@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 from scene import *
 floor = box(-900, 1500, -1100, 1300, ZB-FEET-2, ZB-FEET)
 # 1) hero (front 3/4 left)

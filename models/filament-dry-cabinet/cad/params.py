@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Single source of truth for the dry cabinet CAD (all mm).
 
 Layout numbers come from source/layout.py; everything printed is defined here.

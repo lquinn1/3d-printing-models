@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Layout calculator for the filament dry cabinet (all mm)."""
 import math
 IN = 25.4

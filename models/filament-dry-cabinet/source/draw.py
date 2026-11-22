@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 import math, matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt

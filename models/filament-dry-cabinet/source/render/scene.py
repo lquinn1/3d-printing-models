@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Build a simple 3D scene of the dry cabinet from the spec numbers and render it
 with a small perspective z-buffer renderer (opaque pass + tinted glass pass)."""
 import sys, math, numpy as np, trimesh

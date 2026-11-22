@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Preview renders of the coupons (uses the concept renderer in source/render)."""
 import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'source', 'render'))

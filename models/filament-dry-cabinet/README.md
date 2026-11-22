@@ -54,6 +54,14 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | [`source/draw.py`](source/draw.py), [`source/wiring.py`](source/wiring.py) | Scripts that draw the layout and wiring figures |
 | [`source/render/`](source/render/) | Render scripts (`scene.py` builds the model from the layout numbers, `views.py` renders the three views) |
 
+## License
+
+- **Design files and docs** (STL/STEP, DESIGN.md, drawings, renders): [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Free to build, modify and share with credit, but **no commercial use**, and remixes keep the same license.
+- **Code** (Python in `cad/` and `source/`, and the ESPHome YAML and components when they're added): **MIT**.
+- The display vendor's drawing and pinout in `docs/`, and `images/concept.jpg`, aren't covered.
+
+See [`LICENSE.md`](LICENSE.md).
+
 ## Revision History
 
 - **v0.9.1** (2026-11-22): display chosen: **3.5 in IPS 480 × 320 SPI TFT with FT6336U capacitive touch** (Haldzemo, 98 × 55.5 mm board). It still fits the 68 mm header. Mounting, bezel window, pinout and wiring notes are in DESIGN §6.6, and the vendor drawing and pinout are in `docs/`.

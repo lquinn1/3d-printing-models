@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.6)
+# Filament Dry Cabinet: Design Spec (v0.7)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -12,7 +12,7 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 | R4 | ESPHome (ESP32) with local controls and status | ESP32-S3, a **2.0 in TFT and rotary encoder** for setpoints, plus the HA API and a local web page (§6, §7) |
 | R5 | SK6812 LED lighting | **SK6812 RGBW** strip under the front header, 5 LEDs per slot, so it can **light up a single slot** (§6.4) |
 | R6 | Front label plate, and an index position for each spool that Spoolman can manage | Swappable **material label plate** in the header. **Slot IDs F1–F6 and B1–B6** on index collars and the door rail (§8). |
-| R7 | **≤ 20 in (508 mm) deep** for standard shelves, **≤ 20 in shelf spacing** | **447 mm (17.6 in)** cabinet, **497 mm (19.6 in)** with the rear control pod, using offset-height rows. **494 mm (19.5 in) tall.** (§3) |
+| R7 | **≤ 20 in (508 mm) deep** for standard shelves, **≤ 20 in shelf spacing** | **442 mm (17.4 in)** cabinet, **492 mm (19.4 in)** with the rear control pod, using offset-height rows. **485 mm (19.1 in) tall.** (§3) |
 | R8 | IEC 320 C14 fused inlet | **Fused and switched C14 module** in the rear control pod (§6.1) |
 | R9 | About 12 spools | **12 × 1 kg spools** (200 mm across, up to 75 mm wide) |
 | R10 | PTFE feed ports that can be closed off, on the **top and back** | **12 top ports** (one per slot) and **12 back ports**, all using one plug-in **port module**: PTFE or sealed blank (§4.6) |
@@ -46,11 +46,11 @@ Renders are drawn from the spec dimensions (§3). The original inspiration image
 
 | | mm | in |
 |---|---|---|
-| Width | 540 | 21.3 |
-| Depth (cabinet) | 447 | 17.6 |
-| Depth with the rear control pod | 497 | **19.6 (< 20)** |
-| Height (with 10 mm stacking feet) | **494** | **19.5** |
-| Height per cabinet when stacked (feet nest into the pockets) | 484 | 19.1 |
+| Width | 531 | 20.9 |
+| Depth (cabinet) | 442 | 17.4 |
+| Depth with the rear control pod | 492 | **19.4 (< 20)** |
+| Height (with 10 mm stacking feet) | **485** | **19.1** |
+| Height per cabinet when stacked (feet nest into the pockets) | 475 | 18.7 |
 | Interior (W × D × H) | 500 × 399 × 444 | 19.7 × 15.7 × 17.5 |
 
 ### Layout options considered (all 12 spools)
@@ -66,7 +66,7 @@ Renders are drawn from the spec dimensions (§3). The original inspiration image
 ## 4. Construction
 
 ### 4.1 Shell: printed tile panels
-- **Walls are 20 mm thick:** a printed tile tray (2 mm skin plus edge ribs) holding **1/2 in XPS foam board** (hardware store), with the inside faced in **aluminium foil tape**. The foil works as a vapour barrier and reflects heat back in.
+- **Walls are 15.7 mm thick** (v0.7; was 20): a printed tile tray (2.4 mm skin plus 5 mm edge ribs) holding **1/2 in XPS foam board** (hardware store) in a 13.3 mm pocket, with the inside faced in **aluminium foil tape**. The foil works as a vapour barrier and reflects heat back in.
 - **Tiles are ≤ 330 × 330 mm** (350 mm bed). Each face is a 2 × 2 grid of tiles: sides, top, bottom and back, about 20 tiles in all, plus a front frame and corner posts.
 - **Tiles join** with tongue-and-groove edges, **M4 heat-set inserts and bolts**, and foam tape in the seams. You could swap a side tile later for one with a pass-through port or a window.
 - **Material: ABS or ASA for every printed part** (your choice, v0.2). That gives every cabinet the same parts and lets any cabinet run up to 60 °C. ASA is better for parts that get sunlight or UV.
@@ -81,7 +81,7 @@ Renders are drawn from the spec dimensions (§3). The original inspiration image
 ### 4.3 Spool rods, cradles and index collars
 - **4 × 3/4 in Sch 40 PVC rods**, each cut to about 498 mm (interior width minus 2 mm). Two carry the front row and two carry the back row.
 - **Printed U-cradles** on the side walls let the rods turn, so spools spin freely and can feed out. The rods also lift straight out for cleaning. The back-row cradles sit on printed risers, 120 mm higher.
-- **Index collars:** printed split rings that clip onto the PVC every **80 mm** (75 mm spool plus 5 mm gap). They keep spools in their slots and carry the slot number moulded on top.
+- **Index collars:** printed 46 mm rings, 5 mm wide, every **80 mm** (75 mm spool plus 5 mm gap). They **slide on from the rod end** (the rods lift out) and **three spring tabs grip the PVC**, so they can be moved. A split ring that clips on sideways would be too stiff at this size (v0.7). They keep spools in their slots. Slot numbers are on the door rail, since the rods turn.
 
 ### 4.4 Front header and label plate
 - A 60 mm header above the door holds, from left to right:
@@ -113,7 +113,7 @@ Renders are drawn from the spec dimensions (§3). The original inspiration image
 
 **Seal:** an O-ring on each module plus foam tape around the socket sleeve, so a closed port seals as well as the rest of the wall.
 
-**Socket size:** about M20 × 2 printed thread, with a 16 × 2 mm O-ring. This will be finalised in CAD after a fit test with a printed coupon, the same approach used for the dragon egg socket.
+**Socket size:** M20 × 2 printed thread, 15.7 mm long (the full wall). The module has a hex flange (30 mm across flats) with a **22 × 2 mm O-ring** in a face groove that seals against the outside skin. (v0.6 said 16 × 2, but a 16 mm ring can't fit round an M20 thread.) The thread clearance is chosen with the coupon in §12.
 
 ### 4.7 Stacking
 
@@ -280,7 +280,7 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 **Hardware store**
 - 3/4 in Sch 40 PVC pipe, about 2 m (4 rods × 498 mm)
 - 24 × PC4-M10 push-fit couplers (only as many as you'll use) + 4 mm OD PTFE tube
-- 16 × 2 mm nitrile O-rings (one per port module)
+- 22 × 2 mm nitrile O-rings (ID × CS, one per port module)
 - 1/2 in XPS foam board (one 2 × 4 ft sheet covers it)
 - Clear polycarbonate sheet, 2–2.5 mm, 2 panes about 510 × 400 mm
 - EPDM foam weatherstrip, about 2 m
@@ -335,3 +335,28 @@ Still open (not blocking CAD):
 | 3b | **ESPHome PN5180 external component**: ISO 15693 inventory and read, plus OpenPrintTag payload. Tested on a bench board before it goes in the cabinet. |
 | 4 | Prototype: one cabinet. Test the fit, the heat-up and holding RH. |
 | 5 | Home Assistant and Spoolman: **NFC check-in/out automation** (find or create the spool, set Location), slot lighting, dashboards, desiccant alerts |
+
+## 12. CAD (phase 1: fit-test coupons)
+
+All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one place for dimensions; it reads the layout from `source/layout.py`. Values marked `FIT` there get set from these coupons before any tiles are printed.
+
+![Fit-test coupons](images/cad_coupons.jpg)
+
+![Port section: blank plug and PTFE module in their sockets](images/cad_port_section.jpg)
+
+| STL | What it tests | What to report back |
+|---|---|---|
+| `port_socket_coupon` | Three M20 × 2 sockets with **0.15 / 0.25 / 0.35 mm** radial clearance (marked on the plate) | Which one the plug turns into by hand, snug with no wobble |
+| `port_blank_plug`, `port_ptfe_module` | Hex-flange modules, 22 × 2 O-ring face groove; the PTFE module has a 9.0 mm hole for a PC4-M10 coupler and a 4.4 mm bore | Does the PC4-M10 thread in firmly? Does the O-ring seat and seal? |
+| `rod_cradle` | U-cradle, 0.6 mm radial clearance on 26.67 mm PVC, two M4 counterbored holes | Does the rod turn freely without rattling? Your pipe's measured OD |
+| `index_collar` | Slide-on collar with three spring tabs (0.35 mm grip) | Slides with firm hand pressure and stays put? |
+| `tile_joint_a` + `_b` | V tongue and groove (0.2 mm clearance), two M4 × 8.1 heat-set inserts (5.6 mm holes), foam pocket depth | Joint closes flush? Inserts go in cleanly? Foam sits flush with the rim? |
+
+**Print settings:** ABS/ASA, 0.2 mm layers, 4 walls, 40 % infill. Print every coupon as it lies in the STL (flange or skin down). No supports.
+
+**Hardware for the test:** 2 × M4 × 12 socket-head bolts, 2 × M4 heat-set inserts (M4 × 8.1, 5.6 mm hole), 1 × PC4-M10 coupler, 2 × 22 × 2 mm O-rings, an offcut of 3/4 in Sch 40 PVC, a scrap of the 1/2 in XPS.
+
+**Rebuild:** `python3 cad/coupons.py` writes the STLs to `cad/stl/`; `python3 cad/preview.py` redraws the two images.
+
+**Next in CAD:** the tile set (side, top, bottom and back tiles, corner posts) generated from `params.py`, then the front frame and header, the door, and the rear pod.
+

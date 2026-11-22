@@ -14,13 +14,13 @@ summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one pe
 
 A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.6 in deep and 19.5 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
 
-**Status: design spec for review. No CAD yet.** See **[DESIGN.md](DESIGN.md)** for the full spec.
+**Status: CAD phase 1. Fit-test coupons are ready to print** (DESIGN.md §12). See **[DESIGN.md](DESIGN.md)** for the full spec.
 
 ![Two cabinets stacked (PLA under PETG)](images/render_stack.jpg)
 
 ![Rear: control pod, IEC inlet, back PTFE ports](images/render_rear.jpg)
 
-*Concept renders drawn from the v0.6 spec dimensions. Shapes are simplified; this is not CAD.*
+*Concept renders drawn from the v0.6 spec dimensions (walls since slimmed to 15.7 mm). Shapes are simplified; this is not CAD.*
 
 ![Side section](images/layout_side.png)
 
@@ -31,7 +31,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | | |
 |---|---|
 | Capacity | 12 spools: two rows of 6, with the back row raised 120 mm |
-| Size | 540 W × 447 D (497 with rear control pod) × 494 H mm (21.3 × 17.6 / 19.6 × 19.5 in) |
+| Size | 531 W × 442 D (492 with rear control pod) × 485 H mm (20.9 × 17.4 / 19.4 × 19.1 in) |
 | Shelves | 3/4 in Sch 40 PVC rods in printed cradles, with printed index collars every 80 mm |
 | Shell | Printed ABS/ASA tile panels (≤ 330 mm) with 1/2 in XPS foam, and a twin-pane polycarbonate door |
 | PTFE ports | 12 on top (one per slot) + 12 on the back. Each one takes a PTFE pass-through module (PC4-M10) or a sealed blank plug. |
@@ -46,6 +46,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 | File | Description |
 |------|-------------|
+| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `preview.py`; STLs in `cad/stl/` |
 | [`DESIGN.md`](DESIGN.md) | Full design spec: requirements, layout options, construction, drying, electronics, ESPHome entities, Spoolman scheme, parts list, open questions |
 | [`images/render_front.jpg`](images/render_front.jpg), [`render_stack.jpg`](images/render_stack.jpg), [`render_rear.jpg`](images/render_rear.jpg) | Concept renders (front, stacked pair, rear) |
 | [`images/wiring.png`](images/wiring.png) | Electrical block diagram |
@@ -55,6 +56,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 ## Revision History
 
+- **v0.7** (2026-11-22): CAD phase 1, fit-test coupons for the port thread and O-ring, PC4-M10 hole, rod cradle, index collar, tile joint, inserts and foam pocket. Walls are now 15.7 mm (2.4 mm skin + 1/2 in foam), so the outside is 531 × 442 (492) × 485 mm. The O-ring is now 22 × 2 mm. Index collars now slide on from the rod end.
 - **v0.6.1** (2026-11-22): added concept renders (front, stacked PLA + PETG pair, rear). No spec changes.
 - **v0.6** (2026-11-22): added an OpenPrintTag NFC reader: a PN5180 tap pad in the header, a Spools menu for checking spools in and out, an HA → Spoolman flow, and the ESPHome PN5180 component as new firmware work.
 - **v0.5** (2026-11-22): RGB colour options for the lights: a preset colour list and a custom RGB colour, set from the encoder menu or Home Assistant.

@@ -12,7 +12,7 @@ ROD_CC = 110.0                          # spacing of the two rods under each row
 R = SPOOL_D / 2
 C_ABOVE_RODS = math.sqrt((R + ROD_OD/2)**2 - (ROD_CC/2)**2)
 # shell
-WALL = 20.0                             # printed tile + 1/2 in XPS foam
+WALL = 15.7                             # 2.4 skin + 1/2 in XPS + 0.6 (cad/params.py)
 DOOR = 28.0                             # door frame with twin-wall polycarbonate
 FEET = 10.0                             # stacking feet (nest into the cabinet below)
 CLR = 15.0                              # clearance spool <-> wall/door

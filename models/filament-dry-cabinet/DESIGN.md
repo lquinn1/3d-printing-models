@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.4)
+# Filament Dry Cabinet: Design Spec (v0.5)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -176,6 +176,8 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 - One **SK6812 RGBW** strip (60/m) runs under the front header, aimed down and back. That's about **30 LEDs, 5 per slot column**.
 - An ESPHome **partition** light is set up for each column, so Home Assistant can **light up one slot**: for example, highlight F3 in white and B3 in a different colour.
 - The door switch turns on the full light. Normal brightness is capped at about 60 % to limit heat and current.
+- **Colour options:** choose a preset colour or a custom RGB colour from the encoder menu (**Lights → Colour / Custom colour**), or with the colour picker in Home Assistant. "White" uses the SK6812's **dedicated white LED** for the cleanest light, which is best when you're reading labels. The colours mix the RGB LEDs. A colour is a nice way to match each cabinet to its material (for example amber for PETG). The choice is saved and restored after a power cut.
+- **Find slot** uses a contrasting highlight colour, so the chosen slot stands out against whatever colour the cabinet is set to.
 
 ## 7. ESPHome (planned entities)
 
@@ -199,7 +201,9 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Desiccant days since recharge | sensor + reset button | Reminder |
 | Door | binary_sensor | |
 | Fault | text_sensor | Last interlock that tripped |
-| Cabinet light, Slot F1…B6 lights | light | Full strip + per-slot partitions |
+| Cabinet light, Slot F1…B6 lights | light | Full strip + per-slot partitions. Home Assistant gets the full RGBW colour picker. |
+| Light colour | select (restored) | **White (W channel)** · Warm white · Red · Orange · Amber · Yellow · Green · Cyan · Blue · Purple · Magenta · **Custom** |
+| Custom colour R / G / B | number × 3 (0–255, restored) | Used when Colour = Custom. Set from the encoder or from HA. |
 
 **Control loop (Maintain mode):**
 1. Above the target RH, the **PID climate** heats toward the max chamber temperature, and the fan runs at the heating speed. The PID output drives the heater's slow PWM, so every cabinet uses the same 150 W heater.
@@ -217,7 +221,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Mode | Off / Maintain / Dry (timed) |
 | Setpoints | Target RH · Max chamber temp · Fan minimum % · Heater max % · Dry timer (h) |
 | Material preset | PLA · PETG · ABS/ASA · TPU · Nylon/PC (loads the defaults in §5) |
-| Lights | On/off · Brightness · Find slot (choose F1–B6 to light it) |
+| Lights | On/off · Brightness · **Colour** (preset list) · **Custom colour** (R / G / B, 0–255) · Find slot (choose F1–B6 to light it) |
 | Desiccant | Days since recharge · **Reset after recharge** (asks to confirm) |
 | **Tuning** | **PID autotune → Start** (asks to confirm) · Abort · Last result (kp / ki / kd) |
 | Info | IP address · Wi-Fi signal · firmware version · last fault |

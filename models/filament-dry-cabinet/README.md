@@ -10,11 +10,19 @@ summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one pe
 
 # Filament Dry Cabinet
 
-![Side section](images/layout_side.png)
+![Concept render](images/render_front.jpg)
 
 A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.6 in deep and 19.5 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
 
 **Status: design spec for review. No CAD yet.** See **[DESIGN.md](DESIGN.md)** for the full spec.
+
+![Two cabinets stacked (PLA under PETG)](images/render_stack.jpg)
+
+![Rear: control pod, IEC inlet, back PTFE ports](images/render_rear.jpg)
+
+*Concept renders drawn from the v0.6 spec dimensions. Shapes are simplified; this is not CAD.*
+
+![Side section](images/layout_side.png)
 
 ![Front view](images/layout_front.png)
 
@@ -39,12 +47,15 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | File | Description |
 |------|-------------|
 | [`DESIGN.md`](DESIGN.md) | Full design spec: requirements, layout options, construction, drying, electronics, ESPHome entities, Spoolman scheme, parts list, open questions |
+| [`images/render_front.jpg`](images/render_front.jpg), [`render_stack.jpg`](images/render_stack.jpg), [`render_rear.jpg`](images/render_rear.jpg) | Concept renders (front, stacked pair, rear) |
 | [`images/wiring.png`](images/wiring.png) | Electrical block diagram |
 | [`source/layout.py`](source/layout.py) | Layout calculator. Change the spool and rod sizes or the offset and rerun it. |
 | [`source/draw.py`](source/draw.py), [`source/wiring.py`](source/wiring.py) | Scripts that draw the layout and wiring figures |
+| [`source/render/`](source/render/) | Render scripts (`scene.py` builds the model from the layout numbers, `views.py` renders the three views) |
 
 ## Revision History
 
+- **v0.6.1** (2026-11-22): added concept renders (front, stacked PLA + PETG pair, rear). No spec changes.
 - **v0.6** (2026-11-22): added an OpenPrintTag NFC reader: a PN5180 tap pad in the header, a Spools menu for checking spools in and out, an HA → Spoolman flow, and the ESPHome PN5180 component as new firmware work.
 - **v0.5** (2026-11-22): RGB colour options for the lights: a preset colour list and a custom RGB colour, set from the encoder menu or Home Assistant.
 - **v0.4** (2026-11-22): PID autotune now starts from the encoder menu (Tuning → PID autotune), with a confirmation step, instead of a button. Added a draft menu layout.

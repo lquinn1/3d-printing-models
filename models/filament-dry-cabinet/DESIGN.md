@@ -22,6 +22,12 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 
 ## 2. Concept
 
+![Concept render](images/render_front.jpg)
+
+![Stacked pair](images/render_stack.jpg) ![Rear](images/render_rear.jpg)
+
+Renders are drawn from the spec dimensions (§3). The original inspiration image:
+
 ![Concept](images/concept.jpg)
 
 ## 3. Layout (chosen: one level, two offset rows of six)

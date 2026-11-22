@@ -56,13 +56,28 @@ ax.add_patch(FancyArrowPatch((60, 40), (60, IH-40), connectionstyle='arc3,rad=-0
 ax.add_patch(FancyArrowPatch((ID-40, IH-40), (ID-40, 130), connectionstyle='arc3,rad=-0.2', arrowstyle='->', mutation_scale=15, color='#1971c2'))
 ax.text(40, IH-25, 'warm air up the front', fontsize=8, color='#c92a2a')
 ax.text(ID-150, IH-25, 'return through desiccant', fontsize=8, color='#1971c2')
+# closable PTFE ports: top (one per slot) and back (above the control pod)
+PORT='#7048e8'
+for yp in (A['y_front'], A['y_back']):
+    ax.add_patch(Rectangle((yp-9, IH-2), 18, T+6, facecolor=PORT, edgecolor='k', zorder=7))
+    ax.plot([yp, yp], [A['cf']+R if yp==A['y_front'] else A['cb']+R, IH-2], ls=':', color=PORT, lw=1.5)
+for zp in (IH-62, IH-36):
+    ax.add_patch(Rectangle((ID-2, zp-9), T+6, 18, facecolor=PORT, edgecolor='k', zorder=7))
+ax.plot([A['y_front'], A['y_front']+60, ID-2], [A['cf']+R, IH-36, IH-36], ls=':', color=PORT, lw=1.5)
+ax.text(A['y_front']+15, IH+T+14, 'closable PTFE ports (top, 1 per slot)', color=PORT, fontsize=8)
+ax.text(ID+T+10, IH-49, 'closable PTFE\nports (back)', color=PORT, fontsize=8, va='center')
+# stacking: pockets in the roof that take the next cabinet's feet
+for yy in (5, ID-60):
+    ax.add_patch(Rectangle((yy, IH+T-FEET), 50, FEET, facecolor='white', edgecolor='#222', ls='--'))
+ax.text(5, IH+T+14, 'stacking pocket', fontsize=7, color='#444')
 # LED strip
 ax.add_patch(Rectangle((5, IH-6), 10, 6, color='#fab005', zorder=6)); ax.text(18, IH-14, 'SK6812 strip', fontsize=7)
 # sensors
 ax.plot([ID/2], [IH-30], 'ks'); ax.text(ID/2+6, IH-35, 'SHT45 chamber', fontsize=7)
 # lift clearance
-ax.annotate('', xy=(A['y_back']+R+12, A['top_back']+A['lift']), xytext=(A['y_back']+R+12, A['top_back']), arrowprops=dict(arrowstyle='<->'))
-ax.text(A['y_back']+R+16, A['top_back']+A['lift']/2, f"{A['lift']:.0f} lift room\nto pull a back\nspool forward", fontsize=7, va='center')
+xl = A['y_back'] - R - 14
+ax.annotate('', xy=(xl, A['top_back']+A['lift']), xytext=(xl, A['top_back']), arrowprops=dict(arrowstyle='<->'))
+ax.text(xl-4, A['top_back']+A['lift']/2, f"{A['lift']:.0f} lift room\nfor back spools", fontsize=7, va='center', ha='right')
 # dimensions
 def dim(p0, p1, txt, off, horiz=True):
     if horiz:
@@ -76,9 +91,9 @@ dim(-DOOR, ID+T+POD, f"with rear control pod {A['ed']+POD:.0f} mm ({(A['ed']+POD
 dim(-T-FEET, IH+T, f"{A['eh']:.0f} mm ({A['eh']/IN:.1f} in)", ID+T+POD+25, horiz=False)
 ax.annotate('', xy=(A['y_back'], A['cb']-R-25), xytext=(A['y_front'], A['cb']-R-25), arrowprops=dict(arrowstyle='<->', color='#555'))
 ax.text((A['y_front']+A['y_back'])/2, A['cb']-R-40, f"rows {A['d']:.0f} apart", ha='center', fontsize=8, color='#555')
-ax.set_xlim(-190, ID+T+POD+70); ax.set_ylim(-T-FEET-120, IH+T+30)
+ax.set_xlim(-190, ID+T+POD+80); ax.set_ylim(-T-FEET-120, IH+T+40)
 ax.set_aspect('equal'); ax.axis('off')
-ax.set_title('Side section (front of cabinet on the left): 12 spools, 2 offset rows x 6', fontsize=12)
+ax.set_title('Side section (front on the left): 12 spools, 2 offset rows x 6, PTFE ports, stackable', fontsize=12)
 plt.savefig('layout_side.png', dpi=110, bbox_inches='tight')
 
 # ---------------- front view ----------------

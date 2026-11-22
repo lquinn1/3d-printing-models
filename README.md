@@ -42,7 +42,7 @@ A collection of 3D printable models — source files, print-ready files, and pri
 
 | Model | Description | Material | Status | Tags |
 |-------|-------------|----------|--------|------|
-| [Filament Dry Cabinet](models/filament-dry-cabinet/README.md) | Modular, heated, desiccant-dried 12-spool cabinet (one per material), with ESPHome control, SK6812 lighting and Spoolman slot IDs. Under 20 in deep. | ASA / PETG | Design | `filament` `dry-box` `dehumidifier` `esphome` `esp32` `sk6812` `spoolman` `pvc` `modular` |
+| [Filament Dry Cabinet](models/filament-dry-cabinet/README.md) | Modular, stackable, heated and desiccant-dried 12-spool cabinet (one per material). ESPHome control, SK6812 lighting, closable PTFE ports and Spoolman slot IDs. Under 20 in deep and tall. | ABS / ASA | Design | `filament` `dry-box` `dehumidifier` `esphome` `esp32` `sk6812` `spoolman` `pvc` `modular` `stackable` `ptfe` |
 <!-- INDEX:END -->
 
 ## Repository Layout

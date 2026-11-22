@@ -14,7 +14,7 @@ C_ABOVE_RODS = math.sqrt((R + ROD_OD/2)**2 - (ROD_CC/2)**2)
 # shell
 WALL = 20.0                             # printed tile + 1/2 in XPS foam
 DOOR = 28.0                             # door frame with twin-wall polycarbonate
-FEET = 15.0
+FEET = 10.0                             # stacking feet (nest into the cabinet below)
 CLR = 15.0                              # clearance spool <-> wall/door
 
 def stadium(n_across, h_offset, lift_access=True):
@@ -22,13 +22,13 @@ def stadium(n_across, h_offset, lift_access=True):
     d = math.sqrt((SPOOL_D + SPOOL_CLR)**2 - h_offset**2) if h_offset < SPOOL_D + SPOOL_CLR else 0
     iw = n_across * PITCH + 2 * 10
     idepth = CLR + R + d + R + CLR
-    rod_z_front = 35.0                  # rod centre above floor
+    rod_z_front = 30.0                  # rod centre above floor
     cf = rod_z_front + C_ABOVE_RODS     # front spool centre
     cb = cf + h_offset
     top_back = cb + R
     top_front = cf + R
     lift = max(0.0, (top_front + 5) - (cb - R)) if lift_access else 0.0
-    ih = top_back + lift + 15
+    ih = top_back + lift + 10
     ew, ed, eh = iw + 2*WALL, idepth + WALL + DOOR, ih + 2*WALL + FEET
     return dict(n=2*n_across, iw=iw, idepth=idepth, ih=ih, ew=ew, ed=ed, eh=eh,
                 d=d, cf=cf, cb=cb, rod_front=rod_z_front, rod_back=rod_z_front+h_offset,

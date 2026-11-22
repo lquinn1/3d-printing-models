@@ -1,6 +1,6 @@
-# Filament Dry Cabinet: Design Spec (v0.1)
+# Filament Dry Cabinet: Design Spec (v0.2)
 
-This spec is for review before any CAD. It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
+This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
 ## 1. Requirements
 
@@ -12,15 +12,18 @@ This spec is for review before any CAD. It sets the layout, construction, electr
 | R4 | ESPHome (ESP32) with local controls and status | ESP32-S3, a **2.0 in TFT and rotary encoder** for setpoints, plus the HA API and a local web page (§6, §7) |
 | R5 | SK6812 LED lighting | **SK6812 RGBW** strip under the front header, 5 LEDs per slot, so it can **light up a single slot** (§6.4) |
 | R6 | Front label plate, and an index position for each spool that Spoolman can manage | Swappable **material label plate** in the header. **Slot IDs F1–F6 and B1–B6** on index collars and the door rail (§8). |
-| R7 | **≤ 20 in (508 mm) deep** for standard shelves | **447 mm (17.6 in)** cabinet, **497 mm (19.6 in)** with the rear control pod, using offset-height rows (§3) |
+| R7 | **≤ 20 in (508 mm) deep** for standard shelves, **≤ 20 in shelf spacing** | **447 mm (17.6 in)** cabinet, **497 mm (19.6 in)** with the rear control pod, using offset-height rows. **494 mm (19.5 in) tall.** (§3) |
 | R8 | IEC 320 C14 fused inlet | **Fused and switched C14 module** in the rear control pod (§6.1) |
 | R9 | About 12 spools | **12 × 1 kg spools** (200 mm across, up to 75 mm wide) |
+| R10 | PTFE feed ports that can be closed off, on the **top and back** | **12 top ports** (one per slot) and **12 back ports**, all using one plug-in **port module**: PTFE or sealed blank (§4.6) |
+| R11 | Stackable | Feet nest into **pockets in the cabinet below**, with optional side links (§4.7) |
+| R12 | 120 V mains only | Inlet, fuse and PSU are specified for 120 V (§6.1) |
 
 ## 2. Concept
 
 ![Concept](images/concept.jpg)
 
-## 3. Layout (recommended: one level, two offset rows of six)
+## 3. Layout (chosen: one level, two offset rows of six)
 
 ![Side section](images/layout_side.png)
 
@@ -28,9 +31,9 @@ This spec is for review before any CAD. It sets the layout, construction, electr
 
 **Spools roll on two PVC rods per row**, with their axles running side to side, so their faces point out the door like in the concept picture. Two rods 110 mm apart put a 200 mm spool's centre **99 mm above the rod centres**.
 
-**The back row is raised 120 mm.** This lets the two rows overlap in depth (centres 169 mm apart instead of 207 mm). The back spools show above the front ones, so you can read them through the door. It also leaves a **service void under the back row, about 184 × 142 × 500 mm**, which holds the heater, fan duct and desiccant cartridges without adding any height.
+**The back row is raised 120 mm.** This lets the two rows overlap in depth (centres 169 mm apart instead of 207 mm). The back spools show above the front ones, so you can read them through the door. It also leaves a **service void under the back row, about 184 × 142 × 500 mm**, which holds the heater, fan duct and desiccant cartridges without adding any height. In v0.2 the front rods sit 30 mm above the floor, so the void is 137 mm tall.
 
-**There's 85 mm of lift room above the back row**, so you can lift a back spool up and over the front spool to take it out. Dropping that lift room saves 85 mm of height (cabinet 424 mm / 16.7 in tall), but then you'd take out the front spool to reach the one behind it.
+**There's 85 mm of lift room above the back row**, so you can lift a back spool up and over the front spool to take it out. **Kept in v0.2**, since your shelves allow 20 in. Without it, the cabinet would be 409 mm / 16.1 in tall.
 
 ### Overall size (recommended layout A)
 
@@ -39,16 +42,17 @@ This spec is for review before any CAD. It sets the layout, construction, electr
 | Width | 540 | 21.3 |
 | Depth (cabinet) | 447 | 17.6 |
 | Depth with the rear control pod | 497 | **19.6 (< 20)** |
-| Height (with 15 mm feet) | 509 | 20.0 |
-| Interior (W × D × H) | 500 × 399 × 454 | 19.7 × 15.7 × 17.9 |
+| Height (with 10 mm stacking feet) | **494** | **19.5** |
+| Height per cabinet when stacked (feet nest into the pockets) | 484 | 19.1 |
+| Interior (W × D × H) | 500 × 399 × 444 | 19.7 × 15.7 × 17.5 |
 
 ### Layout options considered (all 12 spools)
 
 | Option | Arrangement | W × D × H (in) | Notes |
 |---|---|---|---|
-| **A (recommended)** | 1 level, 2 offset rows × 6 | **21.3 × 17.6 (19.6 with pod) × 20.0** | Uses the full shelf depth. Low enough to fit under typical shelf spacing. Dead space houses the heater and desiccant. |
-| B | 2 levels × (2 offset rows × 3) | 11.8 × 17.6 × 37.9 | Narrow but very tall. Won't fit between most shelves. |
-| C | 3 levels × 4, single row | 15.0 × 10.9 × 31.3 | Shallow and tall. Wastes half the shelf depth. |
+| **A (chosen)** | 1 level, 2 offset rows × 6 | **21.3 × 17.6 (19.6 with pod) × 19.5** | Uses the full shelf depth. Low enough to fit under typical shelf spacing. Dead space houses the heater and desiccant. |
+| B | 2 levels × (2 offset rows × 3) | 11.8 × 17.6 × 36.9 | Narrow but very tall. Won't fit between most shelves. |
+| C | 3 levels × 4, single row | 15.0 × 10.9 × 31.1 | Shallow and tall. Wastes half the shelf depth. |
 
 `source/layout.py` recalculates all of this. Change the spool size, rod size or offset and rerun it.
 
@@ -58,8 +62,8 @@ This spec is for review before any CAD. It sets the layout, construction, electr
 - **Walls are 20 mm thick:** a printed tile tray (2 mm skin plus edge ribs) holding **1/2 in XPS foam board** (hardware store), with the inside faced in **aluminium foil tape**. The foil works as a vapour barrier and reflects heat back in.
 - **Tiles are ≤ 330 × 330 mm** (350 mm bed). Each face is a 2 × 2 grid of tiles: sides, top, bottom and back, about 20 tiles in all, plus a front frame and corner posts.
 - **Tiles join** with tongue-and-groove edges, **M4 heat-set inserts and bolts**, and foam tape in the seams. You could swap a side tile later for one with a pass-through port or a window.
-- **Material:** **ASA** for everything near the heater and for cabinets that run hotter than 50 °C. PETG is fine for the shell of a PLA or PETG cabinet. **No PLA in the structure**, since it softens at about 55 °C.
-- **Feet:** printed, 15 mm tall, with recesses so cabinets can **stack** (to be confirmed, §10).
+- **Material: ABS or ASA for every printed part** (your choice, v0.2). That gives every cabinet the same parts and lets any cabinet run up to 60 °C. ASA is better for parts that get sunlight or UV.
+- **Feet:** printed, 10 mm tall, and they **nest into pockets in the top of the cabinet below** (§4.7).
 
 ### 4.2 Door
 - A printed frame with **two panes of clear polycarbonate** (hardware-store "Lexan", 2–2.5 mm) and a 6 mm air gap. That insulates about twice as well as one pane, and stops condensation on the glass.
@@ -81,13 +85,38 @@ This spec is for review before any CAD. It sets the layout, construction, electr
 - Wires pass into the chamber through a sealed gland.
 - A removable back cover gives access, with ventilation slots for the PSU.
 
+### 4.6 Closable PTFE ports (top and back)
+
+**One port design is used everywhere.** Each tile gets a threaded **port socket**, a printed sleeve through the wall. A plug-in **port module** screws into the socket, sealed with an **O-ring**. The module comes in three versions:
+
+| Module | Use |
+|---|---|
+| **PTFE pass-through** | **PC4-M10 push-fit coupler** on the outside for the 4 mm OD PTFE tube to the printer. Inside, a short PTFE guide tube runs toward the spool. |
+| **Blank plug** | Seals any unused socket. It's the default in every socket. |
+| **Feed cap** | Push-fit cap over the coupler for when the tube is disconnected but you want to keep the PTFE routing |
+
+**Port positions:**
+- **Top: 12 ports, one per slot.** They sit straight above each spool, at the front-row and back-row lines (§3 drawing). Filament comes off the top of the spool straight up.
+- **Back: 12 ports in two staggered rows**, high on the back wall above the control pod. Guide tubes inside run up over the back row and down to each slot. **Use the back ports when cabinets are stacked**, since the cabinet above covers the top ports.
+
+**Seal:** an O-ring on each module plus foam tape around the socket sleeve, so a closed port seals as well as the rest of the wall.
+
+**Socket size:** about M20 × 2 printed thread, with a 16 × 2 mm O-ring. This will be finalised in CAD after a fit test with a printed coupon, the same approach used for the dragon egg socket.
+
+### 4.7 Stacking
+
+- **Feet nest into pockets:** each cabinet has four 10 mm feet that drop into matching **pockets in the roof** of the cabinet below. That keeps them aligned and stops them sliding.
+- **Optional side links:** printed **link plates** bolt across the seam on each side, so a stack can't tip.
+- **Limits:** stacks of **2, or 3 at most**. A loaded cabinet weighs roughly 12 kg of spools plus the cabinet itself, so the roof tiles get extra ribs around the pockets.
+- **Power and ports:** every cabinet has its own inlet and controller. Stacking doesn't block the rear pods or the back ports.
+
 ## 5. Drying system
 
 **How it works:** warm air holds the same amount of water at a much lower relative humidity, and warm plastic gives up moisture. The heater warms the chamber gently, and the **fan pulls chamber air down through the desiccant cartridges and over the PTC heater**. Warm, dry air leaves along the floor at the front, rises up the inside of the door, which also keeps the door glass clear, and returns down the back through the desiccant. Moisture driven out of the spools ends up in the silica gel, not back in the filament.
 
 | Item | Spec |
 |---|---|
-| Heater | **24 V PTC element with fins**, 100 W (PLA/PETG) or 150 W (ABS/ASA/nylon), in a printed **ASA** duct on standoffs |
+| Heater | **24 V PTC element with fins**, 100 W (PLA/PETG/TPU cabinets) or 150 W (ABS/ASA/nylon), in a printed **ABS/ASA** duct on standoffs |
 | Fan | 24 V **4-pin PWM** fan (60–80 mm) with tach, so the firmware can tell if it stops |
 | Desiccant | **2 pull-out cartridges, about 300–400 g of orange indicating silica gel each**. They sit in the return-air path in the service void. |
 | Recharging | Empty the gel into a metal tray and dry it in an oven at the temperature on the gel's packaging. **The printed cartridges can't go in the oven.** Firmware counts the days since the last recharge, and watches for absolute humidity creeping up. |
@@ -99,9 +128,9 @@ This spec is for review before any CAD. It sets the layout, construction, electr
 |---|---|---|---|
 | PLA / PLA+ / silk | 40 °C | ≤ 30 % | Never above 45 °C |
 | PETG / PCTG | 50 °C | ≤ 20 % | |
-| ABS / ASA | 55 °C | ≤ 20 % | ASA shell required |
+| ABS / ASA | 55 °C | ≤ 20 % | |
 | TPU | 40 °C | ≤ 20 % | |
-| Nylon / PC / CF blends | 60 °C | ≤ 10–15 % | ASA shell, 150 W heater, extra desiccant |
+| Nylon / PC / CF blends | 60 °C | ≤ 10–15 % | 150 W heater, extra desiccant |
 
 There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum temperature, such as 6 h at 50 °C for PETG. It's a top-up, not a replacement for a proper filament dryer.
 
@@ -110,7 +139,8 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 ![Electrical block diagram](images/wiring.png)
 
 ### 6.1 Power
-- **Inlet:** IEC 320 C14 panel module with a **fuse holder and switch** (5 × 20 mm, **3.15 A T** slow-blow at 120 V). Earth (PE) goes to the PSU's FG terminal and to any metal parts. Use 18 AWG wire with ferrules, plus strain relief. The module snaps into a printed cutout, sized from the datasheet of the exact part you buy.
+- **Mains: 120 V only.**
+- **Inlet:** a UL-recognised IEC 320 C14 panel module with a **fuse holder and switch** (5 × 20 mm, **3.15 A T** slow-blow, 250 V rated). Earth (PE) goes to the PSU's FG terminal and to any metal parts. Use 18 AWG wire with ferrules, plus strain relief. The module snaps into a printed cutout, sized from the datasheet of the exact part you buy.
 - **PSU:** **Mean Well LRS-200-24** (24 V, 8.8 A) in its enclosed metal case. The LRS-150-24 (6.5 A) is enough if every cabinet uses the 100 W heater.
 - **5 V:** a 24 → 5 V buck converter (3–5 A) for the LEDs, display and ESP32. The LED feed has its own 3 A fuse.
 
@@ -188,6 +218,8 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 
 **Hardware store**
 - 3/4 in Sch 40 PVC pipe, about 2 m (4 rods × 498 mm)
+- 24 × PC4-M10 push-fit couplers (only as many as you'll use) + 4 mm OD PTFE tube
+- 16 × 2 mm nitrile O-rings (one per port module)
 - 1/2 in XPS foam board (one 2 × 4 ft sheet covers it)
 - Clear polycarbonate sheet, 2–2.5 mm, 2 panes about 510 × 400 mm
 - EPDM foam weatherstrip, about 2 m
@@ -210,24 +242,29 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 
 **Consumables**
 - Orange indicating silica gel, about 1 kg
-- ASA filament for the duct, pod and hot parts, and PETG or ASA for the tiles
+- ABS or ASA filament for all printed parts
 
-## 10. Open questions for you
+## 10. Decisions (v0.2)
 
-1. **Layout A** (21.3 W × 19.6 D × 20.0 H in): does it fit your shelves? What's the **clear height** between shelves?
-2. **Lift room:** keep the 85 mm so you can lift back spools out (20.0 in tall), or drop it to 16.7 in tall and remove the front spool first?
-3. **PTFE pass-through ports** in a side tile, so a printer can feed straight from a cabinet slot?
-4. **Stackable** cabinets (interlocking feet and top)?
-5. **UI:** 2.0 in TFT + encoder, or a touchscreen?
-6. **Mains:** 120 V only? This affects the fuse rating.
-7. **Which cabinets first?** This sets the heater size (100 W vs 150 W) and shell material (PETG vs ASA).
+| Question | Decision |
+|---|---|
+| Shelf height | 20 in shelves. **Keep the lift room**, and the cabinet is **19.5 in tall** after trimming the feet, cradles and top clearance. |
+| PTFE ports | **Yes, top and back, closable:** one port module design with PTFE, blank and cap versions (§4.6) |
+| Stacking | **Yes:** nesting feet and pockets, plus optional side links (§4.7) |
+| UI | **2.0 in TFT + encoder** |
+| Mains | **120 V only** |
+| Shell material | **ABS or ASA** for all printed parts |
+
+Still open (not blocking CAD):
+- **Which material cabinet to build first?** This only changes the heater size (100 W or 150 W) and the label plate.
+- **Port socket thread:** this will be confirmed with a fit-test print.
 
 ## 11. Plan
 
 | Phase | Deliverable |
 |---|---|
 | **1 (this)** | Design spec, layout, electrical plan, BOM |
-| 2 | CAD: tiles, corner posts, front frame, door, hinges, rod cradles and risers, index collars, label plate, header with display, heater duct, desiccant cartridges, rear pod. STEP and STL. |
+| 2 | CAD: tiles, corner posts, front frame, door, hinges, rod cradles and risers, index collars, label plate, header with display, heater duct, desiccant cartridges, rear pod, **port sockets and modules with a fit-test coupon**, **stacking feet, pockets and links**. STEP and STL. |
 | 3 | ESPHome YAML, pin map and wiring diagram |
 | 4 | Prototype: one cabinet. Test the fit, the heat-up and holding RH. |
 | 5 | Home Assistant and Spoolman: slot lighting, dashboards, desiccant alerts |

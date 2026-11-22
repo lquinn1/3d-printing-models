@@ -28,7 +28,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | Shell | Printed ABS/ASA tile panels (≤ 330 mm) with 1/2 in XPS foam, and a twin-pane polycarbonate door |
 | PTFE ports | 12 on top (one per slot) + 12 on the back. Each one takes a PTFE pass-through module (PC4-M10) or a sealed blank plug. |
 | Stacking | Feet nest into pockets in the cabinet below, with optional side links. Stacks of 2–3. |
-| Drying | 24 V PTC heater (100/150 W) + PWM fan + about 700 g of silica gel |
+| Drying | 24 V PTC heater, 150 W in every cabinet with PID (autotune), + PWM fan + about 700 g of silica gel |
 | Control | ESP32-S3, SHT45/SHT40, 2.0 in TFT + encoder, ESPHome |
 | Power | 120 V IEC C14 fused and switched inlet → Mean Well 24 V PSU in a rear pod outside the chamber |
 | Safety | Hardware thermal cutouts (85 °C auto-reset + 102 °C fuse) and firmware interlocks |
@@ -44,5 +44,6 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 ## Revision History
 
+- **v0.3** (2026-11-22): every cabinet uses the same parts: a 150 W heater and Mean Well LRS-200-24, with PID control and autotune for each cabinet.
 - **v0.2** (2026-11-22): decisions added: 20 in shelves (cabinet 19.5 in tall, lift room kept), closable PTFE ports on the top and back, stacking, 2.0 in TFT, 120 V only, ABS/ASA shell.
 - **v0.1** (2026-11-22): first design spec and layout for review.

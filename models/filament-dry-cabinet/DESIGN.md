@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.2)
+# Filament Dry Cabinet: Design Spec (v0.3)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -116,11 +116,11 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 
 | Item | Spec |
 |---|---|
-| Heater | **24 V PTC element with fins**, 100 W (PLA/PETG/TPU cabinets) or 150 W (ABS/ASA/nylon), in a printed **ABS/ASA** duct on standoffs |
+| Heater | **24 V PTC element with fins, 150 W, the same in every cabinet**, in a printed **ABS/ASA** duct on standoffs. **PID control** sets how much of that power is used for each cabinet (§7). |
 | Fan | 24 V **4-pin PWM** fan (60–80 mm) with tach, so the firmware can tell if it stops |
 | Desiccant | **2 pull-out cartridges, about 300–400 g of orange indicating silica gel each**. They sit in the return-air path in the service void. |
 | Recharging | Empty the gel into a metal tray and dry it in an oven at the temperature on the gel's packaging. **The printed cartridges can't go in the oven.** Firmware counts the days since the last recharge, and watches for absolute humidity creeping up. |
-| Heat loss (estimate) | About 40 W at ΔT 15 °C, 65 W at ΔT 25 °C, and 90 W at ΔT 35 °C (walls U ≈ 1.5, twin-pane door U ≈ 2.7 W/m²K). 100 W holds PLA/PETG temperatures easily. The 150 W heater is for 55–60 °C cabinets in a cool room. |
+| Heat loss (estimate) | About 40 W at ΔT 15 °C, 65 W at ΔT 25 °C, and 90 W at ΔT 35 °C (walls U ≈ 1.5, twin-pane door U ≈ 2.7 W/m²K). 150 W gives a 60 °C cabinet headroom in a cool room and a fast warm-up. In a 40 °C PLA cabinet, PID simply runs it at a low duty, roughly 25–40 %. |
 
 ### Default settings per cabinet (storage, not hard drying)
 
@@ -130,7 +130,7 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 | PETG / PCTG | 50 °C | ≤ 20 % | |
 | ABS / ASA | 55 °C | ≤ 20 % | |
 | TPU | 40 °C | ≤ 20 % | |
-| Nylon / PC / CF blends | 60 °C | ≤ 10–15 % | 150 W heater, extra desiccant |
+| Nylon / PC / CF blends | 60 °C | ≤ 10–15 % | Extra desiccant |
 
 There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum temperature, such as 6 h at 50 °C for PETG. It's a top-up, not a replacement for a proper filament dryer.
 
@@ -141,10 +141,10 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 ### 6.1 Power
 - **Mains: 120 V only.**
 - **Inlet:** a UL-recognised IEC 320 C14 panel module with a **fuse holder and switch** (5 × 20 mm, **3.15 A T** slow-blow, 250 V rated). Earth (PE) goes to the PSU's FG terminal and to any metal parts. Use 18 AWG wire with ferrules, plus strain relief. The module snaps into a printed cutout, sized from the datasheet of the exact part you buy.
-- **PSU:** **Mean Well LRS-200-24** (24 V, 8.8 A) in its enclosed metal case. The LRS-150-24 (6.5 A) is enough if every cabinet uses the 100 W heater.
+- **PSU:** **Mean Well LRS-200-24** (24 V, 8.8 A) in its enclosed metal case, the same in every cabinet.
 - **5 V:** a 24 → 5 V buck converter (3–5 A) for the LEDs, display and ESP32. The LED feed has its own 3 A fuse.
 
-**Power budget at 24 V:** heater 4.2–6.3 A, fan 0.1–0.3 A, 5 V loads about 0.8 A (LEDs at full white about 3 A at 5 V). The peak is about 7.4 A with the 150 W heater, within the LRS-200's 8.8 A.
+**Power budget at 24 V:** heater 6.3 A, fan 0.1–0.3 A, 5 V loads about 0.8 A (LEDs at full white about 3 A at 5 V). The peak is about 7.4 A with the 150 W heater, within the LRS-200's 8.8 A.
 
 ### 6.2 Controller and I/O (ESP32-S3-DevKitC-1 N16R8)
 
@@ -192,6 +192,9 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | **Fan minimum %** | number (restored) | Circulation while idle |
 | Mode | select | `Off` / `Maintain` / `Dry (timed)` |
 | Material preset | select | Sets the defaults in §5. The label plate is the physical match. |
+| Heater max power % | number (restored) | Optional cap on top of PID, for example 60 % in a PLA cabinet |
+| Chamber heater | climate (`pid`) | PID on chamber temperature, with **autotune** |
+| PID autotune | button | Runs `climate.pid.autotune`. Results are logged, then saved as the cabinet's kp/ki/kd. |
 | Dry timer (h) | number | For `Dry` mode |
 | Desiccant days since recharge | sensor + reset button | Reminder |
 | Door | binary_sensor | |
@@ -199,9 +202,11 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Cabinet light, Slot F1…B6 lights | light | Full strip + per-slot partitions |
 
 **Control loop (Maintain mode):**
-1. Above the target RH, the heater runs a PI loop toward the max chamber temperature, and the fan runs at the heating speed.
+1. Above the target RH, the **PID climate** heats toward the max chamber temperature, and the fan runs at the heating speed. The PID output drives the heater's slow PWM, so every cabinet uses the same 150 W heater.
 2. Once the RH is 3 % below target, the heater stops and the fan drops to its minimum circulation speed. The fan keeps air moving through the desiccant.
 3. If absolute humidity keeps rising with the heater off, the cabinet flags that the desiccant needs recharging.
+
+**PID tuning:** every cabinet uses the same heater, but cabinets differ in where they stand, their ambient temperature and how many spools they hold. Run **autotune once per cabinet** with it loaded and the door closed. ESPHome's `pid` climate drives the heater in a relay cycle around the setpoint and logs the suggested kp, ki and kd. Put those into the YAML substitutions, or into the restored `number` entities if you'd rather tune it live. The firmware interlocks (§6.3) stay active during autotune.
 
 **Local UI:** the TFT shows a status page (T, RH, absolute humidity, heater %, fan RPM, mode, material). Pressing the encoder opens a **`graphical_display_menu`**, where you adjust the setpoints with the knob. Everything also works without Wi-Fi. The local `web_server` shows status on the network.
 
@@ -228,11 +233,11 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 
 **Electronics**
 - IEC C14 fused and switched inlet module, 3.15 A T fuse
-- Mean Well LRS-200-24 (or LRS-150-24)
+- Mean Well LRS-200-24
 - 24 → 5 V buck converter, 5 A
 - ESP32-S3-DevKitC-1 N16R8
 - SHT45 + 1–2 × SHT40 breakout boards, 10 k NTC
-- 24 V PTC heater element, 100/150 W
+- 24 V PTC heater element, 150 W
 - KSD301 85 °C NC thermostat, 102 °C TCO
 - Logic-level MOSFET module (heater)
 - 24 V 4-pin PWM fan (60–80 mm)
@@ -254,9 +259,10 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | UI | **2.0 in TFT + encoder** |
 | Mains | **120 V only** |
 | Shell material | **ABS or ASA** for all printed parts |
+| Heater | **150 W in every cabinet**, with the same PSU and parts. **PID with autotune** adjusts it for each cabinet. |
 
 Still open (not blocking CAD):
-- **Which material cabinet to build first?** This only changes the heater size (100 W or 150 W) and the label plate.
+- **Which material cabinet to build first?** This now only changes the label plate and the firmware preset.
 - **Port socket thread:** this will be confirmed with a fit-test print.
 
 ## 11. Plan

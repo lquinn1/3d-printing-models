@@ -2,7 +2,7 @@
 title: Homeline Load Center Filler Plate
 category: Electrical
 status: Working
-material: ABS / ASA / PC (not PLA)
+material: PLA (tested); ABS / ASA / PC recommended
 printer: Voron 2.4 R2 350
 tags: [electrical, load-center, breaker-panel, filler-plate, square-d, homeline, snap-fit]
 summary: Snap-in filler plates (1- and 2-pole) for empty breaker openings in a Square D Homeline panel cover. Inspired by the HOMFPCP.
@@ -49,7 +49,7 @@ Printed on edge and fitted to the HOM1224L125PGCVP cover. They snap in and sit f
 | Setting | Value |
 |---------|-------|
 | Orientation | **Stand the plate on its long edge**, with the 65 mm × 16 mm side on the bed and the face vertical. The part is a single profile extruded through its height, so it needs no supports. The spring leaves flex in the layer plane, which is much stronger than flexing across the layers. |
-| Material | ABS / ASA / PC, preferably flame-retardant (V-0). **Not PLA.** It creeps and softens, and it's a poor choice inside an electrical enclosure. |
+| Material | **Tested in PLA**: it prints cleanly and snaps in well. For a plate that stays in long-term, **ABS / ASA / PC** (ideally flame-retardant V-0) is the better choice. PLA softens at around 55–60 °C and can slowly relax under the constant spring load, which would loosen the latch. It also burns more readily. |
 | Walls | 3 or more, so the 1.2 mm leaves print as solid perimeters |
 | Infill | 100% (the part is almost all walls anyway) |
 | **Brim** | **Use a brim, or mouse ears at the ends.** Standing on edge, the plate has a narrow footprint and grows tall, so a brim keeps it from lifting or tipping. |
@@ -71,4 +71,4 @@ To remove a plate, take the cover off and squeeze the two spring leaves inward f
 
 ## Revision History
 
-- **v1.0** (2026-11-21): first version, single- and double-pole. Printed on edge with a brim and installed in the cover, where they snap in and fit well.
+- **v1.0** (2026-11-21): first version, single- and double-pole. Printed in PLA on edge with a brim and installed in the cover, where they snap in and fit well.

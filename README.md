@@ -12,7 +12,7 @@ A collection of 3D printable models — source files, print-ready files, and pri
 
 | Model | Description | Material | Status | Tags |
 |-------|-------------|----------|--------|------|
-| [Homeline Load Center Filler Plate](models/homeline-filler-plate/README.md) | Snap-in filler plates (1- and 2-pole) for empty breaker openings in a Square D Homeline panel cover. Inspired by the HOMFPCP. | ABS / ASA / PC (not PLA) | Working | `electrical` `load-center` `breaker-panel` `filler-plate` `square-d` `homeline` `snap-fit` |
+| [Homeline Load Center Filler Plate](models/homeline-filler-plate/README.md) | Snap-in filler plates (1- and 2-pole) for empty breaker openings in a Square D Homeline panel cover. Inspired by the HOMFPCP. | PLA (tested); ABS / ASA / PC recommended | Working | `electrical` `load-center` `breaker-panel` `filler-plate` `square-d` `homeline` `snap-fit` |
 
 ### Kitchen & BBQ
 

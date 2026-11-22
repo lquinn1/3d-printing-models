@@ -25,7 +25,7 @@ for r in [(0,-T+4,ID,T-8),(0,IH+4,ID,T-8),(ID+4,-T,T-8,IH+2*T)]:
 # door (twin-wall polycarbonate) + header
 ax.add_patch(Rectangle((-DOOR, -T), DOOR, IH+2*T-HEADER, facecolor='#9fd3f5', alpha=0.6, edgecolor='#333'))
 ax.add_patch(Rectangle((-DOOR, IH+T-HEADER), DOOR+8, HEADER, color='#222'))
-ax.text(-DOOR-6, IH+T-HEADER/2, 'header:\nlabel plate,\ndisplay, encoder', ha='right', va='center', fontsize=8)
+ax.text(-DOOR-6, IH+T-HEADER/2, 'header:\nNFC pad, 2.8" TFT\n(label), encoder', ha='right', va='center', fontsize=8)
 ax.text(-DOOR-6, IH/2-40, 'door: printed frame,\n2 x polycarbonate\n+ air gap, EPDM seal', ha='right', va='center', fontsize=8)
 # rear control pod
 ax.add_patch(Rectangle((ID+T, 30), POD, 230, facecolor='#555', edgecolor='#222'))
@@ -103,20 +103,21 @@ ax.add_patch(Rectangle((-T, -T-FEET), EW, A['eh'], facecolor='#2b2b2b'))
 # door glass and header
 htop = IH + T; hy = htop - HEADER
 ax.add_patch(Rectangle((0, -T+12), IW, hy-4-(-T+12), facecolor='#cfe8fc', alpha=0.9, edgecolor='#111', lw=3))
-ax.add_patch(Rectangle((30, hy+10), 200, HEADER-20, facecolor='#e9ecef', edgecolor='#111'))
-ax.text(130, hy+HEADER/2+3, 'PETG', ha='center', va='center', fontsize=22, weight='bold')
-ax.text(130, hy+11, 'swappable label plate', ha='center', va='bottom', fontsize=6)
 # NFC tap pad (PN5180 antenna behind the header)
-ax.add_patch(Rectangle((245, hy+6), 70, HEADER-12, facecolor='#343a40', edgecolor='#7048e8', lw=2))
+ax.add_patch(Rectangle((80, hy+6), 70, HEADER-12, facecolor='#343a40', edgecolor='#7048e8', lw=2))
 for r in (8, 14, 20):
-    ax.add_patch(matplotlib.patches.Arc((268, hy+HEADER/2), r, r*1.3, theta1=-50, theta2=50, color='#b197fc', lw=1.5))
-ax.text(295, hy+HEADER/2, 'TAP', ha='center', va='center', color='#b197fc', fontsize=9, weight='bold')
-ax.text(280, hy+1, 'NFC (OpenPrintTag)', ha='center', va='bottom', fontsize=5.5, color='white')
-ax.add_patch(Rectangle((330, hy+8), 62, HEADER-16, facecolor='#111', edgecolor='#666'))
-ax.text(361, hy+HEADER/2, '42°C\n14%RH', ha='center', va='center', color='#69db7c', fontsize=8, family='monospace')
-ax.add_patch(Circle((440, hy+HEADER/2), 14, facecolor='#adb5bd', edgecolor='#111'))
-ax.text(440, hy+1, 'encoder', ha='center', va='bottom', fontsize=6, color='white')
-ax.text(361, hy+1, '2.0" TFT', ha='center', va='bottom', fontsize=6, color='white')
+    ax.add_patch(matplotlib.patches.Arc((103, hy+HEADER/2), r, r*1.3, theta1=-50, theta2=50, color='#b197fc', lw=1.5))
+ax.text(130, hy+HEADER/2, 'TAP', ha='center', va='center', color='#b197fc', fontsize=9, weight='bold')
+ax.text(115, hy+1, 'NFC (OpenPrintTag)', ha='center', va='bottom', fontsize=5.5, color='white')
+# 2.8 in IPS TFT, centred: material name on a colour band + status line
+cx, cz = IW/2, hy+HEADER/2
+ax.add_patch(Rectangle((cx-28.8, cz-21.6), 57.6, 43.2, facecolor='#050608', edgecolor='#666'))
+ax.add_patch(Rectangle((cx-28.8, cz-1), 57.6, 22.6, facecolor='#e8590c'))
+ax.text(cx, cz+10.5, 'PETG', ha='center', va='center', color='white', fontsize=13, weight='bold')
+ax.text(cx, cz-11, '45°C 14%RH', ha='center', va='center', color='#69db7c', fontsize=5.5, family='monospace')
+ax.text(cx, hy+1, '2.8" IPS TFT (label + menu)', ha='center', va='bottom', fontsize=5.5, color='white')
+ax.add_patch(Circle((375, hy+HEADER/2), 14, facecolor='#adb5bd', edgecolor='#111'))
+ax.text(375, hy+1, 'encoder', ha='center', va='bottom', fontsize=6, color='white')
 # LED strip just inside, under the header
 ax.add_patch(Rectangle((10, hy-14), IW-20, 6, color='#fab005'))
 for i in range(6):
@@ -138,6 +139,6 @@ ax.text(IW+8, A['rod_front'], '3/4 in PVC rods\n+ index collars', fontsize=8, va
 ax.text(IW+8, IH+T-HEADER-11, 'SK6812 strip\n(5 LEDs per slot)', fontsize=8, va='center')
 ax.set_xlim(-T-10, EW+90); ax.set_ylim(-T-FEET-45, A['eh']-T-FEET+10)
 ax.set_aspect('equal'); ax.axis('off')
-ax.set_title('Front view: slots F1-F6 / B1-B6, label plate, NFC tap pad, display + encoder', fontsize=12)
+ax.set_title('Front view: slots F1-F6 / B1-B6, NFC tap pad, 2.8" TFT (shows the label), encoder', fontsize=12)
 plt.savefig('layout_front.png', dpi=110, bbox_inches='tight')
 print('ok')

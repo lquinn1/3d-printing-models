@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.7)
+# Filament Dry Cabinet: Design Spec (v0.8)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -9,9 +9,9 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 | R1 | Filament storage that also dehumidifies | Sealed, insulated chamber with a **low-voltage PTC heater**, a circulation fan and **pull-out silica gel cartridges** (§5) |
 | R2 | Modular, looks like the concept picture | **Printed tile panels** (each ≤ 330 mm, to fit the 350 mm bed) bolted together, a dark frame and a full-width glass door (§4) |
 | R3 | PVC or other hardware-store parts as spool shelves | Spools roll on **3/4 in Sch 40 PVC pipe** (26.7 mm OD) set in printed cradles (§4.3) |
-| R4 | ESPHome (ESP32) with local controls and status | ESP32-S3, a **2.0 in TFT and rotary encoder** for setpoints, plus the HA API and a local web page (§6, §7) |
+| R4 | ESPHome (ESP32) with local controls and status | ESP32-S3, a **2.8 in IPS TFT and rotary encoder** for setpoints, plus the HA API and a local web page (§6, §7) |
 | R5 | SK6812 LED lighting | **SK6812 RGBW** strip under the front header, 5 LEDs per slot, so it can **light up a single slot** (§6.4) |
-| R6 | Front label plate, and an index position for each spool that Spoolman can manage | Swappable **material label plate** in the header. **Slot IDs F1–F6 and B1–B6** on index collars and the door rail (§8). |
+| R6 | Front label, and an index position for each spool that Spoolman can manage | **The material label is shown on the 2.8 in TFT** (v0.8, replaces the printed plate), set from the menu or HA, plus a small printed backup tag on the door rail. **Slot IDs F1–F6 and B1–B6** on the door rail (§8). |
 | R7 | **≤ 20 in (508 mm) deep** for standard shelves, **≤ 20 in shelf spacing** | **442 mm (17.4 in)** cabinet, **492 mm (19.4 in)** with the rear control pod, using offset-height rows. **485 mm (19.1 in) tall.** (§3) |
 | R8 | IEC 320 C14 fused inlet | **Fused and switched C14 module** in the rear control pod (§6.1) |
 | R9 | About 12 spools | **12 × 1 kg spools** (200 mm across, up to 75 mm wide) |
@@ -83,12 +83,14 @@ Renders are drawn from the spec dimensions (§3). The original inspiration image
 - **Printed U-cradles** on the side walls let the rods turn, so spools spin freely and can feed out. The rods also lift straight out for cleaning. The back-row cradles sit on printed risers, 120 mm higher.
 - **Index collars:** printed 46 mm rings, 5 mm wide, every **80 mm** (75 mm spool plus 5 mm gap). They **slide on from the rod end** (the rods lift out) and **three spring tabs grip the PVC**, so they can be moved. A split ring that clips on sideways would be too stiff at this size (v0.7). They keep spools in their slots. Slot numbers are on the door rail, since the rods turn.
 
-### 4.4 Front header and label plate
+### 4.4 Front header and on-screen label
 - A 60 mm header above the door holds, from left to right:
-  - a **swappable label plate**: multicolour printed text such as "PETG" that slides into a groove
   - the **NFC tap pad**, a recessed area with a printed tap icon over the PN5180 antenna
-  - the **2.0 in TFT**
+  - the **2.8 in IPS TFT** (320 × 240, about 57.6 × 43.2 mm active, module about 86 × 50 mm), centred. **It is the cabinet's label** (v0.8): the material name in large letters on a colour band, with temperature, humidity and mode below. See §7 for the screen behaviour.
   - the **encoder knob**
+- **The printed label plate is gone** (v0.8). The name is a setting, so changing what a cabinet holds needs no reprint.
+- **Backup tag:** a small printed tag (about 40 × 12 mm) clips into a slot at the left end of the door's bottom rail, so the cabinet is still identified when it's unplugged.
+- **Display mount:** the panel sits behind a printed bezel with a 58.6 × 44.2 mm window, held by its four PCB holes on printed standoffs. Measure the exact module before the header CAD, since 2.8 in boards vary by a few mm.
 - **The tap pad has no metal over it**, and the plastic covering the antenna is no more than 2–3 mm thick. If the PN5180 module you buy doesn't fit behind a 60 mm header, the header grows by up to 10 mm. The cabinet would then be 504 mm (19.8 in) tall, still under 20 in.
 - The **slot numbers 1–6** are also moulded into the door's bottom rail, lined up with the columns.
 
@@ -169,7 +171,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Heater | logic-level N-MOSFET, low side | GPIO, `slow_pwm` (about 5 s period) |
 | Fan | 4-pin PWM | LEDC at 25 kHz, tach to `pulse_counter` |
 | LEDs | SK6812 RGBW, about 30 LEDs | `esp32_rmt_led_strip`, via a **74AHCT125** level shifter, 330 Ω series resistor and 1000 µF at the strip |
-| Display | 2.0 in ILI9341/ST7789 SPI TFT | SPI |
+| Display | **2.8 in IPS SPI TFT, 320 × 240** (ST7789 or ILI9341 IPS), no touch | SPI (shared with the PN5180, own CS) + **backlight on an LEDC PWM pin** via a small transistor |
 | Local control | EC11 rotary encoder with push switch | `rotary_encoder` + GPIO |
 | Door | reed switch + magnet | GPIO (`binary_sensor`) |
 | Buzzer (optional) | piezo for alarms | GPIO / LEDC |
@@ -216,7 +218,10 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | **Max chamber temperature** | number (restored) | Capped by the material preset |
 | **Fan minimum %** | number (restored) | Circulation while idle |
 | Mode | select | `Off` / `Maintain` / `Dry (timed)` |
-| Material preset | select | Sets the defaults in §5. The label plate is the physical match. |
+| Material preset | select | Sets the defaults in §5 |
+| **Cabinet name** | text (restored, max 8 characters) | **The label on the screen**, and the prefix of the slot IDs (`PETG-F3`). Set from HA or the encoder menu. Defaults to the material preset. |
+| **Label colour** | select (restored) | Colour band behind the name: **Auto** (from the material preset) · Same as lights · any light colour preset |
+| **Idle brightness** | number (restored, 10–100 %) | Backlight when nobody is using the cabinet. Never fully off, since the screen is the label. |
 | Heater max power % | number (restored) | Optional cap on top of PID, for example 60 % in a PLA cabinet |
 | Chamber heater | climate (`pid`) | PID on chamber temperature, with **autotune** |
 | PID autotune | **local menu item** (not an HA button) | Started from the encoder menu (see the menu below). Runs `climate.pid.autotune`. Progress and results show on the TFT. |
@@ -238,7 +243,12 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 
 **PID tuning:** every cabinet uses the same heater, but cabinets differ in where they stand, their ambient temperature and how many spools they hold. Run **autotune once per cabinet** with it loaded and the door closed. Start it from the **encoder menu (Tuning → PID autotune → Start)**. It asks you to confirm, so a stray knob press can't start it. The screen then shows the progress. ESPHome's `pid` climate drives the heater in a relay cycle around the setpoint, and the suggested kp, ki and kd are shown on the TFT and written to the log. Put those into the YAML substitutions, or into the restored `number` entities if you'd rather tune it live. The firmware interlocks (§6.3) stay active during autotune.
 
-**Local UI:** the TFT shows a status page (T, RH, absolute humidity, heater %, fan RPM, mode, material). Pressing the encoder opens a **`graphical_display_menu`**, where you adjust the setpoints with the knob.
+**Local UI (2.8 in TFT):**
+- **Label page (default, always on):** the **cabinet name** in large letters (about 13 mm tall, readable across the room) on the label colour band, then a status line with temperature, RH and mode, plus fault and desiccant icons. The backlight sits at **idle brightness** (default 30 %).
+- **Wake:** opening the door, turning the knob or tapping a tag brings the backlight to 100 %. It drops back to idle 60 s after the last activity.
+- **Detail page:** one knob click from the label page shows T, RH, absolute humidity, dew point, heater %, fan RPM and days since the desiccant recharge.
+- **NFC tap:** shows the tag's brand, material, colour and weight, then the slot ("Put in B4") while that slot's LEDs light.
+- **Menu:** a press opens the **`graphical_display_menu`**, where you adjust the setpoints with the knob. Times out back to the label page.
 
 **Menu (draft):**
 
@@ -247,6 +257,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Mode | Off / Maintain / Dry (timed) |
 | Setpoints | Target RH · Max chamber temp · Fan minimum % · Heater max % · Dry timer (h) |
 | Material preset | PLA · PETG · ABS/ASA · TPU · Nylon/PC (loads the defaults in §5) |
+| **Label** | Cabinet name (pick letters with the knob) · Label colour · Idle brightness |
 | Lights | On/off · Brightness · **Colour** (preset list) · **Custom colour** (R / G / B, 0–255) · Find slot (choose F1–B6 to light it) |
 | Desiccant | Days since recharge · **Reset after recharge** (asks to confirm) |
 | **Spools** | **Check in** (tap, choose a slot, confirm) · **Check out** (tap or choose a slot) · Last scanned tag · Slot map (F1–B6 with what's in each) |
@@ -259,7 +270,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 ## 8. Spoolman slot scheme
 
 - **Slot ID = `<cabinet>-<row><position>`**, for example **`PETG-F3`** or **`ABS-B6`**. Put it in Spoolman's **Location** field for the spool. F is the front row and B is the back row, and positions run 1–6 from left to right.
-- **On the cabinet:** the label plate shows the cabinet name ("PETG"). Index collars and the door rail show 1–6. The rows are physically obvious: front is low, back is high.
+- **On the cabinet:** the TFT shows the cabinet name ("PETG"), which is also the slot ID prefix, and the backup tag on the door rail matches it. The door rail shows 1–6. The rows are physically obvious: front is low, back is high.
 - **Spoolman QR labels** go on the spool sides that face the door. They're still useful for spools without an NFC tag.
 
 ### 8.1 NFC check-in / check-out flow (OpenPrintTag)
@@ -298,7 +309,8 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 - Logic-level MOSFET module (heater)
 - 24 V 4-pin PWM fan (60–80 mm)
 - SK6812 RGBW 5 V strip (60/m, 0.5 m), 74AHCT125, 330 Ω, 1000 µF
-- 2.0 in SPI TFT (ILI9341/ST7789), EC11 encoder, reed switch + magnet
+- 2.8 in IPS SPI TFT, 320 × 240 (ST7789 or ILI9341 IPS), no touch; small NPN/N-MOSFET for backlight PWM
+- EC11 encoder, reed switch + magnet
 - **PN5180 NFC module** (ISO 15693 + 14443A, SPI). Check the board size against the header (§4.4).
 - **Blank ICODE SLIX2 tags** for spools that don't ship with OpenPrintTag
 - Wire: 18 AWG for mains, 20 AWG for 24 V. Ferrules, connectors.
@@ -314,14 +326,14 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 | Shelf height | 20 in shelves. **Keep the lift room**, and the cabinet is **19.5 in tall** after trimming the feet, cradles and top clearance. |
 | PTFE ports | **Yes, top and back, closable:** one port module design with PTFE, blank and cap versions (§4.6) |
 | Stacking | **Yes:** nesting feet and pockets, plus optional side links (§4.7) |
-| UI | **2.0 in TFT + encoder** |
+| UI | **2.8 in IPS TFT + encoder** (v0.8). The screen is also the label; no printed plate. |
 | Mains | **120 V only** |
 | Shell material | **ABS or ASA** for all printed parts |
 | Heater | **150 W in every cabinet**, with the same PSU and parts. **PID with autotune** adjusts it for each cabinet. |
 | NFC | **Add an OpenPrintTag reader:** a PN5180 tap pad in the header for checking spools in and out (§6.5, §8.1) |
 
 Still open (not blocking CAD):
-- **Which material cabinet to build first?** This now only changes the label plate and the firmware preset.
+- **Which material cabinet to build first?** This now only changes firmware settings (cabinet name and material preset) and the backup tag.
 - **Port socket thread:** this will be confirmed with a fit-test print.
 - **PN5180 module size:** this decides whether the header stays at 60 mm or grows to 70 mm.
 
@@ -330,7 +342,7 @@ Still open (not blocking CAD):
 | Phase | Deliverable |
 |---|---|
 | **1 (this)** | Design spec, layout, electrical plan, BOM |
-| 2 | CAD: tiles, corner posts, front frame, door, hinges, rod cradles and risers, index collars, label plate, header with display, heater duct, desiccant cartridges, rear pod, **port sockets and modules with a fit-test coupon**, **stacking feet, pockets and links**. STEP and STL. |
+| 2 | CAD: tiles, corner posts, front frame, door, hinges, rod cradles and risers, index collars, backup tag, header with the 2.8 in display bezel, heater duct, desiccant cartridges, rear pod, **port sockets and modules with a fit-test coupon**, **stacking feet, pockets and links**. STEP and STL. |
 | 3 | ESPHome YAML, pin map and wiring diagram |
 | 3b | **ESPHome PN5180 external component**: ISO 15693 inventory and read, plus OpenPrintTag payload. Tested on a bench board before it goes in the cabinet. |
 | 4 | Prototype: one cabinet. Test the fit, the heat-up and holding RH. |

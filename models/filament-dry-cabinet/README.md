@@ -37,7 +37,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | PTFE ports | 12 on top (one per slot) + 12 on the back. Each one takes a PTFE pass-through module (PC4-M10) or a sealed blank plug. |
 | Stacking | Feet nest into pockets in the cabinet below, with optional side links. Stacks of 2–3. |
 | Drying | 24 V PTC heater, 150 W in every cabinet with PID (autotune), + PWM fan + about 700 g of silica gel |
-| Control | ESP32-S3, SHT45/SHT40, 2.8 in IPS TFT (also shows the label) + encoder, ESPHome |
+| Control | ESP32-S3, SHT45/SHT40, 2.8 in IPS touchscreen TFT (shows the label; touch firmware later) + encoder, ESPHome |
 | NFC | **PN5180 tap pad** in the header for **OpenPrintTag** (ISO 15693) and NTAG tags. Tap a spool and pick a slot, and Spoolman's Location updates. |
 | Power | 120 V IEC C14 fused and switched inlet → Mean Well 24 V PSU in a rear pod outside the chamber |
 | Safety | Hardware thermal cutouts (85 °C auto-reset + 102 °C fuse) and firmware interlocks |
@@ -56,6 +56,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 ## Revision History
 
+- **v0.8.1** (2026-11-22): the BOM uses the **capacitive touchscreen** version of the 2.8 in display (FT6336U on I2C, INT/RST pins reserved) so touch can be added in firmware later. The rotary encoder stays.
 - **v0.8** (2026-11-22): the printed label plate is replaced by a **2.8 in IPS TFT that shows the material name** on a colour band, with status below. Added cabinet name, label colour and idle brightness settings, the screen behaviour, a backup tag on the door rail, and updated the header layout, figures and renders.
 - **v0.7** (2026-11-22): CAD phase 1, fit-test coupons for the port thread and O-ring, PC4-M10 hole, rod cradle, index collar, tile joint, inserts and foam pocket. Walls are now 15.7 mm (2.4 mm skin + 1/2 in foam), so the outside is 531 × 442 (492) × 485 mm. The O-ring is now 22 × 2 mm. Index collars now slide on from the rod end.
 - **v0.6.1** (2026-11-22): added concept renders (front, stacked PLA + PETG pair, rear). No spec changes.

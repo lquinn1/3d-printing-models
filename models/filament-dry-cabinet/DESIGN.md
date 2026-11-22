@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.8)
+# Filament Dry Cabinet: Design Spec (v0.8.1)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -90,6 +90,7 @@ Renders are drawn from the spec dimensions (§3). The original inspiration image
   - the **encoder knob**
 - **The printed label plate is gone** (v0.8). The name is a setting, so changing what a cabinet holds needs no reprint.
 - **Backup tag:** a small printed tag (about 40 × 12 mm) clips into a slot at the left end of the door's bottom rail, so the cabinet is still identified when it's unplugged.
+- **Touch-ready (v0.8.1):** the BOM uses the **touchscreen version** of the 2.8 in module, so touch can be added in firmware later without changing hardware. The **encoder stays** as the main control. The bezel window must leave the whole touch surface open (no clear cover in front of the panel), with the panel front at most about 1.5 mm behind the bezel face so a finger reaches the edges.
 - **Display mount:** the panel sits behind a printed bezel with a 58.6 × 44.2 mm window, held by its four PCB holes on printed standoffs. Measure the exact module before the header CAD, since 2.8 in boards vary by a few mm.
 - **The tap pad has no metal over it**, and the plastic covering the antenna is no more than 2–3 mm thick. If the PN5180 module you buy doesn't fit behind a 60 mm header, the header grows by up to 10 mm. The cabinet would then be 504 mm (19.8 in) tall, still under 20 in.
 - The **slot numbers 1–6** are also moulded into the door's bottom rail, lined up with the columns.
@@ -171,7 +172,8 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Heater | logic-level N-MOSFET, low side | GPIO, `slow_pwm` (about 5 s period) |
 | Fan | 4-pin PWM | LEDC at 25 kHz, tach to `pulse_counter` |
 | LEDs | SK6812 RGBW, about 30 LEDs | `esp32_rmt_led_strip`, via a **74AHCT125** level shifter, 330 Ω series resistor and 1000 µF at the strip |
-| Display | **2.8 in IPS SPI TFT, 320 × 240** (ST7789 or ILI9341 IPS), no touch | SPI (shared with the PN5180, own CS) + **backlight on an LEDC PWM pin** via a small transistor |
+| Display | **2.8 in IPS SPI TFT, 320 × 240, with capacitive touch** (ST7789 or ILI9341 IPS panel + FT6336U touch controller) | SPI (shared with the PN5180, own CS) + **backlight on an LEDC PWM pin** via a small transistor |
+| Touch (wired now, firmware later) | FT6336U capacitive, on the **I2C bus** (shared with the sensors) + **INT and RST pins reserved**. A resistive XPT2046 board also works: it goes on SPI with its own CS + IRQ pin. | ESPHome `ft63x6` (or `xpt2046`) touchscreen, enabled in a later phase |
 | Local control | EC11 rotary encoder with push switch | `rotary_encoder` + GPIO |
 | Door | reed switch + magnet | GPIO (`binary_sensor`) |
 | Buzzer (optional) | piezo for alarms | GPIO / LEDC |
@@ -309,7 +311,7 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 - Logic-level MOSFET module (heater)
 - 24 V 4-pin PWM fan (60–80 mm)
 - SK6812 RGBW 5 V strip (60/m, 0.5 m), 74AHCT125, 330 Ω, 1000 µF
-- 2.8 in IPS SPI TFT, 320 × 240 (ST7789 or ILI9341 IPS), no touch; small NPN/N-MOSFET for backlight PWM
+- 2.8 in IPS SPI TFT, 320 × 240, **capacitive touch version** (FT6336U); small NPN/N-MOSFET for backlight PWM
 - EC11 encoder, reed switch + magnet
 - **PN5180 NFC module** (ISO 15693 + 14443A, SPI). Check the board size against the header (§4.4).
 - **Blank ICODE SLIX2 tags** for spools that don't ship with OpenPrintTag
@@ -326,7 +328,7 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 | Shelf height | 20 in shelves. **Keep the lift room**, and the cabinet is **19.5 in tall** after trimming the feet, cradles and top clearance. |
 | PTFE ports | **Yes, top and back, closable:** one port module design with PTFE, blank and cap versions (§4.6) |
 | Stacking | **Yes:** nesting feet and pockets, plus optional side links (§4.7) |
-| UI | **2.8 in IPS TFT + encoder** (v0.8). The screen is also the label; no printed plate. |
+| UI | **2.8 in IPS TFT + encoder** (v0.8). The screen is also the label; no printed plate. **Touchscreen module in the BOM, touch firmware later; the encoder stays** (v0.8.1). |
 | Mains | **120 V only** |
 | Shell material | **ABS or ASA** for all printed parts |
 | Heater | **150 W in every cabinet**, with the same PSU and parts. **PID with autotune** adjusts it for each cabinet. |
@@ -347,6 +349,7 @@ Still open (not blocking CAD):
 | 3b | **ESPHome PN5180 external component**: ISO 15693 inventory and read, plus OpenPrintTag payload. Tested on a bench board before it goes in the cabinet. |
 | 4 | Prototype: one cabinet. Test the fit, the heat-up and holding RH. |
 | 5 | Home Assistant and Spoolman: **NFC check-in/out automation** (find or create the spool, set Location), slot lighting, dashboards, desiccant alerts |
+| 6 (later) | **Touch UI:** enable the touch controller in ESPHome and add touch targets to the label page and menu (tap the label for details, tap a slot on the slot map). The encoder keeps working alongside it. |
 
 ## 12. CAD (phase 1: fit-test coupons)
 

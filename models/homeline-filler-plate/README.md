@@ -22,10 +22,8 @@ Snap-in plates that close empty breaker openings in a **Square D Homeline** load
 
 | File | Description |
 |------|-------------|
-| [`files/homeline_filler_plate_1pole_flat.stl`](files/homeline_filler_plate_1pole_flat.stl) / [`.step`](files/homeline_filler_plate_1pole_flat.step) | Single-pole, **prints face-down**, with break-away pins under the spring leaves |
-| [`files/homeline_filler_plate_2pole_flat.stl`](files/homeline_filler_plate_2pole_flat.stl) / [`.step`](files/homeline_filler_plate_2pole_flat.step) | Double-pole, **prints face-down**, with break-away pins under the spring leaves |
-| [`files/homeline_filler_plate_1pole_edge.stl`](files/homeline_filler_plate_1pole_edge.stl) / [`.step`](files/homeline_filler_plate_1pole_edge.step) | Single-pole, **prints on its long edge**, no supports needed |
-| [`files/homeline_filler_plate_2pole_edge.stl`](files/homeline_filler_plate_2pole_edge.stl) / [`.step`](files/homeline_filler_plate_2pole_edge.step) | Double-pole, **prints on its long edge**, no supports needed |
+| [`files/homeline_filler_plate_1pole.stl`](files/homeline_filler_plate_1pole.stl) / [`.step`](files/homeline_filler_plate_1pole.step) | Single-pole plate, 65 × 24.8 mm face |
+| [`files/homeline_filler_plate_2pole.stl`](files/homeline_filler_plate_2pole.stl) / [`.step`](files/homeline_filler_plate_2pole.step) | Double-pole plate, 65 × 49.8 mm face |
 | [`source/filler_plate.py`](source/filler_plate.py) | CadQuery script. All the measurements and latch settings are at the top. |
 
 ## Fit (measured on the HOM1224L125PGCVP cover)
@@ -46,21 +44,11 @@ Not printed yet. Suggested settings:
 
 | Setting | Value |
 |---------|-------|
-| Orientation | **`_flat` files: face down on the bed.** Gives the best-looking face. The break-away pins hold up the spring leaves (see below). **`_edge` files: stand the plate on its long edge.** No supports are needed, and the spring leaves flex in the layer plane, so this is the strongest option. |
+| Orientation | **Stand the plate on its long edge**, with the 65 mm × 16 mm side on the bed and the face vertical. The part is a single profile extruded through its height, so it needs no supports. The spring leaves flex in the layer plane, which is much stronger than flexing across the layers. |
 | Material | ABS / ASA / PC, preferably flame-retardant (V-0). **Not PLA.** It creeps and softens, and it's a poor choice inside an electrical enclosure. |
 | Walls | 3 or more, so the 1.2 mm leaves print as solid perimeters |
 | Infill | 100% (the part is almost all walls anyway) |
 | Layer height | 0.2 mm or finer |
-
-## Break-Away Supports (`_flat` files)
-
-![Break-away pins](images/breakaway.png)
-
-When the plate prints face-down, the free end of each spring leaf would start in mid-air, 0.6 mm above the face. **Small pins**, 0.8 mm square and 0.6 mm tall, tie the leaf to the face while it prints: 8 per leaf on the single-pole, 16 on the double-pole.
-
-**After printing:** push each spring leaf inward (toward the centre of the plate) with a small screwdriver, and the pins snap off. Trim any stubs flush with a knife so the leaf moves freely. Then check that both leaves flex easily before you fit the plate.
-
-**Trade-off:** face-down, the spring leaves bend across the layer lines, which is weaker than the `_edge` print. The 1.4% strain is fine for ASA, ABS or PETG with good layer adhesion. If a leaf cracks, switch to the `_edge` version.
 
 ## Installing
 
@@ -78,5 +66,4 @@ To remove a plate, take the cover off and squeeze the two spring leaves inward f
 
 ## Revision History
 
-- **v1.1** (2026-11-21): added `_flat` versions that print face-down, with break-away pins under the spring leaves. The original no-support files are now `_edge`.
 - **v1.0** (2026-11-21): first version, single- and double-pole.

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 #!/usr/bin/env python3
 """Rebuild the model index in the root README.md.
 

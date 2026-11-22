@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Multiboard LED light bar bracket (one part, use as many as you like).
 
 Wedge-shaped brackets that hold an aluminium LED channel (18 x 8.5 mm outer)

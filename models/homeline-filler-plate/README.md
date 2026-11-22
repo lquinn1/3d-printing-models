@@ -69,6 +69,10 @@ To remove a plate, take the cover off and squeeze the two spring leaves inward f
 - Other Homeline covers may have slightly different openings. Re-measure them and set `OPEN_W`, `SPACE_H` and `STEEL_T`.
 - Square D, Homeline and HOMFPCP are trademarks of Schneider Electric. This is an original design that was only inspired by the HOMFPCP.
 
+## License
+
+Repository default: model files and docs are [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (credit required, no commercial use, remixes keep the license). Code in `source/` is MIT. See the repository [`LICENSE`](../../LICENSE).
+
 ## Revision History
 
 - **v1.0** (2026-11-21): first version, single- and double-pole. Printed in PLA on edge with a brim and installed in the cover, where they snap in and fit well.

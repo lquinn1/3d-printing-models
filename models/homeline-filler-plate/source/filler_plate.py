@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """Snap-in filler plate for a Square D Homeline load center cover opening
 (single- and double-pole versions). Inspired by the Square D HOMFPCP.
 

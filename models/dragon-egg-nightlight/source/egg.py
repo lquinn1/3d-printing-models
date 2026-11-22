@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 import numpy as np, cadquery as cq, time, sys
 from OCP.BRepAlgoAPI import BRepAlgoAPI_Fuse, BRepAlgoAPI_Cut
 from OCP.TopTools import TopTools_ListOfShape

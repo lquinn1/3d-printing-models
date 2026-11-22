@@ -1,0 +1,48 @@
+Repository license: lquinn1/3d-printing-models
+Copyright (c) 2026 lquinn1
+
+Unless a model folder contains its own LICENSE.md, everything in this
+repository is licensed as follows.
+
+1. Models and documentation: CC BY-NC-SA 4.0
+
+   Printable models (STL, STEP, 3MF and other CAD/slicer files), READMEs,
+   design notes, drawings, photos and renders are licensed under the Creative
+   Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+   https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+   You may print, modify and share them with credit. Commercial use is not
+   allowed, including selling the files or printed parts. Remixes must use the
+   same license.
+
+2. Code: MIT
+
+   Scripts and source code (for example the Python in each model's source/
+   or cad/ folder, and scripts/ at the repository root) are licensed under
+   the MIT License:
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to
+   deal in the Software without restriction, including without limitation the
+   rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+   sell copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+   IN THE SOFTWARE.
+
+3. Exceptions
+
+   - A model folder with its own LICENSE.md uses that license instead (for
+     example, remixes that must keep the original creator's license).
+   - Third-party material credited in a model's README (vendor drawings,
+     linked models, product photos and trademarks) belongs to its owners and
+     is not covered by this license.

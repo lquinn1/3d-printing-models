@@ -130,6 +130,10 @@ Printed with the same filament and settings as the socket deck: SunLu HighSpeed 
 3. Put the bulb in the socket.
 4. Drop the egg's skirt into the collar on the base.
 
+## License
+
+Repository default: model files and docs are [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (credit required, no commercial use, remixes keep the license). Code in `source/` is MIT. See the repository [`LICENSE`](../../LICENSE).
+
 ## Revision History
 
 - **v10** (2026-11-19): crush ribs on the deck set to 37.00 mm, the size chosen with the fit coupon. Base and deck (ABS) and egg (rainbow translucent PLA) printed and tested on 2026-11-20. The lamp is assembled and working.

@@ -73,4 +73,13 @@ scripts/
 
 ## License
 
-TBD — add a `LICENSE` file (e.g. CC BY 4.0 or CC BY-NC 4.0 are common for printable models).
+Unless a model folder has its own `LICENSE.md`:
+
+- **Models and docs** (STL/STEP/3MF, READMEs, drawings, photos): [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Free to print, modify and share with credit, **no commercial use**, and remixes keep the same license.
+- **Code** (scripts in each model's `source/` or `cad/` folder, and `scripts/`): **MIT**.
+
+Models with their own license:
+- **BBQ Probe Spool Stand:** CC BY-SA 4.0, as required by the original it remixes (commercial use allowed with credit).
+- **Filament Dry Cabinet:** same split as the default, with its vendor reference files excluded.
+
+See [`LICENSE`](LICENSE).

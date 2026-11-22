@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 """High-resolution STL of the dragon egg, built directly as a mesh (same heightfield as egg.py)."""
 import numpy as np, importlib.util, sys, time
 import manifold3d as mf

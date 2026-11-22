@@ -51,4 +51,4 @@ One or two sentences on what this model is and why it exists.
 
 ## License
 
-Same as repository license unless stated otherwise.
+Repository default: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) for the model files and docs, MIT for code in `source/`. If this is a remix, add a `LICENSE.md` with the original's license and credit instead.

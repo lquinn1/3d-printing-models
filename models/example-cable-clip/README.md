@@ -42,3 +42,8 @@ None. Print-only part.
 ## Notes & Revision History
 
 - **v1.0** — Initial example.
+
+## License
+
+Repository default: model files and docs are [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (credit required, no commercial use, remixes keep the license). Code in `source/` is MIT. See the repository [`LICENSE`](../../LICENSE).
+

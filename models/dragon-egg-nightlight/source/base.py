@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 import cadquery as cq, math
 
 R_SKIRT = 43.808          # egg skirt outer radius (from egg.py)

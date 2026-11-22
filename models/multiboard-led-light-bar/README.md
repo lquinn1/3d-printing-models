@@ -78,6 +78,12 @@ Printed and tested. The bracket fits the channel and works well. These are the s
 - The opening has 0.1 mm of clearance per side. **Tested in PLA, it fits the channel perfectly.** The first print used 0.2 mm, which worked but was a little loose. To stop the bar from sliding sideways, add a drop of glue or a wrap of tape on the channel at one bracket. If the channel is too tight, change `CLR` in the script.
 - Multiboard is a trademark of its creator. These brackets are an original design made to fit the Multiboard push-fit system. Selling printed Multiboard parts may need Multiboard's commercial license.
 
+## License
+
+Repository default: model files and docs are [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (credit required, no commercial use, remixes keep the license). Code in `source/` is MIT. See the repository [`LICENSE`](../../LICENSE).
+
+Multiboard is a trademark of its creator and isn't covered by this license.
+
 ## Revision History
 
 - **v1.3** (2026-11-21): the side faces now have a honeycomb of through-hexagons instead of being solid. The channel fit (0.1 mm) is unchanged. Printed and tested: the hexagons came out clean, the channel still fits well, and the bracket is plenty strong.

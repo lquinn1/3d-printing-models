@@ -1,7 +1,7 @@
 ---
 title: Remote Control Wall Holder
 category: Organization
-status: Draft
+status: Working
 material: PLA or PETG
 printer: Any FDM
 tags: [remote, wall-mount, holder, slide-in, led-remote, drywall]
@@ -10,7 +10,9 @@ summary: Slide-in wall cradle for a slim 151 x 38 x 13 mm LED-light remote. Scre
 
 # Remote Control Wall Holder
 
-![Preview](images/preview.png)
+| Installed | Render |
+|---|---|
+| ![Installed next to the light switch](images/photo_installed.png) | ![Preview](images/preview.png) |
 
 A wall-mounted cradle for the white ON / OFF / Bright / Warm / Cool / CCT / RGB / RGB IC LED-light remote. The remote drops in from the top with its buttons facing out and rests on a floor. Front lips along both sides and a solid band across the bottom hold it snugly against the wall. To use it, lift it straight up and out. Two countersunk holes in the back take drywall screws.
 
@@ -71,7 +73,7 @@ A wall-mounted cradle for the white ON / OFF / Bright / Warm / Cool / CCT / RGB 
 
 ## Revision History
 
-- **v1.0** (2026-11-22): initial version, sized from caliper measurements. Not yet printed.
+- **v1.0** (2026-11-22): initial version, sized from caliper measurements. Printed and installed next to the light switch; the remote fits snugly and lifts out cleanly.
 
 ## License
 

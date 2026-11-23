@@ -37,7 +37,7 @@ A collection of 3D printable models — source files, print-ready files, and pri
 | Model | Description | Material | Status | Tags |
 |-------|-------------|----------|--------|------|
 | [Example Cable Clip](models/example-cable-clip/README.md) | Placeholder model showing the README format. Delete once you add real models. | PETG | Example | `example` `cable-management` |
-| [Remote Control Wall Holder](models/remote-wall-holder/README.md) | Slide-in wall cradle for a slim 151 x 38 x 13 mm LED-light remote. Screws to the wall; the remote lifts straight up and out. | PLA or PETG | Draft | `remote` `wall-mount` `holder` `slide-in` `led-remote` `drywall` |
+| [Remote Control Wall Holder](models/remote-wall-holder/README.md) | Slide-in wall cradle for a slim 151 x 38 x 13 mm LED-light remote. Screws to the wall; the remote lifts straight up and out. | PLA or PETG | Working | `remote` `wall-mount` `holder` `slide-in` `led-remote` `drywall` |
 
 ### Storage
 

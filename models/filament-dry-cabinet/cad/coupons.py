@@ -170,8 +170,9 @@ def tile_joint(side):
         for x in bx:
             m -= _ybar_hole(x, zc_b, BOLT_CLEAR_D/2, -1, RIB+1)
     else:
-        g = GROOVE_CLR*math.sqrt(2)
-        prof = mf.CrossSection([[(-0.3, zc_t-half-g), (hgt+GROOVE_CLR, zc_t), (-0.3, zc_t+half+g)]])
+        # true offset of the 45 deg V tongue: every flank is GROOVE_CLR away (tip moves c*sqrt2)
+        g = GROOVE_CLR*math.sqrt(2); e = 0.3
+        prof = mf.CrossSection([[(-e, zc_t-half-g-e), (hgt+g, zc_t), (-e, zc_t+half+g+e)]])
         m -= _xbar(prof, LX+2)
         for x in bx:
             m -= _ybar_hole(x, zc_b, INSERT_HOLE_D/2, -1, INSERT_DEPTH)

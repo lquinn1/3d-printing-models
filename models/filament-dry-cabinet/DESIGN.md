@@ -414,5 +414,15 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 
 **Rebuild:** `python3 cad/coupons.py` writes the STLs to `cad/stl/`; `python3 cad/preview.py` redraws the two images.
 
+**Results (ABS, 2026-11-23):**
+
+| Item | Result | Setting now |
+|---|---|---|
+| Port socket | **0.25 mm** clearance is the fit | `PORT_CLR_SEL = 0.25` |
+| Tile joint | Aligned well, but loose | The v0.7 groove wasn't a true offset of the V tongue (gap about 0 at the face, about 0.2 mm at the tip). It's now an even **0.05 mm on each flank** (±0.07 mm vertical play). **Reprint `tile_joint_b`** to confirm. |
+| Foam | 0.5 in, as specified | unchanged (13.3 mm pocket) |
+| PVC | 1.05 in measured OD, same as nominal | unchanged (26.67 mm) |
+| Inserts, PC4-M10, O-ring, cradle, collar | not reported yet | unchanged |
+
 **Next in CAD:** the tile set (side, top, bottom and back tiles, corner posts) generated from `params.py`, then the front frame and header, the door, and the rear pod.
 

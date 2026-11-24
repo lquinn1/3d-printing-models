@@ -12,7 +12,7 @@ IN = 25.4
 
 # ---------------------------------------------------------------- shell / wall
 SKIN = 2.4                  # outer printed skin of a tile (6 perimeters-ish at 0.4)
-FOAM = 0.5 * IN             # 1/2 in XPS board (measure yours)            FIT
+FOAM = 0.5 * IN             # 1/2 in XPS board: measured 0.5 in       TESTED
 FOAM_CLR = 0.6              # pocket depth allowance over the foam board
 WALL = SKIN + FOAM + FOAM_CLR          # = 15.7 mm (spec said 20; derived now)
 assert abs(WALL - L.WALL) < 0.05, "update WALL in source/layout.py too"
@@ -21,7 +21,7 @@ TILE_MAX = 330.0            # bed limit (Voron 2.4 350) with margin
 
 # tongue and groove on mating rib faces
 TONGUE_W, TONGUE_H = 1.6, 1.6           # width (across rib), height (protrusion)
-GROOVE_CLR = 0.2                        # each side                    FIT
+GROOVE_CLR = 0.05                       # uniform gap on each V flank; retest   FIT
 
 # M4 heat-set inserts + bolts across tile seams
 INSERT_HOLE_D = 5.6         # typical M4 x 8.1 insert (CNC Kitchen / Ruthex) FIT
@@ -31,7 +31,7 @@ BOLT_HEAD_D, BOLT_HEAD_H = 7.4, 4.2     # M4 socket head + clearance
 BOSS = 11.0                 # square boss around an insert
 
 # ---------------------------------------------------------------- rods
-ROD_OD = L.ROD_OD           # 26.67 nominal 3/4 in Sch 40 (measure yours)  FIT
+ROD_OD = L.ROD_OD           # 26.67: measured 1.05 in, matches nominal   TESTED
 CRADLE_CLR = 0.6            # radial clearance so the rod turns freely     FIT
 COLLAR_GRIP = 0.35          # collar ID = ROD_OD - 2*grip (snaps on)       FIT
 COLLAR_OD = 46.0            # stands 9.7 mm proud of the rod: keeps flanges apart
@@ -42,7 +42,7 @@ SLOT_PITCH = L.PITCH
 PORT_D = 20.0               # nominal thread major diameter (M20 x 2 style)
 PORT_P = 2.0
 PORT_CLR = (0.15, 0.25, 0.35)   # radial clearances tested by the coupon FIT
-PORT_CLR_SEL = 0.25         # value used in the real parts until tested
+PORT_CLR_SEL = 0.25         # chosen from the coupon (ABS)              TESTED
 SOCKET_LEN = WALL           # socket sleeve runs right through the wall
 SOCKET_OD = 30.0
 SHANK_LEN = 14.0            # module thread length (shorter than the socket)

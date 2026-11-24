@@ -64,6 +64,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.9.2** (2026-11-23): first fit-test results in ABS: port socket clearance 0.25 mm chosen, tile groove fixed to an even 0.05 mm offset of the V tongue (reprint `tile_joint_b` to confirm), foam (0.5 in) and PVC (1.05 in OD) confirmed.
 - **v0.9.1** (2026-11-22): display chosen: **3.5 in IPS 480 × 320 SPI TFT with FT6336U capacitive touch** (Haldzemo, 98 × 55.5 mm board). It still fits the 68 mm header. Mounting, bezel window, pinout and wiring notes are in DESIGN §6.6, and the vendor drawing and pinout are in `docs/`.
 - **v0.9** (2026-11-22): display changed to a **3.2 in IPS capacitive touch TFT** (FT6336U boards are mostly 3.2 in). The header grows from 60 to 68 mm to fit it, so the cabinet is 494 mm (19.4 in) tall, 484 mm per cabinet when stacked. Figures and renders updated.
 - **v0.8.1** (2026-11-22): the BOM uses the **capacitive touchscreen** version of the 2.8 in display (FT6336U on I2C, INT/RST pins reserved) so touch can be added in firmware later. The rotary encoder stays.

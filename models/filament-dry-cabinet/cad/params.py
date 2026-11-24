@@ -53,7 +53,11 @@ FLANGE_H_MODULE = 9.0       # deep enough for the PC4-M10 thread
 # (The v0.6 spec said 16 x 2, but a 16 mm ID ring can't go round an M20 thread.)
 ORING_ID, ORING_CS = 22.0, 2.0
 GROOVE_DEPTH = 1.5          # ~25 % squeeze
-GROOVE_W = 2.7
+# v0.10.1: the 22.0 ID x 2.7 wide groove held the ring too loosely (tested). The ring now
+# stretches ~3 % onto the groove's inner wall so it stays put, and the groove is only
+# 0.5 mm wider than the cord (fill = ring area / groove area ~ 84 %).
+GROOVE_ID = 22.6                                                          # TESTED (v1 loose)
+GROOVE_W = 2.5
 PC4_HOLE_D = 9.0            # PC4-M10 couplers self-thread into ~9 mm in ABS FIT
 PC4_HOLE_DEPTH = 8.0
 PTFE_BORE = 4.4             # 4 mm OD PTFE guide tube passes through

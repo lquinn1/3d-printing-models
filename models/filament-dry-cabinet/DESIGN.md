@@ -422,7 +422,8 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 | Tile joint | Aligned well, but loose | The v0.7 groove wasn't a true offset of the V tongue (gap about 0 at the face, about 0.2 mm at the tip). It's now an even **0.05 mm on each flank** (±0.07 mm vertical play). **Reprint `tile_joint_b`** to confirm. |
 | Foam | 0.5 in, as specified | unchanged (13.3 mm pocket) |
 | PVC | 1.05 in measured OD, same as nominal | unchanged (26.67 mm) |
-| Inserts, PC4-M10, O-ring, cradle, collar | not reported yet | unchanged |
+| O-ring | 22 × 2 ring fits, but sat **very loose** in the groove (22.0 ID × 2.7 wide) | Groove now **22.6 ID × 2.5 wide × 1.5 deep**: the ring stretches about 3 % onto the inner wall so it stays put, with 84 % groove fill and 25 % squeeze. Plug and PTFE module regenerated; thread fit rechecked. |
+| Inserts, PC4-M10, cradle, collar | not reported yet | unchanged |
 
 **Next in CAD:** the front frame and header (screen bezel, NFC pad, encoder), the door, and the rear pod.
 

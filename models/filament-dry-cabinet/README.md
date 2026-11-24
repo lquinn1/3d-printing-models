@@ -64,6 +64,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.10.1** (2026-11-24): O-ring groove on the port modules tightened (22.6 ID × 2.5 wide, was 22.0 × 2.7) after the test ring sat loose. The ring now stretches onto the groove's inner wall.
 - **v0.10** (2026-11-23): CAD phase 2, the full shell: 20 tiles (all ≤ 299 × 226 mm) with port sockets, stacking pockets, cradle, pod and foot inserts, plus 4 feet and 8 rod cradles. Top and bottom span the full width so the walls carry the load. Assembly verified in CAD (no overlaps, every bolt station clear, rods and stacking fit). Parts list, hardware, foam sizes and assembly order are in DESIGN §13.
 - **v0.9.2** (2026-11-23): first fit-test results in ABS: port socket clearance 0.25 mm chosen, tile groove fixed to an even 0.05 mm offset of the V tongue (reprint `tile_joint_b` to confirm), foam (0.5 in) and PVC (1.05 in OD) confirmed.
 - **v0.9.1** (2026-11-22): display chosen: **3.5 in IPS 480 × 320 SPI TFT with FT6336U capacitive touch** (Haldzemo, 98 × 55.5 mm board). It still fits the 68 mm header. Mounting, bezel window, pinout and wiring notes are in DESIGN §6.6, and the vendor drawing and pinout are in `docs/`.

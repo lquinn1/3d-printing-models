@@ -96,7 +96,7 @@ def port_module(kind):
     fh = FLANGE_H_PLUG if kind == 'plug' else FLANGE_H_MODULE
     body = hex_flange(fh)
     # O-ring face groove on the top of the flange (the face that seats against the wall)
-    gi = ORING_ID/2; go = gi + GROOVE_W
+    gi = GROOVE_ID/2; go = gi + GROOVE_W
     body = body.cut(cq.Workplane().workplane(offset=fh-GROOVE_DEPTH).circle(go).circle(gi).extrude(GROOVE_DEPTH+1))
     m = cq_to_mf(body.val())
     # threaded shank with a 1 mm chamfer at the tip

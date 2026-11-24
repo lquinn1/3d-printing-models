@@ -1,0 +1,282 @@
+[
+ {
+  "name": "side_left_front_lower",
+  "size": [
+   115.0,
+   226.0
+  ],
+  "edges": {
+   "umin": "FRONT",
+   "umax": "TG_B",
+   "vmin": "BUTT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 134.4
+ },
+ {
+  "name": "side_left_front_upper",
+  "size": [
+   115.0,
+   226.0
+  ],
+  "edges": {
+   "umin": "FRONT",
+   "umax": "TG_B",
+   "vmin": "TG_A",
+   "vmax": "BUTT"
+  },
+  "volume_cm3": 128.0
+ },
+ {
+  "name": "side_left_rear_lower",
+  "size": [
+   299.4,
+   226.0
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "LAND",
+   "vmin": "BUTT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 308.6
+ },
+ {
+  "name": "side_left_rear_upper",
+  "size": [
+   299.4,
+   226.0
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "LAND",
+   "vmin": "TG_A",
+   "vmax": "BUTT"
+  },
+  "volume_cm3": 275.3
+ },
+ {
+  "name": "side_right_rear_lower",
+  "size": [
+   299.4,
+   226.0
+  ],
+  "edges": {
+   "umin": "LAND",
+   "umax": "TG_B",
+   "vmin": "BUTT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 310.9
+ },
+ {
+  "name": "side_right_rear_upper",
+  "size": [
+   299.4,
+   226.0
+  ],
+  "edges": {
+   "umin": "LAND",
+   "umax": "TG_B",
+   "vmin": "TG_A",
+   "vmax": "BUTT"
+  },
+  "volume_cm3": 277.5
+ },
+ {
+  "name": "side_right_front_lower",
+  "size": [
+   115.0,
+   226.0
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "FRONT",
+   "vmin": "BUTT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 132.1
+ },
+ {
+  "name": "side_right_front_upper",
+  "size": [
+   115.0,
+   226.0
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "FRONT",
+   "vmin": "TG_A",
+   "vmax": "BUTT"
+  },
+  "volume_cm3": 125.7
+ },
+ {
+  "name": "top_left_rear",
+  "size": [
+   265.7,
+   215.4
+  ],
+  "edges": {
+   "umin": "LAND",
+   "umax": "TG_B",
+   "vmin": "LAND",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 334.3
+ },
+ {
+  "name": "top_left_front",
+  "size": [
+   265.7,
+   199.0
+  ],
+  "edges": {
+   "umin": "LAND",
+   "umax": "TG_B",
+   "vmin": "TG_A",
+   "vmax": "FRONT"
+  },
+  "volume_cm3": 288.2
+ },
+ {
+  "name": "top_right_rear",
+  "size": [
+   265.7,
+   215.4
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "LAND",
+   "vmin": "LAND",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 332.0
+ },
+ {
+  "name": "top_right_front",
+  "size": [
+   265.7,
+   199.0
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "LAND",
+   "vmin": "TG_A",
+   "vmax": "FRONT"
+  },
+  "volume_cm3": 286.6
+ },
+ {
+  "name": "bottom_left_front",
+  "size": [
+   265.7,
+   199.0
+  ],
+  "edges": {
+   "umin": "LAND",
+   "umax": "TG_B",
+   "vmin": "FRONT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 278.2
+ },
+ {
+  "name": "bottom_left_rear",
+  "size": [
+   265.7,
+   215.4
+  ],
+  "edges": {
+   "umin": "LAND",
+   "umax": "TG_B",
+   "vmin": "TG_A",
+   "vmax": "LAND"
+  },
+  "volume_cm3": 319.8
+ },
+ {
+  "name": "bottom_right_front",
+  "size": [
+   265.7,
+   199.0
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "LAND",
+   "vmin": "FRONT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 276.6
+ },
+ {
+  "name": "bottom_right_rear",
+  "size": [
+   265.7,
+   215.4
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "LAND",
+   "vmin": "TG_A",
+   "vmax": "LAND"
+  },
+  "volume_cm3": 317.5
+ },
+ {
+  "name": "back_left_lower",
+  "size": [
+   250.0,
+   270.0
+  ],
+  "edges": {
+   "umin": "BUTT",
+   "umax": "TG_B",
+   "vmin": "BUTT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 251.3
+ },
+ {
+  "name": "back_left_upper",
+  "size": [
+   250.0,
+   182.1
+  ],
+  "edges": {
+   "umin": "BUTT",
+   "umax": "TG_B",
+   "vmin": "TG_A",
+   "vmax": "BUTT"
+  },
+  "volume_cm3": 195.2
+ },
+ {
+  "name": "back_right_lower",
+  "size": [
+   250.0,
+   270.0
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "BUTT",
+   "vmin": "BUTT",
+   "vmax": "TG_B"
+  },
+  "volume_cm3": 244.5
+ },
+ {
+  "name": "back_right_upper",
+  "size": [
+   250.0,
+   182.1
+  ],
+  "edges": {
+   "umin": "TG_A",
+   "umax": "BUTT",
+   "vmin": "TG_A",
+   "vmax": "BUTT"
+  },
+  "volume_cm3": 193.6
+ }
+]

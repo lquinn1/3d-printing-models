@@ -66,10 +66,10 @@ def thread_solid(d_major, pitch, z0, z1, grow=0.0, n=128, dz=0.05):
     top = np.stack([np.full(n, ct), idx[-1, :], idx[-1, (np.arange(n)+1) % n]], -1)
     return to_mf(V, np.vstack([F, bot, top]))
 
-def socket_cut(z0, z1, clr):
+def socket_cut(z0, z1, clr, n=128, dz=0.05):
     """Internal thread cutter plus 0.5 mm lead-in countersinks at both ends."""
     r = PORT_D/2 + clr
-    cut = thread_solid(PORT_D, PORT_P, z0-1, z1+1, grow=clr)
+    cut = thread_solid(PORT_D, PORT_P, z0-1, z1+1, grow=clr, n=n, dz=dz)
     cut += cyl(r+0.5+1, z0-1, z0+0.5, r1=r)          # bottom countersink (45 deg)
     cut += cyl(r, z1-0.5, z1+1, r1=r+1.5)            # top countersink
     return cut

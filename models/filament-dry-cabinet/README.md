@@ -14,7 +14,7 @@ summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one pe
 
 A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.4 in deep and 19.4 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
 
-**Status: CAD phase 1. Fit-test coupons are ready to print** (DESIGN.md §12). See **[DESIGN.md](DESIGN.md)** for the full spec.
+**Status: CAD phase 2. The 20 shell tiles, feet and rod cradles are ready** (DESIGN.md §13), and the fit-test coupons are in §12. The front frame, door and rear pod are next. See **[DESIGN.md](DESIGN.md)** for the full spec.
 
 ![Two cabinets stacked (PLA under PETG)](images/render_stack.jpg)
 
@@ -46,7 +46,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 | File | Description |
 |------|-------------|
-| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `preview.py`; STLs in `cad/stl/` |
+| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `verify.py` (assembly checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
 | [`DESIGN.md`](DESIGN.md) | Full design spec: requirements, layout options, construction, drying, electronics, ESPHome entities, Spoolman scheme, parts list, open questions |
 | [`images/render_front.jpg`](images/render_front.jpg), [`render_stack.jpg`](images/render_stack.jpg), [`render_rear.jpg`](images/render_rear.jpg) | Concept renders (front, stacked pair, rear) |
 | [`images/wiring.png`](images/wiring.png) | Electrical block diagram |
@@ -64,6 +64,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.10** (2026-11-23): CAD phase 2, the full shell: 20 tiles (all ≤ 299 × 226 mm) with port sockets, stacking pockets, cradle, pod and foot inserts, plus 4 feet and 8 rod cradles. Top and bottom span the full width so the walls carry the load. Assembly verified in CAD (no overlaps, every bolt station clear, rods and stacking fit). Parts list, hardware, foam sizes and assembly order are in DESIGN §13.
 - **v0.9.2** (2026-11-23): first fit-test results in ABS: port socket clearance 0.25 mm chosen, tile groove fixed to an even 0.05 mm offset of the V tongue (reprint `tile_joint_b` to confirm), foam (0.5 in) and PVC (1.05 in OD) confirmed.
 - **v0.9.1** (2026-11-22): display chosen: **3.5 in IPS 480 × 320 SPI TFT with FT6336U capacitive touch** (Haldzemo, 98 × 55.5 mm board). It still fits the 68 mm header. Mounting, bezel window, pinout and wiring notes are in DESIGN §6.6, and the vendor drawing and pinout are in `docs/`.
 - **v0.9** (2026-11-22): display changed to a **3.2 in IPS capacitive touch TFT** (FT6336U boards are mostly 3.2 in). The header grows from 60 to 68 mm to fit it, so the cabinet is 494 mm (19.4 in) tall, 484 mm per cabinet when stacked. Figures and renders updated.

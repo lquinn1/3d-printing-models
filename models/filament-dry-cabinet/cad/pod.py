@@ -3,7 +3,7 @@
 
 Holds the IEC C14 fused/switched inlet (snap-in, right side wall), the Mean Well LRS-200-24
 (on rails, two clamp bars), and two drillable carrier plates for the ESP32-S3 DevKitC, the
-24->5 V buck, MOSFET/level-shifter board and terminal blocks. Low-voltage wires go into the
+24->5 V Mean Well SD-15B-5, MOSFET/level-shifter board and terminal blocks. Low-voltage wires go into the
 chamber through the gland module in the back tile's 13th socket, which the pod surrounds.
 Mains never leaves the pod.
 """
@@ -29,6 +29,12 @@ IEC_C = (PY0 + 25.0, PZ0 + 184.0)          # (y, z) centre on the right wall
 CARRIERS = {'carrier_main': (PX0 + 100, PX0 + 280, PZ0 + 145, PZ0 + 214),
             'carrier_left': (PX0 + 8, PX0 + 93, PZ0 + 15, PZ0 + 105)}
 CARRIER_STANDOFF = 8.0
+# 5 V supply: Mean Well SD-15B-5 (18-36 V in, 5 V 3 A), 78 x 51 x 28 mm case, terminals on one 51 mm end.
+# Stands on carrier_left with its terminals up (toward carrier_main); four corner stops locate it and
+# two M3 x 6 screws go up into the case's own M3 holes (drill the carrier where they land).
+BUCK_SZ = (51.0, 28.0, 78.0)               # x, y (height off the carrier), z
+_cx0, _cx1, _cz0, _cz1 = CARRIERS['carrier_left']
+BUCK = dict(x0=(_cx0 + _cx1)/2 - BUCK_SZ[0]/2, z0=(_cz0 + _cz1)/2 - BUCK_SZ[2]/2)
 
 def pod_base():
     m = box(PX0, PX1, PY0, PY0 + PW, PZ0, PZ1)                                 # back plate
@@ -121,7 +127,19 @@ def carrier(name):
     for x in np.arange(x0 + 15, x1 - 10, 10.0):
         for z in np.arange(z0 + 12, z1 - 8, 10.0):
             m -= cyl_y(x, z, -1, 4, 1.25, n=12)
+    if name == 'carrier_left':                 # corner stops for the SD-15B-5 (0.5 mm clearance)
+        bx0, bz0 = BUCK['x0'] - 0.5, BUCK['z0'] - 0.5
+        bx1, bz1 = bx0 + BUCK_SZ[0] + 1.0, bz0 + BUCK_SZ[2] + 1.0
+        for cx, sx in ((bx0, -1), (bx1, 1)):
+            for cz, sz in ((bz0, -1), (bz1, 1)):
+                xa, xb = sorted((cx, cx + sx*2.0)); za, zb = sorted((cz, cz + sz*2.0))
+                m += box(min(xa, cx - sx*10), max(xb, cx - sx*10), 2.99, 6.0, za, zb)    # leg along x
+                m += box(xa, xb, 2.99, 6.0, min(za, cz - sz*10), max(zb, cz - sz*10))    # leg along z
     return m.translate((0, PY0 + PW + CARRIER_STANDOFF, 0))
+
+def buck_envelope():
+    y0 = PY0 + PW + CARRIER_STANDOFF + 3.0
+    return box(BUCK['x0'], BUCK['x0'] + BUCK_SZ[0], y0, y0 + BUCK_SZ[1], BUCK['z0'], BUCK['z0'] + BUCK_SZ[2])
 
 def parts_world():
     return {'pod_base': pod_base(), 'pod_cover': pod_cover(),
@@ -141,7 +159,8 @@ def check():
     yc, zc = IEC_C
     iec = box(PX1 - IEC_PANEL - 45, PX1 - IEC_PANEL, yc - 15, yc + 15, zc - 25, zc + 25)
     glandm = [port_module('gland').transform(np.array([[1, 0, 0, gx], [0, 0, -1, Y1], [0, 1, 0, gz]], float)) for gx, gz in GLANDS]
-    for n, env in (('PSU 215x115x30', psu), ('IEC inlet body (45 deep)', iec), ('gland module 1', glandm[0]), ('gland module 2', glandm[1])):
+    print(f'SD-15B-5 top y {PY0 + PW + CARRIER_STANDOFF + 3 + BUCK_SZ[1]:.1f}, cover inner face y {COV:.1f}')
+    for n, env in (('PSU 215x115x30', psu), ('SD-15B-5 5 V supply', buck_envelope()), ('IEC inlet body (45 deep)', iec), ('gland module 1', glandm[0]), ('gland module 2', glandm[1])):
         print(f'{n:26s} clashes with pod parts: {(env ^ solid).volume():.3f} mm3')
     blocked = sum((mf.Manifold.sphere(1.0, 16).translate((x, Y1 + 1.5, z)) ^ solid).volume() > 1e-4 for x, z in POD_PTS)
     print(f'pod bolt holes blocked: {blocked} of {len(POD_PTS)}')

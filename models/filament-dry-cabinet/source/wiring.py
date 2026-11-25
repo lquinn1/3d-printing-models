@@ -20,10 +20,10 @@ WIRES = [
     ('W3', 'IEC inlet earth', 'PSU FG (earth)', 'protective earth', '18 AWG UL1015', 'green', '0.3 m', 'pod (mains side)', 'Ferrules. Mains stays on this side, zip-tied to the left-wall anchors'),
     ('W4', 'PSU +V', 'Controller J1-1', '+24 V', '18 AWG silicone', 'red', '0.25 m', 'pod', 'Ferrules. The board fuse (F1, 10 A) is on this feed'),
     ('W5', 'PSU −V', 'Controller J1-2', 'GND', '18 AWG silicone', 'black', '0.25 m', 'pod', 'Ferrules'),
-    ('W6', 'Controller J5-1', 'Buck VIN', '+24 V', '20 AWG silicone', 'red', '0.15 m', 'pod', 'Buck on carrier_left'),
-    ('W7', 'Controller J5-2', 'Buck GND (input side)', 'GND', '20 AWG silicone', 'black', '0.15 m', 'pod', ''),
-    ('W8', 'Buck VOUT', 'Controller J5-3', '+5 V', '20 AWG silicone', 'red, marked "5V"', '0.15 m', 'pod', 'Mark it with a band of tape: it is not 24 V'),
-    ('W9', 'Buck GND (output side)', 'Controller J5-4', 'GND', '20 AWG silicone', 'black', '0.15 m', 'pod', ''),
+    ('W6', 'Controller J5-1', 'SD-15 +Vin (pin 4)', '+24 V', '20 AWG silicone', 'red', '0.15 m', 'pod', 'SD-15B-5 on carrier_left; leave FG (pin 3) unconnected'),
+    ('W7', 'Controller J5-2', 'SD-15 -Vin (pin 5)', 'GND', '20 AWG silicone', 'black', '0.15 m', 'pod', ''),
+    ('W8', 'SD-15 +V out (pin 1)', 'Controller J5-3', '+5 V', '20 AWG silicone', 'red, marked "5V"', '0.15 m', 'pod', 'Mark it with a band of tape: it is not 24 V'),
+    ('W9', 'SD-15 -V out (pin 2)', 'Controller J5-4', 'GND', '20 AWG silicone', 'black', '0.15 m', 'pod', ''),
     ('W10', 'Controller J2-1', 'TCO, then heater lead A', 'HTR+ (switched 24 V)', '18 AWG silicone', 'red', '0.8 m', 'gland 1, back wall, plenum', 'Join the TCO with crimp butt splices + heat-shrink, never solder (heat trips it). TCO at the duct outlet'),
     ('W11', 'Heater lead B', 'Controller J2-2', 'HTR− (to MOSFET)', '18 AWG silicone', 'black', '0.8 m', 'gland 1', 'Carries 6.3 A: keep W10/W11 18 AWG'),
     ('W12', 'Controller J3-1', 'KSD301 tab 1', '+24 V to the relay coil', '20 AWG silicone', 'red', '0.8 m', 'gland 1', '6.3 mm insulated female quick-connects (high-temp)'),
@@ -75,7 +75,7 @@ def draw():
     # --- pod
     box(5, 98, 18, 14, 'IEC C14 inlet', 'switch + T3.15 A fuse\nright side wall', fc='#fff5f5', ec=C['mains'])
     box(32, 96, 28, 18, 'PSU LRS-200-24', '24 V 8.8 A\nterminals: L N FG  +V −V', fc='#fff4e6', ec=C['v24'])
-    box(5, 70, 20, 16, 'Buck 24 → 5 V', 'Pololu D36V50F5\non carrier_left', fc='#fff9db', ec=C['v5'])
+    box(5, 70, 20, 16, '5 V supply 24 → 5 V', 'Mean Well SD-15B-5\non carrier_left', fc='#fff9db', ec=C['v5'])
     box(8, 8, 46, 52, 'Controller PCB (DCC-MAIN)', 'ESP32-S3 DevKitC-1, relay, MOSFET,\nfuses, fan driver\non carrier_main', fc='#ebfbee', ec='#2b8a3e')
     for i, (a, b, c, t) in enumerate((('L', 'L', C['mains'], 'W1'), ('N', 'N', C['mains'], 'W2'), ('PE', 'FG', '#2f9e44', 'W3'))):
         y = 108 - 3.2 * i

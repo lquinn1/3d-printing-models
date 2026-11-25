@@ -96,7 +96,7 @@ MAIN = [
     ('Q3', 'TO92', '2N3904', 124, 35, 0, {'1': 'GND', '2': 'Q3_B', '3': 'FAN_OC'}, 'onsemi 2N3904BU'),
     ('R7', 'R', '4k7', 136, 26, 0, {'1': 'FAN_PWM', '2': 'Q3_B'}, 'Yageo CFR-25JB-52-4K7'),
     ('R8', 'R', '10k', 136, 29, 0, {'1': 'FAN_PWM', '2': 'GND'}, 'Yageo CFR-25JB-52-10K'),
-    # 5 V: buck module off-board (on carrier_left), back in here
+    # 5 V: Mean Well SD-15B-5 off-board (on carrier_left), back in here
     ('J5', 'TB508_4', 'BUCK 24V/5V', 68, 53, 0, {'1': '+24V', '2': 'GND', '3': '+5V', '4': 'GND'}, 'Phoenix 1935187'),
     ('C3', 'CP6', '100uF 10V', 78, 40, 0, {'1': '+5V', '2': 'GND'}, 'Panasonic EEU-FR1A101'),
     ('D2', 'DO41', '1N5819', 94, 24, 0, {'1': 'ESP_5V', '2': '+5V'}, 'onsemi 1N5819RLG'),

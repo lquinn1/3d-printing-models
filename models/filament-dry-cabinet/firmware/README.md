@@ -1,6 +1,6 @@
 # Firmware (ESPHome)
 
-`dry-cabinet.yaml` runs one cabinet on the DCC-MAIN board (`../pcb/`). It compiles cleanly on ESPHome 2026.11 (ESP-IDF, ESP32-S3 N8R8): about 27 % of flash and 37 % of RAM.
+`dry-cabinet.yaml` runs one cabinet on the DCC-MAIN board (`../pcb/`). It compiles cleanly on ESPHome 2026.11 (ESP-IDF, ESP32-S3-DevKitC-1-N16R8): about 13 % of the app partition and 37 % of RAM.
 
 ## Flashing a cabinet
 

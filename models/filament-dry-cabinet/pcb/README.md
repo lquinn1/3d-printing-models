@@ -31,7 +31,7 @@ Upload `dcc_main/dcc_main_gerbers.zip` and `dcc_front/dcc_front_gerbers.zip` as 
 
 The ESP32 pin map and the 26-way ribbon pinout are on the last two pages of the schematic, and in [`circuit.py`](circuit.py), which is the source for both boards.
 
-- **Not used:** GPIO35–37 (octal PSRAM on the N8R8 module), GPIO19/20 (USB), GPIO43/44 (log UART), GPIO0 (BOOT), GPIO38/48 (the DevKit's RGB LED).
+- **Not used:** GPIO35–37 (octal PSRAM on the N16R8 module), GPIO19/20 (USB), GPIO43/44 (log UART), GPIO0 (BOOT), GPIO38/48 (the DevKit's RGB LED).
 - **Fan PWM is inverted.** Q3 is an open collector, so set `inverted: true` on the ESPHome output. At boot Q3 is off, so the fan runs at full speed until the firmware takes over, which is the safe way round.
 - **Ribbon:** in the flat cable, SCK, MOSI, MISO and the LED data line each sit next to a ground wire. Keep SPI at 10 MHz or less.
 

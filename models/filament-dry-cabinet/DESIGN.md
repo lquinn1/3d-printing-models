@@ -168,11 +168,12 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 - **Mains: 120 V only.**
 - **Inlet:** a UL-recognised IEC 320 C14 panel module with a **fuse holder and switch** (5 × 20 mm, **3.15 A T** slow-blow, 250 V rated). Earth (PE) goes to the PSU's FG terminal and to any metal parts. Use 18 AWG wire with ferrules, plus strain relief. The module snaps into a printed cutout, sized from the datasheet of the exact part you buy.
 - **PSU:** **Mean Well LRS-200-24** (24 V, 8.8 A) in its enclosed metal case, the same in every cabinet.
-- **5 V:** a 24 → 5 V buck converter (3–5 A) for the LEDs, display and ESP32. The LED feed has its own 3 A fuse.
+- **5 V:** a **Mean Well SD-15B-5** DC-DC converter (18–36 V in, 5 V 3 A, enclosed, short-circuit / overload / over-voltage protected; v0.23, was a $40 Pololu D36V50F5) for the LEDs, display, NFC and ESP32. The LED feed has its own 3 A fuse.
+  - **5 V budget:** 30 SK6812 RGBW LEDs draw about 18 mA per channel, so 0.55 A on plain white and about 1.2 A on the firmware's mixed colours (warm white, find-slot). ESP32 up to 0.5 A, TFT backlight 0.1 A, PN5180 0.25 A peak. About **2 A worst real case**, inside 3 A. Every channel of every LED at full would be 2.2 A on its own; the firmware never asks for that, and the 3 A PTC on the LED feed is there if a custom colour does.
 
 **Power budget at 24 V:** heater 6.3 A, fan 0.1–0.3 A, 5 V loads about 0.8 A (LEDs at full white about 3 A at 5 V). The peak is about 7.4 A with the 150 W heater, within the LRS-200's 8.8 A.
 
-### 6.2 Controller and I/O (ESP32-S3-DevKitC-1 N8R8)
+### 6.2 Controller and I/O (ESP32-S3-DevKitC-1 N16R8)
 
 | Function | Part | ESP32 interface |
 |---|---|---|
@@ -258,7 +259,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 - **SD_CS:** not used. Tie it to 3.3 V so the card slot stays off the bus.
 - **Touch:** CTP_SCL / CTP_SDA to the I2C bus, CTP_INT and CTP_RST to reserved GPIOs (touch firmware is phase 6).
 - **Display controller: ST7796(S)** (confirmed by the seller's information). Touch controller: **FT6336U**. In ESPHome the display uses the ST7796 model and touch uses the `ft63x6` platform (phase 6). If the first test shows a blank or scrambled screen, the fallback is the ILI9488 model.
-- **Memory:** a full 480 × 320 colour frame buffer is about 300 KB, so it goes in the PSRAM of the ESP32-S3 N16R8.
+- **Memory:** a full 480 × 320 colour frame buffer is about 300 KB, so it goes in the PSRAM of the ESP32-S3 N16R8 (16 MB flash, 8 MB octal PSRAM).
 
 ## 7. ESPHome entities
 
@@ -346,7 +347,7 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 
 ## 9. Bill of materials (one cabinet, as built)
 
-The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). Every part has its own line, down to each resistor, capacitor and screw size, with a second source and link for each (no auction sites). The electronics go on two **custom PCBs** (§18), with the ESP32 in socket headers. The estimated total for one cabinet is about **$1,043** (prices checked 2026-11-24, before tax and shipping).
+The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). Every part has its own line, down to each resistor, capacitor and screw size, with a second source and link for each (no auction sites). The electronics go on two **custom PCBs** (§18), with the ESP32 in socket headers. The estimated total for one cabinet is about **$1,018** (prices checked 2026-11-24, before tax and shipping).
 
 The live copy, where status, actual cost and test results are filled in as parts arrive, is the Sheets artifact "Filament Dry Cabinet — As-Built BOM". When a part is measured, update `bom/bom_source.csv` and the FIT value in `cad/params.py` together.
 
@@ -688,7 +689,7 @@ Generated and checked by [`cad/pod.py`](cad/pod.py).
   - **Check the cut-out against the datasheet of the inlet you buy.** It's `IEC_CUT` / `IEC_PANEL` in `pod.py`.
 - **Electronics:** two **carrier plates** on 8 mm standoffs, each with a 10 mm grid of 2.5 mm pilot holes.
   - `carrier_main` (180 × 69 mm): the **controller PCB** (§18). Its four M3 holes are 160 × 50 mm apart, which lands on the 10 mm grid.
-  - `carrier_left` (85 × 90 mm): the 24 → 5 V buck converter, wired to the PCB's J5.
+  - `carrier_left` (85 × 90 mm): the **SD-15B-5** 5 V supply, wired to the PCB's J5. It stands terminals-up between four printed corner stops, held by two M3 × 6 screws into the case's own M3 holes (mark them from the unit and drill the carrier). Its top is 5 mm under the cover.
   - Mount the boards with M2.5/M3 self-tapping screws or nylon standoffs.
 - **Cooling:** intake slots in the bottom wall under the PSU, and exhaust slots in the cover over the PSU and the controller (chimney flow).
 - **Wiring:**
@@ -824,7 +825,7 @@ Every wire, from the mains inlet to the LED strip. Generated by [`source/wiring.
 
 **Before you power it:**
 - **Mains:** keep it in the pod's left half, with ferrules on every end. Earth goes to the PSU's FG terminal.
-- **Buck output:** power it up without the ESP32 fitted and check J5-3 reads 5.0 V.
+- **5 V supply output:** power it up without the ESP32 fitted and check J5-3 reads 5.0 V (trim with the SD-15's +V ADJ pot if needed: 4.95–5.10 V).
 - **Heater:** check the heater wiring with the ESP32 out. With the KSD301 closed, J3 should read continuity. J2 should read the heater through the TCO: a few ohms (a PTC element reads lower cold than its 3.8 Ω hot rating).
 - **Front board:** mount it on the header back plate between the display and the encoder (x 335–415, over the slot), on 3 mm standoffs or VHB. If the 1000 µF capacitor is taller than 14 mm, bend it over flat before soldering.
 
@@ -835,10 +836,10 @@ Every wire, from the mains inlet to the LED strip. Generated by [`source/wiring.
 | W3 | IEC inlet earth | PSU FG (earth) | protective earth | 18 AWG UL1015 | green | 0.3 m | pod (mains side) | Ferrules. Mains stays on this side, zip-tied to the left-wall anchors |
 | W4 | PSU +V | Controller J1-1 | +24 V | 18 AWG silicone | red | 0.25 m | pod | Ferrules. The board fuse (F1, 10 A) is on this feed |
 | W5 | PSU −V | Controller J1-2 | GND | 18 AWG silicone | black | 0.25 m | pod | Ferrules |
-| W6 | Controller J5-1 | Buck VIN | +24 V | 20 AWG silicone | red | 0.15 m | pod | Buck on carrier_left |
-| W7 | Controller J5-2 | Buck GND (input side) | GND | 20 AWG silicone | black | 0.15 m | pod |  |
-| W8 | Buck VOUT | Controller J5-3 | +5 V | 20 AWG silicone | red, marked "5V" | 0.15 m | pod | Mark it with a band of tape: it is not 24 V |
-| W9 | Buck GND (output side) | Controller J5-4 | GND | 20 AWG silicone | black | 0.15 m | pod |  |
+| W6 | Controller J5-1 | SD-15 +Vin (pin 4) | +24 V | 20 AWG silicone | red | 0.15 m | pod | SD-15B-5 on carrier_left; leave FG (pin 3) unconnected |
+| W7 | Controller J5-2 | SD-15 −Vin (pin 5) | GND | 20 AWG silicone | black | 0.15 m | pod |  |
+| W8 | SD-15 +V out (pin 1) | Controller J5-3 | +5 V | 20 AWG silicone | red, marked "5V" | 0.15 m | pod | Mark it with a band of tape: it is not 24 V |
+| W9 | SD-15 −V out (pin 2) | Controller J5-4 | GND | 20 AWG silicone | black | 0.15 m | pod |  |
 | W10 | Controller J2-1 | TCO, then heater lead A | HTR+ (switched 24 V) | 18 AWG silicone | red | 0.8 m | gland 1, back wall, plenum | Join the TCO with crimp butt splices + heat-shrink, never solder (heat trips it). TCO at the duct outlet |
 | W11 | Heater lead B | Controller J2-2 | HTR− (to MOSFET) | 18 AWG silicone | black | 0.8 m | gland 1 | Carries 6.3 A: keep W10/W11 18 AWG |
 | W12 | Controller J3-1 | KSD301 tab 1 | +24 V to the relay coil | 20 AWG silicone | red | 0.8 m | gland 1 | 6.3 mm insulated female quick-connects (high-temp) |

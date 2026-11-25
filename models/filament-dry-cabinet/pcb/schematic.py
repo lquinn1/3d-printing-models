@@ -209,7 +209,7 @@ def text_sheet(lines, w=1500, h=900, title=''):
     return im
 
 def pin_sheets():
-    a = ['ESP32-S3-DevKitC-1 (N8R8), socketed (U1A = J1 row, U1B = J3 row, twin holes 22.86 / 25.40 mm)', '',
+    a = ['ESP32-S3-DevKitC-1 (N16R8), socketed (U1A = J1 row, U1B = J3 row, twin holes 22.86 / 25.40 mm)', '',
          f'{"J1":<4}{"pin":<6}{"net":<14}      {"J3":<4}{"pin":<6}{"net":<14}']
     n1 = ['3V3', '3V3', 'RST', 'IO4', 'IO5', 'IO6', 'IO7', 'IO15', 'IO16', 'IO17', 'IO18', 'IO8', 'IO3', 'IO46',
           'IO9', 'IO10', 'IO11', 'IO12', 'IO13', 'IO14', '5V', 'G']

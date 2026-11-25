@@ -2,7 +2,7 @@
 
 One cabinet, spec v0.15. This is the parts list for the first (test) build: it records what is bought, what fits and what changed.
 
-**Estimated total: $792.67** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed.
+**Estimated total: $781.39** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed.
 
 The live copy, with status, actual cost and test columns to fill in, is the Sheets artifact. This file is generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`; edit the source, not this file.
 
@@ -14,7 +14,7 @@ The live copy, with status, actual cost and test columns to fill in, is the Shee
 | Item | Description | Qty | Buy | $/pack | Ext $ | Supplier | Part # | Used in | Status | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 | 24 V power supply | Mean Well 24 V 8.8 A (211 W) enclosed switching supply | 1 pcs | 1 | 25.10 | 25.10 | [Jameco](https://www.jameco.com/z/LRS-200-24-MEAN-WELL-211W-24V-8800mA-Single-Output-Switchable-Power-Supply_2219743.html) | LRS-200-24 | Rear pod: PSU rails + psu_clamp ×2 (§16) | To order | Digi-Key alt 1866-3332-ND, about $24.50 |
-| IEC inlet with switch + fuse | C14 snap-in inlet, rocker switch and 5×20 mm fuse drawer; cutout 27.9 × 47.0 mm | 1 pcs | 1 | 8.00 | 8.00 | [Digi-Key](https://www.digikey.com/en/products/detail/isl-products-international/MIS-I-80485-INLET/15283284) | MIS-I-80485 | Rear pod cover: IEC_CUT 47.5 × 27.5, 1.6 mm panel (§16) | To order | FIT: price is an estimate. Check the snap-in panel range covers 1.6 mm and the cutout against IEC_CUT before ordering. |
+| IEC inlet with switch + fuse | C14 snap-in inlet, rocker switch and 5×20 mm fuse drawer; cutout 27.9 × 47.0 mm | 1 pcs | 1 | 8.00 | 8.00 | [Digi-Key](https://www.digikey.com/en/products/detail/isl-products-international/MIS-I-80485-INLET/15283284) | MIS-I-80485 | Rear pod base, right side wall: IEC_CUT 47.5 × 27.5, 1.6 mm panel (§16) | To order | FIT: price is an estimate. Check the snap-in panel range covers 1.6 mm and the cutout against IEC_CUT before ordering. |
 | Mains fuse | 5 × 20 mm ceramic slow-blow T3.15 A 250 V (1 + spare) | 2 pcs | 2 | 0.60 | 1.20 | [Digi-Key](https://www.digikey.com/en/products/detail/bel-fuse-inc/5HT-3-15-R/1008984) | 5HT 3.15-R | IEC inlet fuse drawer | To order | Price estimate |
 | 5 V buck converter | Pololu 5 V 5.5 A step-down regulator, 24 V in | 1 pcs | 1 | 39.95 | 39.95 | [Pololu](https://www.pololu.com/product/4091) | D36V50F5 | Rear pod: carrier_main (§16) | To order |  |
 | Controller | ESP32-S3-DevKitC-1, N16R8 (16 MB flash, 8 MB PSRAM) | 1 pcs | 1 | 12.19 | 12.19 | [Walmart marketplace](https://www.walmart.com/c/kp/esp32-s3-devkitc-1) | ESP32-S3-DevKitC-1-N16R8 | Rear pod: carrier_main (§16) | To order | DIYmall 2-pack about $21.99 on Amazon is the cheaper per-board option |
@@ -49,8 +49,8 @@ The live copy, with status, actual cost and test columns to fill in, is the Shee
 | Item | Description | Qty | Buy | $/pack | Ext $ | Supplier | Part # | Used in | Status | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 | Circulation fan | 80 × 25 mm 24 V 4-wire PWM fan with tach, 0.1 A | 1 pcs | 1 | 20.00 | 20.00 | [Digi-Key](https://www.digikey.com/en/products/detail/sanyo-denki-america-inc/9GA0824P4H001/6192316) | 9GA0824P4H001 | plenum fan mount, 71.5 mm holes (§17) | To order | Mouser about $18.22 (978-9GA0824P4H001). ebm-papst 8414N-2HP is an alternative. |
-| PTC heater | 24 V 155 W PTC element, aluminium fins | 1 pcs | 1 | 19.34 | 19.34 | [Digi-Key](https://www.digikey.com/en/products/detail/european-thermodynamics-ltd/HP05-1-22-12-24ET/22611930) | HP05-1/22-12/24ET | heater_duct, slides in from the back (§17) | To order | FIT: measure against HEATER 80 × 52 × 30 mm before printing the duct |
-| Thermostat | KSD301 85 °C normally-closed snap disc (5-pack) | 1 pcs | 1 × 5 | 8.15 | 8.15 | [Newegg Business](https://www.neweggbusiness.com/p/9B-30D-007Z-00101) | KSD301 85 °C NC | heater_duct Ø17 mount (§17) | To order |  |
+| PTC heater | 24 V 155 W PTC element, aluminium fins | 1 pcs | 1 | 19.34 | 19.34 | [Digi-Key](https://www.digikey.com/en/products/detail/european-thermodynamics-ltd/HP05-1-22-12-24ET/22611930) | HP05-1/22-12/24ET | heater_duct, slides in from the back (§17) | To order | FIT: measure against HEATER 80 × 52 × 30 mm before printing the duct. QA: this element is rated to 220 °C; prefer a self-limiting PTC of about 120 °C or less, and keep it off the ABS ledges with metal or silicone standoffs (QA_REVIEW.md). |
+| Thermostat | KSD301 85 °C normally-closed snap disc (5-pack) | 1 pcs | 1 × 5 | 8.15 | 8.15 | [Newegg Business](https://www.neweggbusiness.com/p/9B-30D-007Z-00101) | KSD301 85 °C NC | heater_duct Ø17 mount (§17) | To order | QA: KSD301 contacts are rated for AC; switching 6 A DC directly will pit them. Use it to break a 24 V relay coil (or the MOSFET gate supply) and mount one in contact with the heater frame (QA_REVIEW.md). |
 | Thermal cutoff | 102 °C one-shot TCO, 10 A 250 V (5-pack) | 2 pcs | 1 × 5 | 0.96 | 0.96 | [LCSC](https://lcsc.com/product-detail/Thermal-Fuses-TCO_SETsafe-SETfuse-S102_C20578421.html) | SETfuse S102 | Heater circuit, in series with the KSD301 | To order |  |
 | Silica gel | Orange indicating silica gel beads, 2 lb (0.9 kg) bag | 0.93 kg | 2 × 0.907 | 16.99 | 33.98 | [Walmart](https://www.walmart.com/ip/441623975) | Dry & Dry orange 2 lb | desiccant_cartridge ×2, up to 465 g each (§17) | To order |  |
 
@@ -59,7 +59,7 @@ The live copy, with status, actual cost and test columns to fill in, is the Shee
 | Item | Description | Qty | Buy | $/pack | Ext $ | Supplier | Part # | Used in | Status | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 | Port O-rings | 22 × 2 mm EPDM O-ring, 70 duro (50-pack) | 25 pcs | 1 × 50 | 11.00 | 11.00 | [Zoro](https://www.zoro.com/mr-o-ring-epdm-70-duro-black-o-ring-cs-200-mm-0079-in-id-2200-mm-0866-in-e200x022/i/G714272189/) | E200X022 | All 25 port modules (§12–13) | Tested OK | O-ring fit verified. The groove was loose; it was tightened to ID 22.6 × 2.5 × 1.5 mm. Reprint and retest. |
-| PTFE couplers | PC4-M10 push-fit couplers (20-pack) | 24 pcs | 2 × 20 | 11.28 | 22.56 | [eBay](https://www.ebay.com/itm/306366239017) | PC4-M10 | port_ptfe_module ×24, 9.0 mm hole (§12–13) | Ordered | Arriving; fit test pending. Only as many as you use; blank plugs fill the rest. |
+| PTFE couplers | PC4-M10 push-fit couplers (20-pack) | 12 pcs | 1 × 20 | 11.28 | 11.28 | [eBay](https://www.ebay.com/itm/306366239017) | PC4-M10 | port_ptfe_module ×12: top OR back ports, one per slot (§4.6, §12–13) | Ordered | Arriving; fit test pending. Only 12 are in use at once (top ports, or back ports when stacked), so one 20-pack covers it with spares. |
 | PTFE tube | 4 mm OD / 2 mm ID PTFE tube, 1 m | 1 m | 1 | 11.99 | 11.99 | [Capricorn](https://store11330852.ecwid.com/1-Meter-TL-Translucent-1-75mm-Bowden-Tubing-p82190771) | TL 1.75 1 m | Port modules to printer | To order | Length depends on your runs to the printer |
 | Spool rods | 3/4 in Schedule 40 PVC pipe, 10 ft (1.05 in OD) | 1.992 m | 1 × 3.048 | 9.31 | 9.31 | [Home Depot](https://www.homedepot.com/p/Charlotte-Pipe-3-4-in-x-10-ft-PVC-Schedule-40-Pressure-Plain-End-Pipe-PVC-04007-0600/100348472) | PVC 04007 0600 | 4 rods × 498 mm in rod_cradle_front / _rear (§13) | Received | Measured 1.05 in OD; cradles sized to it |
 

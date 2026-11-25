@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.15)
+# Filament Dry Cabinet: Design Spec (v0.15.1)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -335,7 +335,7 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 
 ## 9. Bill of materials (one cabinet, as built)
 
-The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). The estimated total for one cabinet is about **$793** (prices checked 2026-11-24, before tax and shipping).
+The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). The estimated total for one cabinet is about **$781** (prices checked 2026-11-24, before tax and shipping).
 
 The live copy, where status, actual cost and test results are filled in as parts arrive, is the Sheets artifact "Filament Dry Cabinet — As-Built BOM". When a part is measured, update `bom/bom_source.csv` and the FIT value in `cad/params.py` together.
 
@@ -346,6 +346,8 @@ The live copy, where status, actual cost and test results are filled in as parts
 - Display stack: TFT_STACK 4.5 mm (TFT fascia)
 
 **Filament:** all printed parts together are about 8.5 L of solid plastic, about 6.2 kg at typical walls and infill. Buy 7 kg of ABS or ASA.
+
+**QA review (v0.15.1):** see [`QA_REVIEW.md`](QA_REVIEW.md) for the open findings on the heater safety chain, door seal force, hinges, rods for hot cabinets and part labels.
 
 ## 10. Decisions (v0.2)
 
@@ -719,7 +721,7 @@ The desiccant sees the coolest, wettest air, before the heater, which is where s
 | Part | Qty | Notes |
 |---|---|---|
 | `desiccant_cartridge` | 2 | 72 × 150 × 72 mm, **645 cm³ (up to about 465 g of gel)**. Slotted grids (1.4 mm) on both sides. A lift handle at the door end. Identical for either end. |
-| `desiccant_lid` | 2 | Slotted lid on an inner ledge, with a finger tab |
+| `desiccant_lid` | 2 | Slotted lid on an inner ledge, with a finger tab. Print the plate on the bed, tab up. |
 | `plenum` | 1 | 323 × 161 × 100 mm, open bottom, so print it **top down**. Sits on foam tape between the cartridges. Windows face the cartridge grids (2.3 mm foam gasket). It has the fan mount (80 mm, 71.5 mm holes), an SHT40 port (desiccant outlet) and a cable notch toward the gland. |
 | `heater_duct` | 1 | Stepped so it clears the front spools. The **heater slides in from the open back** onto two ledges, then the duct butts onto the plenum's front wall. It has the KSD301 mount (Ø17 hole, 2 × M3 inserts 24 mm apart) in the outlet chamber, an NTC hole, TCO zip-tie slots and a lead notch. |
 | `floor_duct` | 1 | 66 × 188 × 14 mm inverted channel, 0.7 mm under the front rods, between slot 3's collars. Louvres at the door end. |

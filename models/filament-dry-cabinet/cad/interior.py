@@ -181,7 +181,8 @@ def parts_world():
 def print_pose(name, m):
     if name == 'plenum':            m = m.mirror((0, 0, 1))          # top on the bed (no supports)
     if name == 'floor_duct':        m = m.mirror((0, 0, 1))
-    if name.startswith('desiccant_lid') or name == 'heater_duct_lid': m = m.mirror((0, 0, 1))
+    # desiccant_lid prints as modelled: slotted plate on the bed, finger tab up.
+    # (It was flipped, which left the 64 x 130 mm plate in mid-air on the 6 mm tab.)
     b = m.bounding_box()
     return m.translate((-(b[0]+b[3])/2, -(b[1]+b[4])/2, -b[2]))
 

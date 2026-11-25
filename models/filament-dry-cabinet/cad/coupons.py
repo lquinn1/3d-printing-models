@@ -33,13 +33,22 @@ def cq_to_mf(shape):
 def save(man, name):
     o = man.to_mesh(); t = trimesh.Trimesh(o.vert_properties[:, :3], o.tri_verts, process=False)
     assert t.is_watertight and t.is_volume, name
+    # Check again the way a slicer sees it: welded by position, float32. Pinched
+    # (shared-vertex) geometry passes the first check but fails this one.
+    w = trimesh.Trimesh(t.vertices.astype(np.float32), t.faces)
+    assert w.is_watertight, f'{name}: non-manifold after welding'
     t.export(os.path.join(OUT, name + '.stl'))
     b = t.bounds
     print(f"{name:20s} vol {t.volume/1000:6.1f} cm3   {b[1][0]-b[0][0]:.1f} x {b[1][1]-b[0][1]:.1f} x {b[1][2]-b[0][2]:.1f} mm")
     return t
 
-def cyl(r, z0, z1, n=96, r1=None):
-    return mf.Manifold.cylinder(z1-z0, r, r if r1 is None else r1, n).translate((0, 0, z0))
+def cyl(r, z0, z1, n=96, r1=None, twist=0.0):
+    """twist (deg) turns the facets so they never land on a thread vertex: shared
+    vertices make 'pinched' edges that slicers report as non-manifold."""
+    c = mf.Manifold.cylinder(z1-z0, r, r if r1 is None else r1, n)
+    return (c.rotate((0, 0, twist)) if twist else c).translate((0, 0, z0))
+
+TW = 0.71   # facet twist for anything that touches a thread
 
 # ------------------------------------------------------------------ thread
 def thread_profile(u):
@@ -67,11 +76,14 @@ def thread_solid(d_major, pitch, z0, z1, grow=0.0, n=128, dz=0.05):
     return to_mf(V, np.vstack([F, bot, top]))
 
 def socket_cut(z0, z1, clr, n=128, dz=0.05):
-    """Internal thread cutter plus 0.5 mm lead-in countersinks at both ends."""
+    """Internal thread cutter plus 45 deg lead-in countersinks at both ends.
+    The thread runs past the countersink caps and each cone ends just inside the
+    crest, so no faces or vertices coincide (keeps the exported STL manifold)."""
     r = PORT_D/2 + clr
-    cut = thread_solid(PORT_D, PORT_P, z0-1, z1+1, grow=clr, n=n, dz=dz)
-    cut += cyl(r+0.5+1, z0-1, z0+0.5, r1=r)          # bottom countersink (45 deg)
-    cut += cyl(r, z1-0.5, z1+1, r1=r+1.5)            # top countersink
+    cut = thread_solid(PORT_D, PORT_P, z0-1.53, z1+1.53, grow=clr, n=n, dz=dz)
+    # cone planes sit off the thread's z grid (dz) so no thread vertex lies on them
+    cut += cyl(r+1.53, z0-1.03, z0+0.67, r1=r-0.17, twist=TW)   # bottom countersink
+    cut += cyl(r-0.17, z1-0.67, z1+1.03, r1=r+1.53, twist=TW)   # top countersink
     return cut
 
 # ------------------------------------------------------------------ parts
@@ -101,9 +113,9 @@ def port_module(kind):
     m = cq_to_mf(body.val())
     # threaded shank with a 1 mm chamfer at the tip
     z0, z1 = fh, fh + SHANK_LEN
-    env = cyl(PORT_D/2+0.5, z0-0.2, z1-1.0) + cyl(PORT_D/2+0.5, z1-1.0, z1, r1=PORT_D/2-1.2)
+    env = cyl(PORT_D/2+0.5, z0-0.2, z1-1.0, twist=TW) + cyl(PORT_D/2+0.5, z1-1.0, z1, r1=PORT_D/2-1.2, twist=TW)
     shank = thread_solid(PORT_D, PORT_P, z0-0.2, z1) ^ env
-    m += shank + cyl(PORT_D/2-1.0, z0-0.5, z0+0.5)      # root fillet ring so the thread is fused
+    m += shank + cyl(PORT_D/2-1.0, z0-0.5, z0+0.5, twist=TW)      # root fillet ring so the thread is fused
     if kind == 'gland':                         # cable pass-through: 12 mm bore, sealant recess outside
         m -= cyl(6.0, -1, z1 + 1, n=48)
         m -= cyl(9.0, -1, 4.0, n=48)

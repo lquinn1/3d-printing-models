@@ -131,7 +131,7 @@ def chassis(i):
         if x0 + 6 < xs < x1 - 6:
             m -= cyl_y(xs, LED_Z, F_Y1 - M3_INSERT_L, F_Y1 + 1, M3_INSERT_D/2)
     if i == 0:                                                         # LED wires into the chamber
-        m -= cyl_y(32.0, HDR_Z0 + 8, BAY_Y1 - 1, F_Y1 + 1, 2.5)
+        m -= cyl_y(32.0, HDR_Z0 + 8, BAY_Y1 - 1, F_Y1 + 1, 5.0)     # 10 mm: LED + header cable bundle (RTV seal)
     if i == 2:
         xc = OPEN_X1 + 6.5                                             # reed wires up from the stile
         m -= box(xc - 2, xc + 2, 18, 22, LIP_Z0 - 1, HDR_Z0 + WALL_H + 1)

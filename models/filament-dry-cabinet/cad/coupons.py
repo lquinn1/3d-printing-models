@@ -92,8 +92,8 @@ def hex_flange(h):
     return cq.Workplane().polygon(6, FLANGE_AF/math.cos(math.pi/6)).extrude(h).edges('|Z').fillet(1.5)
 
 def port_module(kind):
-    """kind: 'plug' or 'ptfe'. Printed flange down (outside face on the bed)."""
-    fh = FLANGE_H_PLUG if kind == 'plug' else FLANGE_H_MODULE
+    """kind: 'plug', 'ptfe' or 'gland'. Printed flange down (outside face on the bed)."""
+    fh = FLANGE_H_MODULE if kind in ('ptfe', 'gland') else FLANGE_H_PLUG
     body = hex_flange(fh)
     # O-ring face groove on the top of the flange (the face that seats against the wall)
     gi = GROOVE_ID/2; go = gi + GROOVE_W
@@ -104,11 +104,15 @@ def port_module(kind):
     env = cyl(PORT_D/2+0.5, z0-0.2, z1-1.0) + cyl(PORT_D/2+0.5, z1-1.0, z1, r1=PORT_D/2-1.2)
     shank = thread_solid(PORT_D, PORT_P, z0-0.2, z1) ^ env
     m += shank + cyl(PORT_D/2-1.0, z0-0.5, z0+0.5)      # root fillet ring so the thread is fused
+    if kind == 'gland':                         # cable pass-through: 12 mm bore, sealant recess outside
+        m -= cyl(6.0, -1, z1 + 1, n=48)
+        m -= cyl(9.0, -1, 4.0, n=48)
+        m -= cyl(7.0, z1 - 0.8, z1 + 1, r1=6.0)
     if kind == 'ptfe':
         m -= cyl(PC4_HOLE_D/2, -1, PC4_HOLE_DEPTH, n=64)
         m -= cyl(PTFE_BORE/2, -1, z1+1, n=48)
         m -= cyl(PTFE_BORE/2+1, z1-0.8, z1+1, r1=PTFE_BORE/2) .translate((0, 0, 0))  # lead-in
-    else:
+    elif kind == 'plug':
         # finger grip: shallow cross slot on the outside face so a coin can turn it
         m -= cq_to_mf(cq.Workplane().box(18, 2.4, 2.4).val())
     return m

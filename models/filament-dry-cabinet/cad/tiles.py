@@ -64,7 +64,8 @@ BACK_PORTS = [(x + (-14 if k == 0 else 14), FLOOR + A['ih'] + dz)
               for x in X_SLOT for k, dz in enumerate((-62, -36))]
 GLAND = (T + 150, FLOOR + 150)                                          # pod -> chamber wiring
 POCKET_XY = [(x, y) for x in (35.0, W-35.0) for y in (Y0+45, Y1-50)]     # roof pockets = foot spots
-POD_PTS = [(T+x, FLOOR+z) for x in (70, 200, 300, 430) for z in (20, 230)]
+POD_PX0 = T + 85.0                                                       # rear pod: 330 x 230, see pod.py
+POD_PTS = [(POD_PX0 + u, FLOOR + 10 + v) for u in (10, 110, 220, 320) for v in (10, 220)]
 ROD_Y = [Y_FRONT_ROW - L.ROD_CC/2, Y_FRONT_ROW + L.ROD_CC/2, Y_BACK_ROW - L.ROD_CC/2, Y_BACK_ROW + L.ROD_CC/2]
 FRONT_CRADLE_H = A['rod_front']                                         # 30: cradle sits on the floor
 REAR_CRADLE_H = A['rod_back']                                           # 150: riser + cradle in one

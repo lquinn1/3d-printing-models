@@ -408,6 +408,7 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 |---|---|---|
 | `port_socket_coupon` | Three M20 × 2 sockets with **0.15 / 0.25 / 0.35 mm** radial clearance (marked on the plate) | Which one the plug turns into by hand, snug with no wobble |
 | `port_blank_plug`, `port_ptfe_module` | Hex-flange modules, 22 × 2 O-ring face groove; the PTFE module has a 9.0 mm hole for a PC4-M10 coupler and a 4.4 mm bore | Does the PC4-M10 thread in firmly? Does the O-ring seat and seal? |
+| `oring_groove_coupon` | Three plain hex flanges with the O-ring face groove at **22.6 / 23.0 / 23.4 mm** ID (1 / 2 / 3 notches on the front flat), 5 mm tall | Which groove holds the 22 × 2 ring on without rolling it? |
 | `rod_cradle` | U-cradle, 0.6 mm radial clearance on the 25.4 mm dowel, two M4 counterbored holes | Does the dried, sealed rod turn freely without rattling? Your dowel's measured OD |
 | `index_collar` | Slide-on collar with three spring tabs (0.35 mm grip) | Slides with firm hand pressure and stays put? |
 | `tile_joint_a` + `_b` | V tongue and groove (0.2 mm clearance), two M4 × 8.1 heat-set inserts (5.6 mm holes), foam pocket depth | Joint closes flush? Inserts go in cleanly? Foam sits flush with the rim? |
@@ -433,6 +434,14 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 | PVC | 1.05 in measured OD, same as nominal | unchanged (26.67 mm). **Superseded in v0.22 by the 1 in dowel: measure it after drying** |
 | O-ring | 22 × 2 ring fits, but sat **very loose** in the groove (22.0 ID × 2.7 wide) | Groove now **22.6 ID × 2.5 wide × 1.5 deep**: the ring stretches about 3 % onto the inner wall so it stays put, with 84 % groove fill and 25 % squeeze. Plug and PTFE module regenerated; thread fit rechecked. |
 | Inserts, PC4-M10, cradle, collar | not reported yet | unchanged |
+
+**Results, round 2 (ABS, 2026-11-25):**
+
+| Item | Result | Setting now |
+|---|---|---|
+| Tile joint | **`tile_joint_b` fits better** (even 0.05 mm on each V flank) | `GROOVE_CLR = 0.05`, confirmed |
+| Port socket | Reprinted with **updated print settings**: **0.35 mm** is now the fit | `PORT_CLR_SEL = 0.35` (was 0.25). Print the tiles with the same settings as this coupon |
+| O-ring | The ring still has a hard time staying on the module, but it's workable | Groove ID **23.0** (was 22.6): the 22 mm ring stretches about 4.5 % onto the groove's inner wall (cord about 1.96 mm, squeeze about 23 %). New **`oring_groove_coupon`**: three flanges with 22.6 / 23.0 / 23.4 grooves (1 / 2 / 3 notches on the front flat). Pick the one that holds the ring without rolling it, and change `GROOVE_ID` if it isn't 23.0 |
 
 **Next in CAD:** the front frame and header (screen bezel, NFC pad, encoder), the door, and the rear pod.
 

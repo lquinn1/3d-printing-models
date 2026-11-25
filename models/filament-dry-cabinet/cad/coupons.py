@@ -100,6 +100,21 @@ def port_socket_coupon():
         m -= socket_cut(0, SOCKET_LEN, c).translate((x, 0, 0))
     return m
 
+def oring_groove_coupon():
+    """Three plain hex flanges with the O-ring face groove at GROOVE_ID_TEST: which one holds the ring on?"""
+    xs = (-40.0, 0.0, 40.0); H = 5.0
+    m = None
+    for x, gid in zip(xs, GROOVE_ID_TEST):
+        b = hex_flange(H)
+        gi = gid/2; go = gi + GROOVE_W
+        b = b.cut(cq.Workplane().workplane(offset=H-GROOVE_DEPTH).circle(go).circle(gi).extrude(GROOVE_DEPTH+1))
+        b = b.cut(cq.Workplane().circle(8.0).extrude(H+1))                            # save plastic
+        for k in range(xs.index(x) + 1):                                  # 1, 2, 3 notches on the front flat = 22.6, 23.0, 23.4
+            b = b.cut(cq.Workplane().center(4.0 + k*3.0, -FLANGE_AF/2).rect(1.4, 2.4).extrude(H + 1))
+        bm = cq_to_mf(b.val()).translate((x, 0, 0))
+        m = bm if m is None else m + bm
+    return m
+
 def hex_flange(h):
     return cq.Workplane().polygon(6, FLANGE_AF/math.cos(math.pi/6)).extrude(h).edges('|Z').fillet(1.5)
 
@@ -215,5 +230,6 @@ if __name__ == '__main__':
         'index_collar': index_collar(),
         'tile_joint_a': tile_joint('a'),
         'tile_joint_b': tile_joint('b'),
+        'oring_groove_coupon': oring_groove_coupon(),
     }
     for k, v in parts.items(): save(v, k)

@@ -123,7 +123,7 @@
    "vmin": "LAND",
    "vmax": "TG_B"
   },
-  "volume_cm3": 332.3
+  "volume_cm3": 332.0
  },
  {
   "name": "top_left_front",
@@ -137,7 +137,7 @@
    "vmin": "TG_A",
    "vmax": "FRONT"
   },
-  "volume_cm3": 287.3
+  "volume_cm3": 287.0
  },
  {
   "name": "top_right_rear",
@@ -151,7 +151,7 @@
    "vmin": "LAND",
    "vmax": "TG_B"
   },
-  "volume_cm3": 329.9
+  "volume_cm3": 329.6
  },
  {
   "name": "top_right_front",
@@ -165,7 +165,7 @@
    "vmin": "TG_A",
    "vmax": "FRONT"
   },
-  "volume_cm3": 285.7
+  "volume_cm3": 285.5
  },
  {
   "name": "bottom_left_front",
@@ -235,7 +235,7 @@
    "vmin": "BUTT",
    "vmax": "TG_B"
   },
-  "volume_cm3": 256.0
+  "volume_cm3": 255.9
  },
  {
   "name": "back_left_upper",
@@ -249,7 +249,7 @@
    "vmin": "TG_A",
    "vmax": "BUTT"
   },
-  "volume_cm3": 195.1
+  "volume_cm3": 194.6
  },
  {
   "name": "back_right_lower",
@@ -277,6 +277,6 @@
    "vmin": "TG_A",
    "vmax": "BUTT"
   },
-  "volume_cm3": 193.6
+  "volume_cm3": 193.0
  }
 ]

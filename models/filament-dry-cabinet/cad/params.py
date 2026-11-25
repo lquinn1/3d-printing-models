@@ -21,7 +21,7 @@ TILE_MAX = 330.0            # bed limit (Voron 2.4 350) with margin
 
 # tongue and groove on mating rib faces
 TONGUE_W, TONGUE_H = 1.6, 1.6           # width (across rib), height (protrusion)
-GROOVE_CLR = 0.05                       # uniform gap on each V flank; retest   FIT
+GROOVE_CLR = 0.05                       # uniform gap on each V flank (tile_joint_b fits better)   TESTED
 
 # M4 heat-set inserts + bolts across tile seams
 INSERT_HOLE_D = 5.6         # typical M4 x 8.1 insert (CNC Kitchen / Ruthex) FIT
@@ -42,7 +42,7 @@ SLOT_PITCH = L.PITCH
 PORT_D = 20.0               # nominal thread major diameter (M20 x 2 style)
 PORT_P = 2.0
 PORT_CLR = (0.15, 0.25, 0.35)   # radial clearances tested by the coupon FIT
-PORT_CLR_SEL = 0.25         # chosen from the coupon (ABS)              TESTED
+PORT_CLR_SEL = 0.35         # v0.25: 0.35 is the fit with the updated print settings (was 0.25)   TESTED
 SOCKET_LEN = WALL           # socket sleeve runs right through the wall
 SOCKET_OD = 30.0
 SHANK_LEN = 14.0            # module thread length (shorter than the socket)
@@ -56,7 +56,9 @@ GROOVE_DEPTH = 1.5          # ~25 % squeeze
 # v0.10.1: the 22.0 ID x 2.7 wide groove held the ring too loosely (tested). The ring now
 # stretches ~3 % onto the groove's inner wall so it stays put, and the groove is only
 # 0.5 mm wider than the cord (fill = ring area / groove area ~ 84 %).
-GROOVE_ID = 22.6                                                          # TESTED (v1 loose)
+# v0.25: 22.6 still let the ring fall off the module (workable, not good): 23.0 stretches it ~4.5 %
+GROOVE_ID = 23.0                                                          # FIT (oring_groove_coupon: 22.6 / 23.0 / 23.4)
+GROOVE_ID_TEST = (22.6, 23.0, 23.4)
 GROOVE_W = 2.5
 PC4_HOLE_D = 9.0            # PC4-M10 couplers self-thread into ~9 mm in ABS FIT
 PC4_HOLE_DEPTH = 8.0

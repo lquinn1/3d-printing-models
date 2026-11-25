@@ -49,7 +49,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 | File | Description |
 |------|-------------|
-| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `door.py` (door, hinges, lift-bar latch, tag), `render_latch.py` (latch renders and animation), `pod.py` (rear pod), `interior.py` (desiccant, plenum, heater and floor ducts, sensor housings), `verify*.py` (assembly and swing checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
+| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `door.py` (door, hinges, lift-bar latch, tag), `render_latch.py` (latch renders and animation), `latch_coupon.py` (latch fit-test coupon), `pod.py` (rear pod), `interior.py` (desiccant, plenum, heater and floor ducts, sensor housings), `verify*.py` (assembly and swing checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
 | [`DESIGN.md`](DESIGN.md) | Full design spec: requirements, layout options, construction, drying, electronics, ESPHome entities, Spoolman scheme, parts list, open questions |
 | [`BOM.md`](BOM.md), [`BOM.csv`](BOM.csv) | As-built bill of materials: links, prices, quantities, where each part is used, status and test results. Generated from `bom/bom_source.csv` by `bom/build_bom.py` |
 | [`QA_REVIEW.md`](QA_REVIEW.md) | Design and CAD QA review: what was fixed, and prioritised recommendations |

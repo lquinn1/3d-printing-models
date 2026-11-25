@@ -394,8 +394,13 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 | `rod_cradle` | U-cradle, 0.6 mm radial clearance on 26.67 mm PVC, two M4 counterbored holes | Does the rod turn freely without rattling? Your pipe's measured OD |
 | `index_collar` | Slide-on collar with three spring tabs (0.35 mm grip) | Slides with firm hand pressure and stays put? |
 | `tile_joint_a` + `_b` | V tongue and groove (0.2 mm clearance), two M4 × 8.1 heat-set inserts (5.6 mm holes), foam pocket depth | Joint closes flush? Inserts go in cleanly? Foam sits flush with the rim? |
+| `coupon_latch_door` + `coupon_latch_frame` + `latch_bar` (v0.17) | The lift-bar latch, cut straight from the real right door stile and frame stile (z 96–262). The door section slides front to back between rails on the frame section's base. | Does it click shut on its own when you push the door section in? Does pressing the bar flush pull it 1.5–2 mm further onto the seal? Does the bar release cleanly at about 40 mm of pull? Is the bar too loose or too stiff in its recess? |
 
 **Print settings:** ABS/ASA, 0.2 mm layers, 4 walls, 40 % infill. Print every coupon as it lies in the STL (flange or skin down). No supports.
+
+![Latch coupon, latched and released](images/cad_latch_coupon.jpg)
+
+**Latch coupon:** print the door section front face down, the frame section on its base, and the bar on its right side (as in the STLs). Fit an M3 × 25 flat head as the pivot (from the door section's right edge), an M3 × 16 flat head as the keeper pin (from the frame section's outer side face), the two click magnets (attracting), and about 170 mm of the 5 × 3 mm door seal on the frame section's face, in the band closest to the opening (x 507.4–516.4). Hold the door section upright while you try it: it's a slice of a door, so it will tip if you let go. Rebuild with `python3 cad/latch_coupon.py`; it re-runs the fit checks first.
 
 **Hardware for the test:** 2 × M4 × 12 socket-head bolts, 2 × M4 heat-set inserts (M4 × 8.1, 5.6 mm hole), 1 × PC4-M10 coupler, 2 × 22 × 2 mm O-rings, an offcut of 3/4 in Sch 40 PVC, a scrap of the 1/2 in XPS.
 

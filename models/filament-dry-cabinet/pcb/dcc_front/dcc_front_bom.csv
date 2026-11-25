@@ -1,0 +1,19 @@
+Ref,Value,Footprint,Part
+C1,10nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C315C103K5R5TA
+C2,10nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C315C103K5R5TA
+C3,10nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C315C103K5R5TA
+C4,100nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C320C104K5R5TA
+C5,1000uF 16V,CP_Radial_D10.0mm_P5.00mm,Panasonic EEU-FR1C102
+C6,100nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C320C104K5R5TA
+J1,FROM POD 2x13,IDC-Header_2x13_P2.54mm_Vertical,Amphenol T821126A1S100CEU
+J2,TFT 3.5in,PinHeader_1x14_P2.54mm_Vertical,Sullins PRPC014SAAN-RC
+J3,PN5180,PinHeader_1x09_P2.54mm_Vertical,Sullins PRPC009SAAN-RC
+J4,ENCODER,PinHeader_1x05_P2.54mm_Vertical,Sullins PRPC005SAAN-RC
+J5,REED,"TerminalBlock_Phoenix_PT-1,5-2-3.5-H_1x02_P3.50mm_Horizontal",Phoenix 1984617
+J6,LED 5V IN,"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Phoenix 1935161
+J7,LED STRIP,"TerminalBlock_Phoenix_PT-1,5-3-3.5-H_1x03_P3.50mm_Horizontal",Phoenix 1984620
+R1,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+R2,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+R3,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+R4,330R,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-330R
+U1,74AHCT125,DIP-14_W7.62mm_Socket,TI SN74AHCT125N + On Shore ED14DT

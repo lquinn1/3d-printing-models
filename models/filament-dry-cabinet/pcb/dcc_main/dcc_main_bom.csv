@@ -1,0 +1,46 @@
+Ref,Value,Footprint,Part
+C1,100uF 35V,CP_Radial_D10.0mm_P5.00mm,Panasonic EEU-FR1V101
+C2,10nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C315C103K5R5TA
+C3,100uF 10V,CP_Radial_D6.3mm_P2.50mm,Panasonic EEU-FR1A101
+C4,100nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C320C104K5R5TA
+C5,100nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C320C104K5R5TA
+C6,100nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C320C104K5R5TA
+C7,100nF,C_Disc_D5.0mm_W2.5mm_P5.00mm,KEMET C320C104K5R5TA
+D1,1N4007,D_DO-41_SOD81_P10.16mm_Horizontal,onsemi 1N4007G
+D2,1N5819,D_DO-41_SOD81_P10.16mm_Horizontal,onsemi 1N5819RLG
+D3,PWR,LED_D3.0mm,Lite-On LTL-4231
+F1,10 A mini blade,Fuseholder_Blade_Mini_Keystone_3568,Keystone 3568 + Littelfuse 0297010
+F2,3A PTC,Fuse_Bourns_MF-RG300,Bourns MF-RG300
+F3,0.5A PTC,Fuse_Bourns_MF-RG300,Bourns MF-R050
+J1,24 V IN,"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Phoenix 1935161
+J2,HEATER,"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Phoenix 1935161
+J3,KSD301,"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Phoenix 1935161
+J4,FAN 24V PWM,FanPinHeader_1x04_P2.54mm_Vertical,Molex 47053-1000
+J5,BUCK 24V/5V,"TerminalBlock_Phoenix_MKDS-1,5-4-5.08_1x04_P5.08mm_Horizontal",Phoenix 1935187
+J6,LED 5V OUT,"TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",Phoenix 1935161
+J7,SHT45 CHAMBER,"TerminalBlock_Phoenix_PT-1,5-4-3.5-H_1x04_P3.50mm_Horizontal",Phoenix 1984633
+J8,SHT40 PLENUM,"TerminalBlock_Phoenix_PT-1,5-4-3.5-H_1x04_P3.50mm_Horizontal",Phoenix 1984633
+J9,NTC,"TerminalBlock_Phoenix_PT-1,5-2-3.5-H_1x02_P3.50mm_Horizontal",Phoenix 1984617
+J10,FRONT 2x13,IDC-Header_2x13_P2.54mm_Vertical,Amphenol T821126A1S100CEU
+J11,SPARE IO21,PinHeader_1x03_P2.54mm_Vertical,Sullins PRPC003SAAN-RC
+K1,G5LE-1A4 DC24,Relay_SPDT_Omron-G5LE-1,Omron G5LE-1A4 DC24
+Q1,IRLB3034,TO-220-3_Vertical,Infineon IRLB3034PBF
+Q2,2N3904,TO-92_Inline,onsemi 2N3904BU
+Q3,2N3904,TO-92_Inline,onsemi 2N3904BU
+R1,4k7,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-4K7
+R2,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+R3,100R,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-100R
+R4,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+R5,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+R6,1k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-1K
+R7,4k7,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-4K7
+R8,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+R9,1k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-1K
+R10,2k2,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-2K2
+R11,2k2,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-2K2
+R12,2k2,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-2K2
+R13,2k2,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-2K2
+R14,10k 1%,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo MFR-25FBF52-10K
+R15,10k,R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,Yageo CFR-25JB-52-10K
+U1A,ESP32 J1,PinSocket_1x22_P2.54mm_Vertical,Sullins PPTC221LFBN-RC
+U1B,ESP32 J3,PinSocket_1x22_P2.54mm_Vertical,Sullins PPTC221LFBN-RC (solder it in the row that fits)

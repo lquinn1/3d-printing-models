@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.17)
+# Filament Dry Cabinet: Design Spec (v0.18)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -165,7 +165,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 
 **Power budget at 24 V:** heater 6.3 A, fan 0.1–0.3 A, 5 V loads about 0.8 A (LEDs at full white about 3 A at 5 V). The peak is about 7.4 A with the 150 W heater, within the LRS-200's 8.8 A.
 
-### 6.2 Controller and I/O (ESP32-S3-DevKitC-1 N16R8)
+### 6.2 Controller and I/O (ESP32-S3-DevKitC-1 N8R8)
 
 | Function | Part | ESP32 interface |
 |---|---|---|
@@ -181,6 +181,8 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Local control | EC11 rotary encoder with push switch | `rotary_encoder` + GPIO |
 | Door | reed switch + magnet | GPIO (`binary_sensor`) |
 | Buzzer (optional) | piezo for alarms | GPIO / LEDC |
+
+**Boards (v0.18):** all of this lives on two custom PCBs, which replace the protoboard: a **controller board** in the rear pod and a small **front breakout** in the header bay. A 26-way ribbon joins them. The GPIO numbers, connectors, schematic and fab files are in [`pcb/`](pcb/README.md) and §18.
 
 ### 6.3 Safety (in layers)
 1. **Hardware, cannot be overridden:** a **KSD301 85 °C auto-reset thermostat** that breaks the coil of a **24 V heater relay** (v0.16: the relay contacts carry the heater current, so the KSD301 never breaks a DC arc), and a **102 °C one-shot thermal fuse (TCO)** in series with the heater's 24 V feed, at the duct outlet. The PTC element also limits itself, and it sits on PTFE pads, not bare ABS.
@@ -335,7 +337,7 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 
 ## 9. Bill of materials (one cabinet, as built)
 
-The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). Every part has its own line, down to each resistor, capacitor and screw size, with a second source and link for each (no auction sites). The electronics go on an **Adafruit Perma-Proto protoboard** on the pod carrier plate, with the ESP32 in socket headers. The estimated total for one cabinet is about **$931** (prices checked 2026-11-24, before tax and shipping).
+The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). Every part has its own line, down to each resistor, capacitor and screw size, with a second source and link for each (no auction sites). The electronics go on two **custom PCBs** (§18), with the ESP32 in socket headers. The estimated total for one cabinet is about **$965** (prices checked 2026-11-24, before tax and shipping).
 
 The live copy, where status, actual cost and test results are filled in as parts arrive, is the Sheets artifact "Filament Dry Cabinet — As-Built BOM". When a part is measured, update `bom/bom_source.csv` and the FIT value in `cad/params.py` together.
 
@@ -671,9 +673,9 @@ Generated and checked by [`cad/pod.py`](cad/pod.py).
   - A snap-in cut-out (47.5 × 27.5 mm) in the **right side wall**, with the wall thinned to 1.6 mm round it for the clips. The cord exits sideways, so the cabinet can stand close to a wall.
   - **Check the cut-out against the datasheet of the inlet you buy.** It's `IEC_CUT` / `IEC_PANEL` in `pod.py`.
 - **Electronics:** two **carrier plates** on 8 mm standoffs, each with a 10 mm grid of 2.5 mm pilot holes.
-  - `carrier_main` (180 × 69 mm): ESP32-S3 DevKitC, MOSFET and level-shifter board.
-  - `carrier_left` (85 × 90 mm): the 24 → 5 V buck converter and the terminal blocks.
-  - Mount the boards with M2.5/M3 self-tapping screws or nylon standoffs wherever they fit.
+  - `carrier_main` (180 × 69 mm): the **controller PCB** (§18). Its four M3 holes are 160 × 50 mm apart, which lands on the 10 mm grid.
+  - `carrier_left` (85 × 90 mm): the 24 → 5 V buck converter, wired to the PCB's J5.
+  - Mount the boards with M2.5/M3 self-tapping screws or nylon standoffs.
 - **Cooling:** intake slots in the bottom wall under the PSU, and exhaust slots in the cover over the PSU and the controller (chimney flow).
 - **Wiring:**
   - Two zip-tie anchors on the left wall keep mains wiring to the inlet/PSU side.
@@ -683,7 +685,7 @@ Generated and checked by [`cad/pod.py`](cad/pod.py).
   1. From the header bay, through the Ø10 hole in the left header piece, into the chamber.
   2. Along the ceiling and down the inside of the back wall, in VHB-mounted clips.
   3. Out through the gland into the pod.
-  The sensors, fan, heater and LED feeds take the same gland. This keeps the outside of the cabinet clean for stacking. Run the TFT/NFC SPI at **≤ 10 MHz** over the roughly 1 m cable, with ground wires between the signal wires.
+  The sensors, fan, heater and LED feeds take the same gland. This keeps the outside of the cabinet clean for stacking. The display, NFC, encoder, reed and LED data go over a **26-way ribbon** (1.27 mm, about 1.5 m) with ground wires beside the fast lines; crimp its IDC sockets after it has gone through the gland. Run the SPI at **≤ 10 MHz**. The LED strip's 5 V goes up separately on a 20 AWG pair.
 - **Checked:**
   - no overlaps (pod parts and back tiles)
   - the PSU (215 × 115 × 30), an inlet body 45 mm deep and the gland module all fit
@@ -776,3 +778,27 @@ The whole lift-and-slide path is checked clear in CAD.
 - about 1 kg of orange indicating silica gel
 
 **Next:** the ESPHome YAML (phase 3) and the PN5180 OpenPrintTag component (phase 3b).
+
+## 18. Electronics: PCBs (v0.18)
+
+Two through-hole boards, generated from [`pcb/circuit.py`](pcb/circuit.py) in KiCad 7, autorouted with Freerouting and checked on every build. Full notes: [`pcb/README.md`](pcb/README.md).
+
+![Controller board](images/pcb_main.png)
+
+![Front breakout](images/pcb_front.png)
+
+- **Controller (170 × 60 mm, 2 oz copper)**, on `carrier_main`:
+  - **Power:** 10 A blade fuse, 100 µF bulk.
+  - **Heater:** high-side **G5LE relay**, its coil fed through the **KSD301** so the hardware cut-out doesn't depend on the firmware, then the low-side **IRLB3034** MOSFET for PWM. The heater path is 2 mm tracks plus both ground pours.
+  - **Fan:** its own 0.5 A PTC fuse, open-collector PWM, and a filtered tach input.
+  - **5 V:** from the off-board buck, a Schottky into the DevKit (so USB can't back-feed the rail), and a 3 A PTC on the LED feed.
+  - **Sensors and inputs:** 2.2 kΩ pull-ups for both I²C buses (the sensor runs are long), the NTC divider, the reed input, and a spare GPIO21 header.
+  - **ESP32 socket:** the J3 socket has twin rows of holes, for 22.86 or 25.4 mm header spacing.
+- **Front breakout (80 × 44 mm)**, in the header bay:
+  - **Headers in each module's own pin order:** TFT (14 pins), PN5180 (9) and encoder, so straight jumper wires work.
+  - **LED strip:** the 74AHCT125 level shifter sits at the strip end, with the 330 Ω and 1000 µF.
+  - **Encoder and reed:** 10 k pull-ups and 10 nF filters on the encoder, and the door-reed terminal.
+- **Checked:** DRC 0 errors and 0 unconnected on both boards; every pad's net matches the circuit; the track width on each net class is confirmed; the schematic part list matches the boards.
+- **Firmware notes:** fan PWM is inverted (`inverted: true`). GPIO45/46 are boot straps held low by their pull-downs, so the heater and relay are off while the ESP32 boots.
+
+![Schematic](images/pcb_schematic.png)

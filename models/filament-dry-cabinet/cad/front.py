@@ -60,6 +60,12 @@ LED_SCREW_X = (60.0, 180.0, W - 180.0, W - 60.0)
 BRK_SLOT = (340.0, 380.0)            # x of the cable slot under the front breakout PCB (v0.18)
 BRK_BOARD = (335.0, 415.0, 439.0, 483.0)   # front breakout PCB outline on the back plate (x0, x1, z0, z1)
 LED_Z = (LIP_Z0 + HDR_Z0) / 2
+# bottom strip (v0.24): two prisms on the floor against the bottom rail's back face, strip face 45 deg up and back.
+# Gap at slot 3 for the floor duct (interior.FD_X0..FD_X1 = 192.7..258.7); a 3-wire jumper crosses it.
+LEDB_H, LEDB_D = 10.0, 14.0           # flush with the sill (rail top); strip face 15.8 mm wide for the 12 mm strip
+LEDB_X = ((OPEN_X0, 190.7), (260.7, OPEN_X1))
+LEDB_SCREW_X = (60.0, 160.0, 300.0, 470.0)
+LEDB_Z = FLOOR + 5.0                  # M3 inserts in the rail's back face, in the 10 mm band above the floor
 
 def box(x0, x1, y0, y1, z0, z1):
     return mf.Manifold.cube((x1-x0, y1-y0, z1-z0)).translate((x0, y0, z0))
@@ -125,6 +131,9 @@ def bottom_rail(half):
     xm = W/2
     x0, x1 = (OPEN_X0, xm) if half == 'L' else (xm, OPEN_X1)
     m = box(x0, x1, F_Y0, F_Y1, Z0, Z0 + RAIL_H)
+    for xs in LEDB_SCREW_X:                                        # bottom LED rail screws (v0.24)
+        if x0 + 6 < xs < x1 - 6:
+            m -= cyl_y(xs, LEDB_Z, F_Y1 - M3_INSERT_L, F_Y1 + 1, M3_INSERT_D/2)
     return front_bolts(m, x0, x1, Z0, Z0 + RAIL_H, F_Y0)
 
 # ------------------------------------------------------------------ header
@@ -327,6 +336,23 @@ def led_rail(half):
             m -= cyl_y(xs, LED_Z, F_Y1 + 3, F_Y1 + 20, 3.2)
     return m
 
+def led_rail_bottom(i):
+    """Prism on the floor against the bottom rail, inside the chamber. Strip face 45 deg up and back."""
+    x0, x1 = LEDB_X[i]
+    h, d = LEDB_H, LEDB_D
+    # profile in (t = y - F_Y1, s = z - FLOOR): rail face t = 0, floor s = 0, slope face (35 deg); corners clipped 1 mm
+    pts = [(0.0, 0.0), (d, 0.0), (d, 1.0), (1.0, h), (0.0, h)]
+    prof = mf.CrossSection([pts])
+    if prof.area() < 0: prof = mf.CrossSection([pts[::-1]])
+    m = mf.Manifold.extrude(prof, x1 - x0).transform(np.array([[0, 0, 1, x0], [1, 0, 0, F_Y1], [0, 1, 0, FLOOR]], float))
+    for xs in LEDB_SCREW_X:
+        if x0 + 6 < xs < x1 - 6:
+            m -= cyl_y(xs, LEDB_Z, F_Y1 - 1, F_Y1 + 20, M3_CLR/2)
+            m -= cyl_y(xs, LEDB_Z, F_Y1 + 3.5, F_Y1 + 20, 3.2)
+    # wire channel along the back edge of the floor contact (3 wires, strip feed / jumper)
+    m -= box(x0 - 1, x1 + 1, F_Y1 + 4, F_Y1 + 8, FLOOR - 1, FLOOR + 2.5)
+    return m
+
 # ------------------------------------------------------------------ print orientation
 FACE_DOWN = np.array([[-1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0]], float)   # y face -> bed, det +1
 BACK_DOWN = np.array([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0]], float)   # y=28 face -> bed
@@ -344,6 +370,7 @@ def parts_world():
         'header_chassis_left': chassis(0), 'header_chassis_center': chassis(1), 'header_chassis_right': chassis(2),
         'header_fascia_nfc': fascia(0), 'header_fascia_tft': fascia(1), 'header_fascia_encoder': fascia(2),
         'led_rail_left': led_rail('L'), 'led_rail_right': led_rail('R'),
+        'led_rail_bottom_left': led_rail_bottom(0), 'led_rail_bottom_right': led_rail_bottom(1),
         'tft_bezel': tft_bezel(), 'nfc_tap_overlay': nfc_tap_overlay(), 'encoder_knob': encoder_knob(),
     }
 

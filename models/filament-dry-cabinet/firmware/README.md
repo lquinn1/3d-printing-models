@@ -62,7 +62,9 @@ data:
   slot: B4
 ```
 
-Front and back slots in the same column share LEDs; the screen says which row.
+Front and back slots in the same column share LEDs; the screen says which row. Each column light covers that column's LEDs in both the top and the bottom strip (slot 3 is top only: the floor duct sits under it).
+
+**LED current cap:** the 51 LEDs could draw 3.7 A on a full RGBW colour, more than the 3 A 5 V supply. Twice a second the firmware adds up the pixel buffer (18 mA per channel) and dims any light that's on to stay under `led_limit_ma` (2000 mA). Plain white is never dimmed. *LED current (estimate)* shows the figure in HA.
 
 ## Not in this version
 

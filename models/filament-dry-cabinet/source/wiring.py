@@ -39,7 +39,9 @@ WIRES = [
     ('W22', 'Front breakout J3 (9 pins)', 'PN5180 header', '5V, 3V3, RST, NSS, MOSI, MISO, SCK, BUSY, GND', '9 × female-female jumpers', 'any', '0.15 m', 'header bay', 'J3 follows the common PN5180 board order; check the labels on yours and match by name'),
     ('W23', 'Front breakout J4 (5 pins)', 'EC11 encoder', 'A, GND (C), B, SW, GND', '5 × 26 AWG', 'any', '0.15 m', 'header bay', 'Solder at the encoder; female jumper ends on J4'),
     ('W24', 'Front breakout J5', 'Door reed switch', 'REED, GND', '2 × 26 AWG', 'any', '0.4 m', 'right frame stile channel into the header', 'Glass reed: bend its leads only away from the glass, and sleeve them'),
-    ('W25', 'Front breakout J7-1..3', 'LED strip input', 'LED_5V, LED data, GND', '20 AWG (5 V, GND) + 26 AWG (data)', 'red, white, black', '0.2 m', 'header bay to under the lip', 'Solder to the strip pads; data goes to the DIN end'),
+    ('W25', 'Front breakout J7-1..3', 'LED strip input', 'LED_5V, LED data, GND', '20 AWG (5 V, GND) + 26 AWG (data)', 'red, white, black', '0.2 m', 'header bay to under the lip', 'Solder to the top strip pads at its DIN end (right end, x about 500); the top strip runs right to left'),
+    ('W26', 'Top strip DOUT (left end)', 'Bottom strip DIN (left end)', 'LED_5V, LED data, GND', '20 AWG (5 V, GND) + 26 AWG (data)', 'red, white, black', '0.45 m', 'down the inside front-left corner (side wall / frame), clipped', 'Chains the bottom strip and feeds its 5 V from both ends of the top strip'),
+    ('W27', 'Bottom strip, left segment DOUT', 'Bottom strip, right segment DIN', 'LED_5V, LED data, GND', '22 AWG ×3', 'red, white, black', '0.1 m', 'across the slot-3 gap in the rails\' floor channel, in front of the floor duct', 'Jumper over the floor duct gap (x 191–261)'),
 ]
 
 def table_md():
@@ -126,7 +128,9 @@ def draw():
     box(168, 100, 24, 12, 'PN5180 NFC', 'behind the NFC fascia', fc='#f3f0ff', ec='#7048e8')
     box(184, 80, 12, 9, 'EC11', 'encoder', fc='#e7f5ff', ec=C['sig'])
     box(182, 44, 15, 10, 'Reed switch', 'right frame\nstile', fc='#e7f5ff', ec=C['sig'])
-    box(170, 26, 26, 9, 'SK6812 strip', 'under the header lip', fc='#fff9db', ec=C['v5'])
+    box(170, 26, 26, 9, 'SK6812 top strip', '28 LEDs, under the header lip', fc='#fff9db', ec=C['v5'])
+    box(170, 14, 26, 8, 'SK6812 bottom strip', '9 + 14 LEDs, floor rails', fc='#fff9db', ec=C['v5'])
+    wire([(169.7, 30.5), (166.5, 30.5), (166.5, 18), (169.7, 18)], C['v5'], 'W26', at=0.5)
     wire([t2, (150, 99.7)], C['sig'], 'W21 ×14', at=0.5)
     wire([t3, (166, 92), (180, 92), (180, 99.7)], C['sig'], 'W22 ×9', at=0.5)
     wire([j4, (183.7, 84)], C['sig'], 'W23', at=0.5)
@@ -135,9 +139,9 @@ def draw():
     # legend
     for k, (c, t) in enumerate(((C['mains'], 'mains 120 V'), ('#2f9e44', 'earth'), (C['v24'], '+24 V'), (C['gnd'], 'GND'),
                                 (C['v5'], '+5 V'), (C['sig'], 'signal / 3.3 V'), (C['ribbon'], '26-way ribbon'))):
-        ax.plot([140 + (k % 4) * 15, 144 + (k % 4) * 15], [15 - (k // 4) * 4] * 2, color=c, lw=3)
-        ax.text(145 + (k % 4) * 15, 15 - (k // 4) * 4, t, fontsize=8, va='center')
-    ax.set_title('Filament dry cabinet: wiring (v0.18). Wire numbers match the wire list in DESIGN.md §19', fontsize=13)
+        ax.plot([140 + (k % 4) * 15, 144 + (k % 4) * 15], [10.5 - (k // 4) * 3.5] * 2, color=c, lw=3)
+        ax.text(145 + (k % 4) * 15, 10.5 - (k // 4) * 3.5, t, fontsize=8, va='center')
+    ax.set_title('Filament dry cabinet: wiring (v0.24). Wire numbers match the wire list in DESIGN.md §19', fontsize=13)
     plt.savefig(os.path.join(ROOT, 'images', 'wiring.png'), dpi=110, bbox_inches='tight'); plt.close()
 
 if __name__ == '__main__':

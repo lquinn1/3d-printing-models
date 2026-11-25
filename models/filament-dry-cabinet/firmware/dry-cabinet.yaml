@@ -23,7 +23,8 @@ substitutions:
   tft_invert: "true"
   tft_color_order: BGR
   # --- LEDs
-  led_count: "30"                     # 5 per slot column x 6 columns, left to right
+  led_count: "51"                     # 28 top (DIN at the right end, runs right to left) + 23 bottom (9 + 14, left to right, gap at slot 3)
+  led_limit_ma: "2000"                # firmware cap on the LED current, so the 3 A 5 V supply keeps 0.85 A for the rest
 
   # GPIO (pcb/circuit.py)
   pin_reed: GPIO4
@@ -160,6 +161,7 @@ globals:
   - { id: heater_level, type: float, initial_value: "0" }     # what reaches the heater after limits
   - { id: fan_level, type: float, initial_value: "0" }
   - { id: kp_before, type: float, initial_value: "0" }
+  - { id: led_ma, type: float, initial_value: "0" }           # estimated LED current
   - { id: ki_before, type: float, initial_value: "0" }
 
 # ----------------------------------------------------------------------------- sensors
@@ -321,6 +323,15 @@ sensor:
       - lambda: |-
           if (id(menu).is_active()) { id(menu).up(); id(menu_timeout).execute(); }
           else { id(page) = 1 - id(page); id(tft).update(); }
+
+  - platform: template
+    id: led_current
+    name: LED current (estimate)
+    unit_of_measurement: mA
+    accuracy_decimals: 0
+    update_interval: 10s
+    entity_category: diagnostic
+    lambda: return id(led_ma);
 
   - platform: wifi_signal
     id: wifi_db
@@ -665,27 +676,27 @@ light:
   - platform: partition
     id: col1
     name: Slots column 1
-    segments: [{ id: cab_light, from: 0, to: 4 }]
+    segments: [{ id: cab_light, from: 24, to: 31 }]
   - platform: partition
     id: col2
     name: Slots column 2
-    segments: [{ id: cab_light, from: 5, to: 9 }]
+    segments: [{ id: cab_light, from: 19, to: 23 }, { id: cab_light, from: 32, to: 36 }]
   - platform: partition
     id: col3
     name: Slots column 3
-    segments: [{ id: cab_light, from: 10, to: 14 }]
+    segments: [{ id: cab_light, from: 14, to: 18 }]
   - platform: partition
     id: col4
     name: Slots column 4
-    segments: [{ id: cab_light, from: 15, to: 19 }]
+    segments: [{ id: cab_light, from: 9, to: 13 }, { id: cab_light, from: 37, to: 41 }]
   - platform: partition
     id: col5
     name: Slots column 5
-    segments: [{ id: cab_light, from: 20, to: 24 }]
+    segments: [{ id: cab_light, from: 4, to: 8 }, { id: cab_light, from: 42, to: 46 }]
   - platform: partition
     id: col6
     name: Slots column 6
-    segments: [{ id: cab_light, from: 25, to: 29 }]
+    segments: [{ id: cab_light, from: 0, to: 3 }, { id: cab_light, from: 47, to: 50 }]
   - platform: monochromatic
     id: backlight
     name: Display backlight
@@ -784,6 +795,31 @@ interval:
     then:
       - lambda: id(desiccant_hours) += 1.0f;
 
+  # LED current limiter: 51 RGBW LEDs at full on every channel would draw 3.7 A, more than the 3 A supply.
+  # Estimate from the pixel buffer (18 mA per channel at 255) and scale every light that is on down to the cap.
+  - interval: 500ms
+    then:
+      - lambda: |-
+          auto *out = static_cast<light::AddressableLight *>(id(cab_light).get_output());
+          float ma = 0;
+          for (int i = 0; i < out->size(); i++) {
+            auto c = (*out)[i].get();
+            ma += (c.r + c.g + c.b + c.w) * (18.0f / 255.0f);
+          }
+          id(led_ma) = ma;
+          if (ma > ${led_limit_ma}) {
+            const float k = ${led_limit_ma} / ma * 0.97f;
+            light::LightState *ls[7] = {id(cab_light), id(col1), id(col2), id(col3), id(col4), id(col5), id(col6)};
+            for (auto *l : ls) {
+              if (!l->remote_values.is_on()) continue;
+              auto call = l->make_call();
+              call.set_brightness(std::max(0.05f, l->remote_values.get_brightness() * k));
+              call.set_transition_length(0);
+              call.perform();
+            }
+            ESP_LOGW("leds", "LED current %.0f mA over the %s mA cap: dimmed to %.0f %%", ma, "${led_limit_ma}", k * 100);
+          }
+
 # ----------------------------------------------------------------------------- scripts
 script:
   - id: wake_display
@@ -832,8 +868,8 @@ script:
     then:
       - script.execute: wake_display
       - lambda: |-
-          // columns 1-6 left to right; front and back slots share a column of LEDs,
-          // so the screen says which row
+          // columns 1-6 left to right (top and bottom strip LEDs of that column); front and back
+          // slots share a column, so the screen says which row
           const char *s = id(find_slot_sel).current_option().c_str();
           int col = s[1] - '0';
           light::LightState *cols[6] = {id(col1), id(col2), id(col3), id(col4), id(col5), id(col6)};

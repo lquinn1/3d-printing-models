@@ -10,7 +10,7 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 | R2 | Modular, looks like the concept picture | **Printed tile panels** (each ≤ 330 mm, to fit the 350 mm bed) bolted together, a dark frame and a full-width glass door (§4) |
 | R3 | PVC or other hardware-store parts as spool shelves | Spools roll on **1 in poplar dowels** (25.4 mm) set in printed cradles (§4.3). Same rods in every cabinet, whatever the plastic (v0.22, was 3/4 in Sch 40 PVC) |
 | R4 | ESPHome (ESP32) with local controls and status | ESP32-S3, a **3.5 in IPS touch TFT and rotary encoder** for setpoints, plus the HA API and a local web page (§6, §7) |
-| R5 | SK6812 LED lighting | **SK6812 RGBW** strip under the front header, 5 LEDs per slot, so it can **light up a single slot** (§6.4) |
+| R5 | SK6812 LED lighting | **SK6812 RGBW** strips under the front header and along the floor behind the door sill (v0.24), so spools are lit from above and below and any **single slot** can light up (§6.4) |
 | R6 | Front label, and an index position for each spool that Spoolman can manage | **The material label is shown on the 3.5 in TFT** (v0.8, replaces the printed plate), set from the menu or HA, plus a small printed backup tag on the door rail. **Slot IDs F1–F6 and B1–B6** on the door rail (§8). |
 | R7 | **≤ 20 in (508 mm) deep** for standard shelves, **≤ 20 in shelf spacing** | **442 mm (17.4 in)** cabinet, **492 mm (19.4 in)** with the rear control pod, using offset-height rows. **494 mm (19.4 in) tall** with the 68 mm header. (§3) |
 | R8 | IEC 320 C14 fused inlet | **Fused and switched C14 module** in the rear control pod (§6.1) |
@@ -183,7 +183,7 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 | Heater outlet temp | 10 k NTC (or DS18B20) at the duct outlet | ADC (or 1-wire) |
 | Heater | logic-level N-MOSFET, low side | GPIO, `slow_pwm` (about 5 s period) |
 | Fan | 4-pin PWM | LEDC at 25 kHz, tach to `pulse_counter` |
-| LEDs | SK6812 RGBW, about 30 LEDs | `esp32_rmt_led_strip`, via a **74AHCT125** level shifter, 330 Ω series resistor and 1000 µF at the strip |
+| LEDs | SK6812 RGBW, 51 LEDs (28 top + 23 bottom, one chain) | `esp32_rmt_led_strip`, via a **74AHCT125** level shifter, 330 Ω series resistor and 1000 µF at the strip |
 | Display | **3.5 in IPS SPI TFT, 480 × 320, ST7796 controller, FT6336U capacitive touch** (§6.6) | SPI (shared with the PN5180, own CS; keep the clock ≤ 10 MHz over the cable to the pod) + **backlight on an LEDC PWM pin** |
 | Touch (wired now, firmware later) | FT6336U capacitive, on the **I2C bus** (shared with the sensors) + **INT and RST pins reserved**. A resistive XPT2046 board also works: it goes on SPI with its own CS + IRQ pin. | ESPHome `ft63x6` (or `xpt2046`) touchscreen, enabled in a later phase |
 | Local control | EC11 rotary encoder with push switch | `rotary_encoder` + GPIO |
@@ -203,7 +203,12 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 3. **Mains** stays only in the rear pod: an enclosed PSU, a fused inlet and an earthed metal PSU case. Only 24 V goes into the chamber.
 
 ### 6.4 Lighting
-- One **SK6812 RGBW** strip (60/m) runs under the front header, aimed down and back. That's about **30 LEDs, 5 per slot column**.
+- **Two SK6812 RGBW strips (60/m), one data chain, 51 LEDs:**
+  - **Top: 28 LEDs** under the front header lip, aimed 45° down and back. Its data input (DIN) is at the **right** end, next to the front breakout (W25), and it runs right to left.
+  - **Bottom (v0.24): 23 LEDs** on two printed rails on the floor, against the inside of the door sill, aimed about 55° up and back so the spools are lit from underneath too. 9 LEDs on the left rail (slots 1–2) and 14 on the right (slots 4–6). There's a 70 mm gap at **slot 3** for the floor duct, which blows warm air up the door; a short jumper (W27) crosses it in the rails' floor channel.
+  - **Chain:** the top strip's DOUT (left end) runs down the inside front-left corner to the bottom strip's DIN (W26), so the bottom strip also gets 5 V from that end.
+  - **Slot lights:** each slot column's light (*Slots column 1–6*) covers its LEDs in both strips, worked out from where each LED sits. Slot 3 is lit from the top only.
+- **5 V budget and current cap:** at 18 mA per channel, all 51 LEDs on plain white draw 0.9 A; the firmware's mixed colours (warm white, find-slot) up to about 2.1 A; every channel at full would be 3.7 A. The 5 V supply is 3 A and the rest of the 5 V load is 0.85 A, so the firmware **caps the LEDs at 2.0 A**: twice a second it adds up the pixel buffer and dims every light that's on to stay under the cap (sensor: *LED current (estimate)*). Plain white is never dimmed; a full RGBW custom colour is.
 - An ESPHome **partition** light is set up for each column, so Home Assistant can **light up one slot**: for example, highlight F3 in white and B3 in a different colour.
 - The door switch turns on the full light. Normal brightness is capped at about 60 % to limit heat and current.
 - **Colour options:** choose a preset colour or a custom RGB colour from the encoder menu (**Lights → Colour / Custom colour**), or with the colour picker in Home Assistant. "White" uses the SK6812's **dedicated white LED** for the cleanest light, which is best when you're reading labels. The colours mix the RGB LEDs. A colour is a nice way to match each cabinet to its material (for example amber for PETG). The choice is saved and restored after a power cut.
@@ -543,6 +548,7 @@ Generated by [`cad/front.py`](cad/front.py) and checked by [`cad/verify_front.py
 | y 14–28 | **Frame ring**, bolted to the tiles' front inserts. The door's EPDM seals on its front face: two stiles, a bottom rail in two halves, and the **header lip** across the top. |
 | y 0–28 | **Header**, above the door, in 3 pieces. Each piece is a chassis bolted to the cabinet plus a removable fascia. |
 | inside | **LED rails** (2) screwed to the back of the header lip, with the strip face pointing 45° down and back |
+| inside | **Bottom LED rails** (2, v0.24) on the floor against the bottom rail's back face, flush with the sill (10 mm tall × 14 mm deep, face about 55° up and back), M3 × 8 into inserts in the rail; gap at slot 3 for the floor duct, wire channel along the back edge of their floor face |
 
 - **Door opening: 480 × 377.8 mm.** The top of the opening is the 12 mm header lip at z = 413.5. With the front spool of its slot out, a back-row spool needs 24 mm of lift to clear the rods and collars, and still clears the lip by **14.7 mm** (§3, §17).
 - **Header:**
@@ -577,6 +583,7 @@ Generated by [`cad/front.py`](cad/front.py) and checked by [`cad/verify_front.py
 | `header_chassis_left`, `_center`, `_right` | 1 each | Back face down. The open front faces up. |
 | `header_fascia_nfc`, `_tft`, `_encoder` | 1 each | Front face down (smooth face on the bed) |
 | `led_rail_left`, `_right` | 1 each | Mounting face down |
+| `led_rail_bottom_left`, `_right` | 1 each | Floor face down (165 and 245 mm long) |
 | `nfc_retainer` | 1 | Flat |
 | `tft_bezel` | 1 | **Orange.** Front face down. Frame round the screen window, 1.2 mm proud, with the 45° finger chamfer on its inner edge |
 | `nfc_tap_overlay` | 1 | **Orange.** Front face down. 64 × 46 mm tap zone over the PN5180 antenna: a phone and signal arcs over **TAP HERE**, debossed 0.5 mm (original icon, not the NFC Forum N-Mark, which is a licensed trademark) |
@@ -855,5 +862,7 @@ Every wire, from the mains inlet to the LED strip. Generated by [`source/wiring.
 | W22 | Front breakout J3 (9 pins) | PN5180 header | 5V, 3V3, RST, NSS, MOSI, MISO, SCK, BUSY, GND | 9 × female-female jumpers | any | 0.15 m | header bay | J3 follows the common PN5180 board order; check the labels on yours and match by name |
 | W23 | Front breakout J4 (5 pins) | EC11 encoder | A, GND (C), B, SW, GND | 5 × 26 AWG | any | 0.15 m | header bay | Solder at the encoder; female jumper ends on J4 |
 | W24 | Front breakout J5 | Door reed switch | REED, GND | 2 × 26 AWG | any | 0.4 m | right frame stile channel into the header | Glass reed: bend its leads only away from the glass, and sleeve them |
-| W25 | Front breakout J7-1..3 | LED strip input | LED_5V, LED data, GND | 20 AWG (5 V, GND) + 26 AWG (data) | red, white, black | 0.2 m | header bay to under the lip | Solder to the strip pads; data goes to the DIN end |
+| W25 | Front breakout J7-1..3 | LED strip input | LED_5V, LED data, GND | 20 AWG (5 V, GND) + 26 AWG (data) | red, white, black | 0.2 m | header bay to under the lip | Solder to the top strip pads at its DIN end (right end, x about 500); the top strip runs right to left |
+| W26 | Top strip DOUT (left end) | Bottom strip DIN (left end) | LED_5V, LED data, GND | 20 AWG (5 V, GND) + 26 AWG (data) | red, white, black | 0.45 m | down the inside front-left corner (side wall / frame), clipped | Chains the bottom strip and feeds its 5 V from both ends of the top strip |
+| W27 | Bottom strip, left segment DOUT | Bottom strip, right segment DIN | LED_5V, LED data, GND | 22 AWG ×3 | red, white, black | 0.1 m | across the slot-3 gap in the rails' floor channel, in front of the floor duct | Jumper over the floor duct gap (x 191–261) |
 

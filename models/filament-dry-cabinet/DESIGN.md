@@ -414,7 +414,7 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 | `tile_joint_a` + `_b` | V tongue and groove (0.2 mm clearance), two M4 × 8.1 heat-set inserts (5.6 mm holes), foam pocket depth | Joint closes flush? Inserts go in cleanly? Foam sits flush with the rim? |
 | `coupon_latch_door` + `coupon_latch_frame` + `latch_bar` (v0.17) | The lift-bar latch, cut straight from the real right door stile and frame stile (z 96–262). The door section slides front to back between rails on the frame section's base. | Does it click shut on its own when you push the door section in? Does pressing the bar flush pull it 1.5–2 mm further onto the seal? Does the bar release cleanly at about 40 mm of pull? Is the bar too loose or too stiff in its recess? |
 
-**Print settings:** ABS/ASA, 0.2 mm layers, 4 walls, 40 % infill. Print every coupon as it lies in the STL (flange or skin down). No supports.
+**Print settings:** ABS/ASA, 0.2 mm layers, 4 walls, **wall order inner/outer** (not inner/outer/inner), 40 % infill. Print every coupon as it lies in the STL (flange or skin down). No supports.
 
 ![Latch coupon, latched and released](images/cad_latch_coupon.jpg)
 
@@ -440,7 +440,7 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 | Item | Result | Setting now |
 |---|---|---|
 | Tile joint | **`tile_joint_b` fits better** (even 0.05 mm on each V flank) | `GROOVE_CLR = 0.05`, confirmed |
-| Port socket | Reprinted with **updated print settings**: **0.35 mm** is now the fit | `PORT_CLR_SEL = 0.35` (was 0.25). Print the tiles with the same settings as this coupon |
+| Port socket | Reprinted with the **wall order changed from inner/outer/inner to inner/outer**: **0.35 mm** is now the fit | `PORT_CLR_SEL = 0.35` (was 0.25). The 0.35 only holds with inner/outer wall order, so print the tiles that way |
 | O-ring | The ring still has a hard time staying on the module, but it's workable | Groove ID **23.0** (was 22.6): the 22 mm ring stretches about 4.5 % onto the groove's inner wall (cord about 1.96 mm, squeeze about 23 %). New **`oring_groove_coupon`**: three flanges with 22.6 / 23.0 / 23.4 grooves (1 / 2 / 3 notches on the front flat). Pick the one that holds the ring without rolling it, and change `GROOVE_ID` if it isn't 23.0 |
 
 **Next in CAD:** the front frame and header (screen bezel, NFC pad, encoder), the door, and the rear pod.
@@ -529,7 +529,7 @@ The foam sizes are the open pocket. Notch the foam around the bosses, pads and s
 
 ### Print settings
 
-ABS/ASA, 0.2 mm layers, **4 walls**, 5 top and bottom layers, **40 % gyroid**, enclosure heated, 3–5 mm brim on the large tiles. Print at 100 % with no extra XY compensation, as with the coupons.
+ABS/ASA, 0.2 mm layers, **4 walls**, **wall order inner/outer** (v0.25: the port thread clearance of 0.35 mm was tested with this; inner/outer/inner prints the threads differently), 5 top and bottom layers, **40 % gyroid**, enclosure heated, 3–5 mm brim on the large tiles. Print at 100 % with no extra XY compensation, as with the coupons.
 
 ### Assembly order
 

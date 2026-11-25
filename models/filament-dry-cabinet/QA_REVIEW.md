@@ -21,15 +21,15 @@ Review of spec v0.15 and every STL in `cad/stl`, 2026-11-24. Each finding has a 
 |---|---|---|---|
 | 1 | 11 threaded STLs had non-manifold "pinched" edges | P1 | **Fixed** |
 | 2 | Desiccant lid was exported upside down (plate in mid-air) | P1 | **Fixed** |
-| 3 | Heater safety chain: hot PTC on ABS ledges, AC-rated thermostat switching DC | P1 | Recommendation, BOM flagged |
-| 4 | Door seal: foam tape probably needs far more force than 3 magnet pairs give | P1 (test) | Recommendation |
-| 5 | Hinge frame leaf is two loose pieces, each held by one screw | P2 | Recommendation |
-| 6 | PVC rods are at their temperature limit in the 55–60 °C cabinets | P2 | Recommendation |
+| 3 | Heater safety chain: hot PTC on ABS ledges, AC-rated thermostat switching DC | P1 | **Fixed in v0.16**: relay + PTFE pads. Open: confirm heater surface temperature |
+| 4 | Door seal: foam tape probably needs far more force than 3 magnet pairs give | P1 (test) | **Fixed in v0.16**: draw latch, soft neoprene at 33 %. Still test the seal |
+| 5 | Hinge frame leaf is two loose pieces, each held by one screw | P2 | **Fixed in v0.16** (one piece, Ø11 knuckles) |
+| 6 | PVC rods are at their temperature limit in the 55–60 °C cabinets | P2 | **In BOM v0.16** (Sch 80 CPVC line, qty 0 for PETG) |
 | 7 | BOM: 24 PC4-M10 couplers listed, only 12 are ever in use | P2 | **Fixed** (BOM $781) |
-| 8 | 20 near-identical tiles have no part labels | P2 | Recommendation |
+| 8 | 20 near-identical tiles have no part labels | P2 | **Fixed in v0.16** (debossed names) |
 | 9 | Material and print-time savings (infill, ports, plenum) | P2 | Recommendation |
-| 10 | Knife edges on the feet and LED rails | P3 | Recommendation |
-| 11 | Looks: box edges, seam reveals, two-tone, flush pull | P3 | Recommendation |
+| 10 | Knife edges on the feet and LED rails | P3 | **Fixed in v0.16** |
+| 11 | Looks: box edges, seam reveals, two-tone, flush pull | P3 | Partly fixed in v0.16 (3 mm corner chamfers; the latch grip replaces the D-pull) |
 | 12 | Maker features: oven-safe desiccant, gel window, cut sheets, weight sensing | P3 | Recommendation |
 
 The things that are already done well are listed at the end.

@@ -27,7 +27,7 @@ for r in [(0,-T+4,ID,T-8),(0,IH+4,ID,T-8),(ID+4,-T,T-8,IH+2*T)]:
 ax.add_patch(Rectangle((-DOOR, -T), DOOR, IH+2*T-HEADER, facecolor='#9fd3f5', alpha=0.6, edgecolor='#333'))
 ax.add_patch(Rectangle((-DOOR, IH+T-HEADER), DOOR+8, HEADER, color='#222'))
 ax.text(-DOOR-6, IH+T-HEADER/2, 'header (68 mm):\nNFC pad, 3.5" TFT\n(label), encoder', ha='right', va='center', fontsize=8)
-ax.text(-DOOR-6, IH/2-40, 'door: printed frame,\n2 x polycarbonate\n+ air gap, EPDM seal', ha='right', va='center', fontsize=8)
+ax.text(-DOOR-6, IH/2-40, 'door: printed frame,\n2 x polycarbonate\n+ air gap, neoprene seal,\nflush lift-bar latch', ha='right', va='center', fontsize=8)
 # rear control pod
 ax.add_patch(Rectangle((ID+T, 30), POD, 230, facecolor='#555', edgecolor='#222'))
 ax.text(ID+T+POD/2, 145, 'control pod\n(outside chamber)\nIEC C14 fused inlet\n24 V PSU, ESP32', rotation=90, ha='center', va='center', color='white', fontsize=8)
@@ -89,7 +89,7 @@ def dim(p0, p1, txt, off, horiz=True):
         ax.text(off+8, (p0+p1)/2, txt, va='center', fontsize=9, rotation=90)
 dim(-DOOR, ID+T, f"cabinet {A['ed']:.0f} mm ({A['ed']/IN:.1f} in)", -T-FEET-25)
 dim(-DOOR, ID+T+POD, f"with rear control pod {A['ed']+POD:.0f} mm ({(A['ed']+POD)/IN:.1f} in)  < 20 in", -T-FEET-75)
-dim(-T-FEET, IH+T, f"{A['eh']:.0f} mm ({A['eh']/IN:.1f} in)", ID+T+POD+25, horiz=False)
+dim(-T-FEET, IH+T, f"{round(A['eh']+0.5):.0f} mm ({A['eh']/IN:.1f} in)", ID+T+POD+25, horiz=False)
 ax.annotate('', xy=(A['y_back'], A['cb']-R-25), xytext=(A['y_front'], A['cb']-R-25), arrowprops=dict(arrowstyle='<->', color='#555'))
 ax.text((A['y_front']+A['y_back'])/2, A['cb']-R-40, f"rows {A['d']:.0f} apart", ha='center', fontsize=8, color='#555')
 ax.set_xlim(-190, ID+T+POD+80); ax.set_ylim(-T-FEET-120, IH+T+40)
@@ -113,12 +113,17 @@ ax.text(115, hy+1, 'NFC (OpenPrintTag)', ha='center', va='bottom', fontsize=5.5,
 # 3.5 in IPS touch TFT, centred: material name on a colour band + status line
 cx, cz = IW/2, hy+HEADER/2
 ax.add_patch(Rectangle((cx-37, cz-24.8), 74, 49.6, facecolor='#050608', edgecolor='#666'))
-ax.add_patch(Rectangle((cx-37, cz-2), 74, 26.8, facecolor='#e8590c'))
-ax.text(cx, cz+11.5, 'PETG', ha='center', va='center', color='white', fontsize=17, weight='bold')
-ax.text(cx, cz-12, '45°C 14%RH', ha='center', va='center', color='#69db7c', fontsize=6, family='monospace')
+# label page as the firmware draws it (firmware/dry-cabinet.yaml): band = top 220 of 320 px
+ax.add_patch(Rectangle((cx-37, cz+24.8-49.6*220/320), 74, 49.6*220/320, facecolor='#1c6dd0'))
+ax.text(cx, cz+24.8-49.6*110/320, 'PETG', ha='center', va='center', color='white', fontsize=17, weight='bold')
+ax.text(cx-33, cz+24.8-49.6*270/320, '47.8°C  18%', ha='left', va='center', color='white', fontsize=5, weight='bold')
+ax.text(cx+33, cz+24.8-49.6*270/320, 'Maintain', ha='right', va='center', color='#8c939c', fontsize=4.5)
 ax.text(cx, hy+0.5, '3.5" IPS touch TFT (label + menu)', ha='center', va='bottom', fontsize=5.5, color='white')
 ax.add_patch(Circle((375, hy+HEADER/2), 14, facecolor='#adb5bd', edgecolor='#111'))
 ax.text(375, hy+1, 'encoder', ha='center', va='bottom', fontsize=6, color='white')
+# flush lift-bar latch in the right door stile
+ax.add_patch(Rectangle((IW-2, 94), 9, 135, facecolor='#495057', edgecolor='#111', lw=0.8))
+ax.text(IW+8, 160, 'lift-bar latch\n(pull the bottom)', fontsize=8, va='center')
 # LED strip just inside, under the header
 ax.add_patch(Rectangle((10, hy-14), IW-20, 6, color='#fab005'))
 for i in range(6):
@@ -135,7 +140,7 @@ for i in range(6):
     ax.text(xc, -T+2, f'{i+1}', ha='center', va='bottom', fontsize=9, color='white')
 for z in (A['rod_front'], A['rod_back']):
     ax.add_patch(Rectangle((0, z-ROD_OD/2), IW, ROD_OD, facecolor='white', edgecolor='#888', alpha=0.9))
-ax.text(IW/2, -T-FEET-28, f"{A['ew']:.0f} mm ({A['ew']/IN:.1f} in) wide x {A['eh']:.0f} mm ({A['eh']/IN:.1f} in) tall", ha='center', fontsize=10)
+ax.text(IW/2, -T-FEET-28, f"{A['ew']:.0f} mm ({A['ew']/IN:.1f} in) wide x {round(A['eh']+0.5):.0f} mm ({A['eh']/IN:.1f} in) tall", ha='center', fontsize=10)
 ax.text(IW+8, A['rod_front'], '3/4 in PVC rods\n+ index collars', fontsize=8, va='center')
 ax.text(IW+8, IH+T-HEADER-11, 'SK6812 strip\n(5 LEDs per slot)', fontsize=8, va='center')
 ax.set_xlim(-T-10, EW+90); ax.set_ylim(-T-FEET-45, A['eh']-T-FEET+10)

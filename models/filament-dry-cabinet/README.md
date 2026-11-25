@@ -59,7 +59,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | [`images/wiring.png`](images/wiring.png) | Electrical block diagram |
 | [`source/layout.py`](source/layout.py) | Layout calculator. Change the spool and rod sizes or the offset and rerun it. |
 | [`source/draw.py`](source/draw.py), [`source/wiring.py`](source/wiring.py) | Scripts that draw the layout and wiring figures |
-| [`source/render/`](source/render/) | Render scripts (`scene.py` builds the model from the layout numbers, `views.py` renders the three views) |
+| [`source/render/`](source/render/) | The software renderer (`scene.py`) used by every `cad/render_*.py`. The three presentation views (front, rear, stack) come from `cad/render_hero.py`, built from the real CAD parts |
 
 ## License
 
@@ -71,6 +71,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.19.1** (2026-11-25): **all renders redone from the current CAD.** The front, rear and stacked presentation views were still the v0.6 concept model (NFC box on the face, side handle, old door); they now come from `cad/render_hero.py` using the real tiles, frame, door with the lift-bar, pod, glands, interior and spools, with the screen showing the firmware's label page. Every `cad_*` render, the layout drawings (seal, latch, screen, 494 mm height), the schematic and the wiring diagram were re-run.
 - **v0.19** (2026-11-25): **ESPHome firmware** in `firmware/`: sensors, PID heater with saved autotune, Maintain / Dry / Off modes, all firmware interlocks, fan control, door pause, label and detail screens, the encoder menu, light colours, find-slot (also as an HA action), desiccant tracking. Compiles on ESPHome 2026.11. NFC and touch come later.
 - **v0.18** (2026-11-25): **Custom PCBs** replace the protoboard. The controller board (rear pod) carries a socketed ESP32-S3 DevKitC-1, the relay and MOSFET heater stage, the fan driver, fuses and sensor inputs. The front breakout (header bay) carries the display, NFC and encoder headers and the LED level shifter. A 26-way ribbon joins them. Files: KiCad boards, Gerbers, schematic and per-board BOMs in `pcb/`. **Wiring:** a full wiring diagram and a 25-wire list (gauge, colour, length, route). A **second cable gland** (14th back socket) for the ribbon, and a 40 × 7 mm slot into the header bay in place of the Ø10 hole. Also a **latch fit-test coupon**. BOM: every board part and harness item on its own line; the ESP32 is now the official Espressif DevKitC-1-N8R8. About $1,006.
 - **v0.17** (2026-11-24): **Flush lift-bar latch** replaces the side lever. The handle is a bar flush in the right door stile; pull its bottom end and a hidden hook drops off a steel pin in the frame stile, then the door opens. Push the door shut and it latches itself; press the bar flush and it draws the door up to 2 mm onto the seal. Nothing sticks out past the door. Renders: closed, pulled, hidden parts, a 5-step section and an animation. BOM: post, sleeve, insert, washer and M3 × 12 removed; M3 × 25 and M3 × 16 flat heads added. About $931.

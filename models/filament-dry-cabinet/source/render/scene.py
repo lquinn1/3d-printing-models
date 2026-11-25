@@ -227,6 +227,10 @@ def render(items, glass, labels, out, eye, target, fov=32, W=1500, H=1150, ss=2,
         scale = f/z
         if kind == 'tftname':
             fnt = ImageFont.truetype(F_B, int(22*scale)); dr.text((x, y), txt, font=fnt, fill=(255, 255, 255), anchor='mm')
+        elif kind == 'lblname':      # firmware label page: name on the colour band (DejaVu Bold 104 px of 320)
+            fnt = ImageFont.truetype(F_B, max(6, int(15.5*scale))); dr.text((x, y), txt, font=fnt, fill=(255, 255, 255), anchor='mm')
+        elif kind == 'lblstat':      # status line under the band
+            fnt = ImageFont.truetype(F_B, max(5, int(4.4*scale))); dr.text((x, y), txt, font=fnt, fill=(235, 235, 235), anchor='mm')
         elif kind == 'tftinfo':
             fnt = ImageFont.truetype(F_M, int(8*scale))
             dr.multiline_text((x, y), txt, font=fnt, fill=(105, 219, 124), anchor='mm', align='center', spacing=2)

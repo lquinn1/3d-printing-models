@@ -246,6 +246,11 @@ def cabinet(name, x, y, z, label):
     bpy.ops.object.light_add(type='AREA', location=(x + CAB_W/2, y + 0.06, z + 0.405))
     L = bpy.context.object; L.data.shape = 'RECTANGLE'; L.data.size = 0.46; L.data.size_y = 0.012
     L.data.energy = 9; L.data.color = (1.0, 0.86, 0.70); L.rotation_euler = (math.radians(180), 0, 0)
+    # bottom strip (v0.24): two segments on the floor behind the sill, aimed up and back
+    for xa, xb in ((25.7, 190.7), (260.7, 505.7)):
+        bpy.ops.object.light_add(type='AREA', location=(x + (xa + xb)/2*MM, y + 0.036, z + 0.031))
+        L = bpy.context.object; L.data.shape = 'RECTANGLE'; L.data.size = (xb - xa)*MM; L.data.size_y = 0.010
+        L.data.energy = 6 * (xb - xa) / 480; L.data.color = (1.0, 0.86, 0.70); L.rotation_euler = (math.radians(145), 0, 0)
     return root
 
 CY = RY0 + 0.012                                         # door front just behind the shelf's front rail

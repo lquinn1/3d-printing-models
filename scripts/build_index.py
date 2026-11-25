@@ -46,6 +46,19 @@ def esc(s: str) -> str:
     return str(s).replace("|", "\\|").strip()
 
 
+IMG_RE = re.compile(r"!\[[^\]]*\]\(([^)\s]+)\)")
+
+
+def thumbnail(d: Path, meta: dict, text: str) -> str | None:
+    """Front-matter `thumbnail:` if set, else the first local image in the README."""
+    cands = [meta.get("thumbnail")] if meta.get("thumbnail") else []
+    cands += [m for m in IMG_RE.findall(text) if not m.startswith(("http://", "https://"))]
+    for c in cands:
+        if (d / c).exists():
+            return f"models/{d.name}/{c}"
+    return None
+
+
 def collect_models():
     models = []
     for d in sorted(p for p in MODELS_DIR.iterdir() if p.is_dir()):
@@ -68,6 +81,7 @@ def collect_models():
             "material": meta.get("material", ""),
             "summary": meta.get("summary", ""),
             "tags": tags,
+            "thumb": thumbnail(d, meta, text),
         })
     return models
 
@@ -81,12 +95,14 @@ def render(models) -> str:
         by_cat.setdefault(m["category"], []).append(m)
     for cat in sorted(by_cat, key=str.lower):
         lines += [f"### {esc(cat)}", "",
-                  "| Model | Description | Material | Status | Tags |",
-                  "|-------|-------------|----------|--------|------|"]
+                  "| | Model | Description | Material | Status | Tags |",
+                  "|---|-------|-------------|----------|--------|------|"]
         for m in sorted(by_cat[cat], key=lambda x: x["title"].lower()):
             tags = " ".join(f"`{esc(t)}`" for t in m["tags"])
+            thumb = (f"<a href=\"models/{m['slug']}/README.md\"><img src=\"{m['thumb']}\" width=\"160\" alt=\"\"></a>"
+                     if m["thumb"] else "")
             lines.append(
-                f"| [{esc(m['title'])}](models/{m['slug']}/README.md) "
+                f"| {thumb} | [{esc(m['title'])}](models/{m['slug']}/README.md) "
                 f"| {esc(m['summary'])} | {esc(m['material'])} "
                 f"| {esc(m['status'])} | {tags} |"
             )

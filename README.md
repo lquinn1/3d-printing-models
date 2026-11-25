@@ -10,40 +10,40 @@ A collection of 3D printable models — source files, print-ready files, and pri
 
 ### Electrical
 
-| Model | Description | Material | Status | Tags |
-|-------|-------------|----------|--------|------|
-| [Homeline Load Center Filler Plate](models/homeline-filler-plate/README.md) | Snap-in filler plates (1- and 2-pole) for empty breaker openings in a Square D Homeline panel cover. Inspired by the HOMFPCP. | PLA (tested); ABS / ASA / PC recommended | Working | `electrical` `load-center` `breaker-panel` `filler-plate` `square-d` `homeline` `snap-fit` |
+| | Model | Description | Material | Status | Tags |
+|---|-------|-------------|----------|--------|------|
+| <a href="models/homeline-filler-plate/README.md"><img src="models/homeline-filler-plate/images/photo_installed.jpg" width="160" alt=""></a> | [Homeline Load Center Filler Plate](models/homeline-filler-plate/README.md) | Snap-in filler plates (1- and 2-pole) for empty breaker openings in a Square D Homeline panel cover. Inspired by the HOMFPCP. | PLA (tested); ABS / ASA / PC recommended | Working | `electrical` `load-center` `breaker-panel` `filler-plate` `square-d` `homeline` `snap-fit` |
 
 ### Kitchen & BBQ
 
-| Model | Description | Material | Status | Tags |
-|-------|-------------|----------|--------|------|
-| [BBQ Probe Spool Stand](models/bbq-probe-spool-stand/README.md) | Stand for rotary BBQ probe spools, with front clips for the probe tips and a storage box with two pockets (V3). | ABS | Working | `bbq` `thermometer` `probe` `organizer` `storage` `inkbird` `alpha-grillers` |
+| | Model | Description | Material | Status | Tags |
+|---|-------|-------------|----------|--------|------|
+| <a href="models/bbq-probe-spool-stand/README.md"><img src="models/bbq-probe-spool-stand/images/photo.jpg" width="160" alt=""></a> | [BBQ Probe Spool Stand](models/bbq-probe-spool-stand/README.md) | Stand for rotary BBQ probe spools, with front clips for the probe tips and a storage box with two pockets (V3). | ABS | Working | `bbq` `thermometer` `probe` `organizer` `storage` `inkbird` `alpha-grillers` |
 
 ### Lighting
 
-| Model | Description | Material | Status | Tags |
-|-------|-------------|----------|--------|------|
-| [Dragon Egg Nightlight](models/dragon-egg-nightlight/README.md) | Scaled dragon-egg lamp shade with an engraved base and a press-fit E26 socket deck, about 264 mm tall assembled. | PLA egg / ABS base and deck | Working | `nightlight` `lamp` `nursery` `dragon-egg` `e26` |
+| | Model | Description | Material | Status | Tags |
+|---|-------|-------------|----------|--------|------|
+| <a href="models/dragon-egg-nightlight/README.md"><img src="models/dragon-egg-nightlight/images/photo_lit.jpg" width="160" alt=""></a> | [Dragon Egg Nightlight](models/dragon-egg-nightlight/README.md) | Scaled dragon-egg lamp shade with an engraved base and a press-fit E26 socket deck, about 264 mm tall assembled. | PLA egg / ABS base and deck | Working | `nightlight` `lamp` `nursery` `dragon-egg` `e26` |
 
 ### Multiboard
 
-| Model | Description | Material | Status | Tags |
-|-------|-------------|----------|--------|------|
-| [Multiboard LED Light Bar](models/multiboard-led-light-bar/README.md) | One wedge bracket that holds an 18 x 8.5 mm LED channel on a Multiboard, aimed down the wall at 30°. The channel passes through, so use as many as you need, anywhere along the bar. | PLA (tested), PETG or ABS | Working | `multiboard` `led` `light-bar` `wall-wash` `push-fit` `honeycomb` |
+| | Model | Description | Material | Status | Tags |
+|---|-------|-------------|----------|--------|------|
+| <a href="models/multiboard-led-light-bar/README.md"><img src="models/multiboard-led-light-bar/images/preview.png" width="160" alt=""></a> | [Multiboard LED Light Bar](models/multiboard-led-light-bar/README.md) | One wedge bracket that holds an 18 x 8.5 mm LED channel on a Multiboard, aimed down the wall at 30°. The channel passes through, so use as many as you need, anywhere along the bar. | PLA (tested), PETG or ABS | Working | `multiboard` `led` `light-bar` `wall-wash` `push-fit` `honeycomb` |
 
 ### Organization
 
-| Model | Description | Material | Status | Tags |
-|-------|-------------|----------|--------|------|
-| [Example Cable Clip](models/example-cable-clip/README.md) | Placeholder model showing the README format. Delete once you add real models. | PETG | Example | `example` `cable-management` |
-| [Remote Control Wall Holder](models/remote-wall-holder/README.md) | Slide-in wall cradle for a slim 151 x 38 x 13 mm LED-light remote. Screws to the wall; the remote lifts straight up and out. | PLA or PETG | Working | `remote` `wall-mount` `holder` `slide-in` `led-remote` `drywall` |
+| | Model | Description | Material | Status | Tags |
+|---|-------|-------------|----------|--------|------|
+|  | [Example Cable Clip](models/example-cable-clip/README.md) | Placeholder model showing the README format. Delete once you add real models. | PETG | Example | `example` `cable-management` |
+| <a href="models/remote-wall-holder/README.md"><img src="models/remote-wall-holder/images/photo_installed.png" width="160" alt=""></a> | [Remote Control Wall Holder](models/remote-wall-holder/README.md) | Slide-in wall cradle for a slim 151 x 38 x 13 mm LED-light remote. Screws to the wall; the remote lifts straight up and out. | PLA or PETG | Working | `remote` `wall-mount` `holder` `slide-in` `led-remote` `drywall` |
 
 ### Storage
 
-| Model | Description | Material | Status | Tags |
-|-------|-------------|----------|--------|------|
-| [Filament Dry Cabinet](models/filament-dry-cabinet/README.md) | Modular, stackable, heated and desiccant-dried 12-spool cabinet (one per material). ESPHome control, SK6812 lighting, closable PTFE ports and Spoolman slot IDs. Under 20 in deep and tall. | ABS / ASA | Design | `filament` `dry-box` `dehumidifier` `esphome` `esp32` `sk6812` `spoolman` `openprinttag` `nfc` `dowel` `modular` `stackable` `ptfe` |
+| | Model | Description | Material | Status | Tags |
+|---|-------|-------------|----------|--------|------|
+| <a href="models/filament-dry-cabinet/README.md"><img src="models/filament-dry-cabinet/images/thumbnail.jpg" width="160" alt=""></a> | [Filament Dry Cabinet](models/filament-dry-cabinet/README.md) | Modular, stackable, heated and desiccant-dried 12-spool cabinet (one per material). ESPHome control, SK6812 lighting, closable PTFE ports and Spoolman slot IDs. Under 20 in deep and tall. | ABS / ASA | Design | `filament` `dry-box` `dehumidifier` `esphome` `esp32` `sk6812` `spoolman` `openprinttag` `nfc` `dowel` `modular` `stackable` `ptfe` |
 <!-- INDEX:END -->
 
 ## Repository Layout
@@ -62,7 +62,7 @@ scripts/
 ## Adding a Model
 
 1. Copy `models/_template` to `models/<model-name>` (lowercase, hyphens, e.g. `spool-holder`).
-2. Fill in the front matter at the top of the new `README.md` (`title`, `category`, `summary`, `material`, `status`, `tags`) and the rest of the page.
+2. Fill in the front matter at the top of the new `README.md` (`title`, `category`, `summary`, `material`, `status`, `tags`, and optionally `thumbnail`: the picture shown in the index; without it the first image in the README is used) and the rest of the page.
 3. Put printable/source files in `files/` and a `preview.png` in `images/`.
 4. Commit and push. The GitHub Action rebuilds the index automatically. To rebuild locally instead, run:
 

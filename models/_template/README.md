@@ -5,6 +5,7 @@ status: Draft
 material: PLA
 printer: Any FDM
 tags: [tag1, tag2]
+thumbnail: images/preview.png
 summary: One-line description of what this model is for.
 ---
 

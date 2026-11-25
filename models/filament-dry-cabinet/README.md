@@ -5,24 +5,25 @@ status: Design
 material: ABS / ASA
 printer: Voron 2.4 R2 350
 tags: [filament, dry-box, dehumidifier, esphome, esp32, sk6812, spoolman, openprinttag, nfc, dowel, modular, stackable, ptfe]
+thumbnail: images/thumbnail.jpg
 summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one per material). ESPHome control, SK6812 lighting, closable PTFE ports and Spoolman slot IDs. Under 20 in deep and tall.
 ---
 
 # Filament Dry Cabinet
 
-![Door closed (CAD)](images/cad_door_closed.jpg)
+![Two cabinets (PLA and PETG) on a wire shelf next to a Voron 2.4](images/render_photo_shelf.jpg)
 
-![Concept render](images/render_front.jpg)
+![Front (CAD render)](images/render_front.jpg)
 
 A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.4 in deep and 19.4 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
 
-**Status: CAD complete.** The shell (§13), front frame and header (§14), door (§15), rear pod (§16) and interior drying unit (§17), plus the fit-test coupons (§12). The as-built parts list is in **[BOM.md](BOM.md)** (about $793 for one cabinet). The ESPHome firmware and the PN5180 component are next. See **[DESIGN.md](DESIGN.md)** for the full spec.
+**Status: CAD, PCBs and firmware done; ready for the test build.** The shell (§13), front frame and header (§14), door (§15), rear pod (§16), interior drying unit (§17) and fit-test coupons (§12); two custom PCBs (§18), wiring (§19) and the ESPHome firmware (`firmware/`). The as-built parts list is in **[BOM.md](BOM.md)** (about $1,018 for one cabinet). The PN5180 NFC component is next. See **[DESIGN.md](DESIGN.md)** for the full spec.
 
 ![Two cabinets stacked (PLA under PETG)](images/render_stack.jpg)
 
 ![Rear: control pod, IEC inlet, back PTFE ports](images/render_rear.jpg)
 
-*Concept renders drawn from the spec dimensions. Shapes are simplified; this is not CAD.*
+*The top picture is a Blender/Cycles render of the CAD (`source/render/photo/`); the printer in it is a simplified stand-in. The others are rendered straight from the CAD (`cad/render_hero.py`).*
 
 ![Side section](images/layout_side.png)
 

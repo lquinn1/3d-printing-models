@@ -1,8 +1,8 @@
 # Filament dry cabinet: as-built bill of materials
 
-One cabinet, spec v0.18. This is the parts list for the first (test) build: it records what is bought, what fits and what changed.
+One cabinet, spec v0.20. This is the parts list for the first (test) build: it records what is bought, what fits and what changed.
 
-**Estimated total: $1,005.89** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed. Every line has a second source; where no product page was confirmed, the link is a search for that exact part on the supplier's site. No auction-site links.
+**Estimated total: $1,028.88** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed. Every line has a second source; where no product page was confirmed, the link is a search for that exact part on the supplier's site. No auction-site links.
 
 The live copy, with status, actual cost and test columns to fill in, is the Sheets artifact. This file is generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`; edit the source, not this file.
 
@@ -144,3 +144,4 @@ The live copy, with status, actual cost and test columns to fill in, is the Shee
 | Item | Description | Qty | Buy | $/pack | Ext $ | Supplier | Alt source | Part # | Used in | Status | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Filament | ABS or ASA, 1.75 mm, 1 kg spool (all printed parts, ~6.2 kg + 10 %) | 7 kg | 7 | 22.99 | 160.93 | [SUNLU](https://sunlu.com/products/1-75mm-sunlu-easy-abs-3d-printer-filament-1kg-roll) | [Newegg Business (SUNLU HS ABS)](https://www.neweggbusiness.com/p/9B-298-00N7-002H6) | SUNLU ABS 1 kg | All STLs in cad/stl | To order | Your usual SUNLU HighSpeed ABS works too. |
+| Accent filament | ABS or ASA, 1.75 mm, orange, 1 kg spool (accent parts, ~0.25 kg) | 1 kg | 1 | 22.99 | 22.99 | [SUNLU](https://sunlu.com/products/1-75mm-sunlu-easy-abs-3d-printer-filament-1kg-roll) | [Newegg Business (SUNLU HS ABS)](https://www.neweggbusiness.com/p/9B-298-00N7-002H6) | SUNLU ABS 1 kg orange | tft_bezel, nfc_tap_overlay, latch_bar, port modules, blank plugs, glands | To order | New in v0.20: orange accents on everything you touch or plug into. |

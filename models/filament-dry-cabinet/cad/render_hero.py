@@ -49,7 +49,8 @@ INSIDE += [(tm(cradle_world(s, k)), PART) for s in 'LR' for k in range(4)]
 for k in range(4):
     INSIDE.append((tm(I.rod(k)), hexc('#eef0f2')))
     INSIDE += [(tm(c), hexc('#b9bec4')) for c in I.collars(k)]
-FRONT_PARTS = [(tm(m), hexc('#f1f1ee') if 'led' in n else FRAME) for n, m in front_parts().items()]
+ORANGE = hexc('#e8833a')
+FRONT_PARTS = [(tm(m), ORANGE if n in ('tft_bezel', 'nfc_tap_overlay') else hexc('#f1f1ee') if 'led' in n else FRAME) for n, m in front_parts().items()]
 HINGES = [(tm(m), STEEL) for m in fixed_hinges().values()]
 
 (wx, wz), _, _, _ = tft_geometry()

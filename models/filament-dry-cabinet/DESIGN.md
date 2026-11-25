@@ -1,4 +1,4 @@
-# Filament Dry Cabinet: Design Spec (v0.14)
+# Filament Dry Cabinet: Design Spec (v0.15)
 
 This spec is for review before any CAD. v0.2 includes your answers to the open questions (§10). It sets the layout, construction, electronics, ESPHome control and the Spoolman slot scheme for **one cabinet**. You'll build **one cabinet per material family**: PLA, PETG, ABS/ASA, and so on.
 
@@ -333,38 +333,19 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 **Spoolman support:** upstream Spoolman doesn't read OpenPrintTag yet (there's a fork with NFC lookup that hasn't been merged), so this flow uses Spoolman's existing REST API and extra fields through Home Assistant. If upstream adds native NFC lookup later, step 4 gets simpler, and nothing on the cabinet changes.
 - **Home Assistant (phase 5):** use the Spoolman integration plus a script that, when you pick a spool, **lights its slot** in that cabinet. It can also show each cabinet's spool list and remaining weight on a dashboard.
 
-## 9. Bill of materials (one cabinet, draft)
+## 9. Bill of materials (one cabinet, as built)
 
-**Hardware store**
-- 3/4 in Sch 40 PVC pipe, about 2 m (4 rods × 498 mm)
-- 24 × PC4-M10 push-fit couplers (only as many as you'll use) + 4 mm OD PTFE tube
-- 22 × 2 mm nitrile O-rings (ID × CS, one per port module)
-- 1/2 in XPS foam board (one 2 × 4 ft sheet covers it)
-- Clear polycarbonate sheet, 2–2.5 mm, 2 panes about 510 × 400 mm
-- EPDM foam weatherstrip, about 2 m
-- Aluminium foil HVAC tape
-- M4 heat-set inserts, M4 × 10/16 bolts, M3 bolts for hinge pins
+The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). The estimated total for one cabinet is about **$793** (prices checked 2026-11-24, before tax and shipping).
 
-**Electronics**
-- IEC C14 fused and switched inlet module, 3.15 A T fuse
-- Mean Well LRS-200-24
-- 24 → 5 V buck converter, 5 A
-- ESP32-S3-DevKitC-1 N16R8
-- SHT45 + 1–2 × SHT40 breakout boards, 10 k NTC
-- 24 V PTC heater element, 150 W
-- KSD301 85 °C NC thermostat, 102 °C TCO
-- Logic-level MOSFET module (heater)
-- 24 V 4-pin PWM fan (60–80 mm)
-- SK6812 RGBW 5 V strip (60/m, 0.5 m), 74AHCT125, 330 Ω, 1000 µF
-- **3.5 in IPS SPI TFT, 480 × 320, FT6336U capacitive touch, 14-pin** (Haldzemo, sold as a 2-pack, about $36: one spare or one for a second cabinet), §6.6; small NPN/N-MOSFET for backlight PWM
-- EC11 encoder, reed switch + magnet
-- **PN5180 NFC module** (ISO 15693 + 14443A, SPI). Check the board size against the header (§4.4).
-- **Blank ICODE SLIX2 tags** for spools that don't ship with OpenPrintTag
-- Wire: 18 AWG for mains, 20 AWG for 24 V. Ferrules, connectors.
+The live copy, where status, actual cost and test results are filled in as parts arrive, is the Sheets artifact "Filament Dry Cabinet — As-Built BOM". When a part is measured, update `bom/bom_source.csv` and the FIT value in `cad/params.py` together.
 
-**Consumables**
-- Orange indicating silica gel, about 1 kg
-- ABS or ASA filament for all printed parts
+**Parts to measure on arrival (FIT values in `cad/params.py`):**
+- PTC heater: HEATER 80 × 52 × 30 mm (heater duct)
+- IEC inlet: IEC_CUT 47.5 × 27.5 mm, 1.6 mm panel (pod cover)
+- PN5180 board: NFC_BOARD 65 × 40 mm (NFC fascia)
+- Display stack: TFT_STACK 4.5 mm (TFT fascia)
+
+**Filament:** all printed parts together are about 8.5 L of solid plastic, about 6.2 kg at typical walls and infill. Buy 7 kg of ABS or ASA.
 
 ## 10. Decisions (v0.2)
 

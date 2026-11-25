@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Renders: cabinet with the door closed, and with the door open 100 deg."""
+"""Renders: cabinet with the door closed, and with the door open 100 deg (latch close-ups: render_latch.py)."""
 import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'source', 'render'))
 import numpy as np, trimesh, manifold3d as mf
@@ -36,18 +36,11 @@ for row, (yc, rz) in enumerate(((Y_FRONT_ROW, FLOOR + A['rod_front']), (Y_BACK_R
 floor = sbox(-1500, 2000, -1500, 2000, -1, 0)
 for deg, name, eye in ((0, 'cad_door_closed.jpg', (-480, -1150, 720)), (100, 'cad_door_open.jpg', (850, -1250, 760))):
     mv = moving_parts()
-    door = [(tm(swing(m, deg)), hexc('#9aa0a6' if ('hinge' in n or 'latch' in n) else '#2b2d31')) for n, m in mv.items()]
+    door = [(tm(swing(m, deg)), hexc('#e8833a' if 'latch' in n else '#9aa0a6' if 'hinge' in n else '#2b2d31')) for n, m in mv.items()]
     panes = []
     for a, b in SLOTS_T:
         x0 = XL1 - SLOT_DEPTH + PANE_CLR; z0 = ZB1 - SLOT_DEPTH + PANE_CLR; yc = DY0 + (a + b)/2
         panes.append(tm(swing(box(x0, x0 + PANE[0], yc - 1.18, yc + 1.18, z0, z0 + PANE[1]), deg)))
     render([(floor, hexc('#d8d4cc'))] + shell + front + hing + extras + inside + door, panes, [],
            os.path.join(IMG, name), eye=eye, target=(265, 150, 240), fov=34, W=1400, H=1150)
-# latch close-up: closed, and lever pulled to release
-for a, name, eye in ((0, 'cad_latch_closed.jpg', (760, -260, 330)), (-24, 'cad_latch_open.jpg', (760, -260, 330))):
-    mv = moving_parts()
-    door = [(tm(lever_turn(m, a) if n == 'latch_lever' else m), hexc('#9aa0a6' if ('hinge' in n or 'latch' in n) else '#2b2d31')) for n, m in mv.items()]
-    post = [(tm(latch_post_world()), hexc('#c9a227'))]
-    render([(floor, hexc('#d8d4cc'))] + shell + front + door + post, [], [],
-           os.path.join(IMG, name), eye=eye, target=(530, 10, 235), fov=24, W=1100, H=900)
 print('ok')

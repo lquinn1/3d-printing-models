@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 """Door checks: closed fit, seal backing, magnets, panes in their grooves, swing clearance."""
-import itertools, numpy as np, manifold3d as mf
+import itertools, math, numpy as np, manifold3d as mf
 from tiles import make_tiles
 from front import parts_world, MAGNET_Z, REED_Z
 from door import *
@@ -42,51 +42,47 @@ for z in list(MAGNET_Z) + [REED_Z]:
     print(f'door magnet pocket at z {z:.0f}: open {(probe ^ DOOR).volume() < 1e-6}')
 print(f'door: x {DX0}..{DX1}, y {DY0}..{DY1}, z {DZ0}..{DZ1}; gap to header {HDR_Z0 - DZ1:.1f} mm')
 
-# ------------------------------------------------------------------ latch
-LEV = latch_lever(); POST = latch_post_world()
-FIXED_NO_POST = mf.Manifold.batch_boolean([m for n, m in fixed if n != 'latch_post'], mf.OpType.Add)
-DOOR_ONLY = mf.Manifold.batch_boolean([m for n, m in mov.items() if n != 'latch_lever'], mf.OpType.Add)
-print('latch closed: lever vs post %.3f mm3, vs door %.3f, vs rest of cabinet %.3f'
-      % ((LEV ^ POST).volume(), (LEV ^ DOOR_ONLY).volume(), (LEV ^ FIXED_NO_POST).volume()))
-grown = latch_post_sleeve().translate((0, 0.15, 0))
-print('latch closed: tooth touches the post (0.15 mm probe): %s' % ((LEV ^ grown).volume() > 1e-4))
-# lever swing on its pivot, door closed: free of the door and cabinet
-for a in (-5, -10, -15, -20, -30, -45):
-    L = lever_turn(LEV, a)
-    print(f'lever {a:4d} deg: vs door {(L ^ DOOR_ONLY).volume():.3f}  vs cabinet {(L ^ FIXED_NO_POST).volume():.3f}')
-# release: lever angle at which the door can come straight forward past the post
-def clear_to_open(a):
-    L = lever_turn(LEV, a)
-    return all((L.translate((0, -dy, 0)) ^ POST).volume() < 1e-3 for dy in np.arange(0.0, 20.1, 0.5))
-rel = next((a for a in range(0, -46, -1) if clear_to_open(a)), None)
-print(f'latch releases at {rel} deg of lever travel '
-      f'(grip moves about {abs(66*np.sin(np.radians(rel or 0))):.0f} mm)')
-# self-latching: door swung shut with the lever hanging closed; the post must meet the ramp,
-# not the tooth's top. Probe the lever pushed back from 6 mm forward to closed.
-hits = [(dy, (LEV.translate((0, -dy, 0)) ^ POST).volume()) for dy in np.arange(6.0, -0.01, -0.5)]
-print('closing with lever down (door forward by dy): post meets the ramp first at dy = %.1f mm' %
-      next(dy for dy, v in hits if v > 1e-3) if any(v > 1e-3 for _, v in hits) else 'no contact')
-# draw-in: with the door short of closed by d, the closed lever overlaps the post -> it pulls the door in
+# ------------------------------------------------------------------ latch (flush lift-bar)
+from front import keeper_pin
+from door import KEEPER_PIN
+BAR = latch_bar(); PIN = keeper_pin()
+CLIP = box(490, 540, -80, 40, 90, 300)
+FIX_NO_PIN = mf.Manifold.batch_boolean([m for n, m in fixed if n != 'keeper_pin'], mf.OpType.Add) ^ CLIP
+DOOR_ONLY = mf.Manifold.batch_boolean([m for n, m in mov.items() if n != 'latch_bar'], mf.OpType.Add) ^ CLIP
+print('bar closed: vs door %.3f, vs frame %.3f, vs pin %.3f mm3' % ((BAR ^ DOOR_ONLY).volume(), (BAR ^ FIX_NO_PIN).volume(), (BAR ^ PIN).volume()))
+print('bar closed: hook touches the pin (0.15 mm probe): %s' % ((BAR ^ PIN.translate((0, 0.15, 0))).volume() > 1e-4))
+stop = None
+for a in np.arange(0, -45.1, -1.0):
+    B = bar_turn(BAR, a)
+    if (B ^ DOOR_ONLY).volume() > 1e-3: stop = a; break
+    assert (B ^ FIX_NO_PIN).volume() < 1e-3 and (B ^ PIN).volume() < 1e-4, a
+print(f'bar swings 0..{stop + 1:.0f} deg free of the door and frame; stops against the door at {stop:.0f}')
+def free(a):
+    B = bar_turn(BAR, a)
+    sweep = mf.Manifold.batch_boolean([B.translate((0, -t, 0)) for t in np.arange(0, 15.01, 0.5)], mf.OpType.Add)
+    return (sweep ^ PIN).volume() < 1e-4
+rel = next(a for a in np.arange(0, -33, -0.5) if free(a))
+print(f'hook releases at {rel} deg (bar bottom end {130*math.sin(math.radians(-rel)):.0f} mm forward)')
+need = []
+for d in np.arange(10, 0.24, -0.25):
+    if (BAR.translate((0, -d, 0)) ^ PIN).volume() < 1e-4: need.append(0.0); continue
+    need.append(next(a for a in np.arange(0, -33, -0.25) if (bar_turn(BAR, a).translate((0, -d, 0)) ^ PIN).volume() < 1e-4))
+print(f'closing: the pin pushes the bar out at most {min(need)} deg (< stop), and it drops back flush at closed: '
+      f'{(BAR ^ PIN).volume() < 1e-4}')
+ky, kz = KEEPER_PIN
 def catches(d):
-    """Door short of closed by d: raise the lever from open; the first contact must be on the
-    post's back half (tooth hooks behind it), not on its top or front."""
-    py, pz = LATCH_POST
-    P = POST.translate((0, d, 0))                       # in the door's frame the post is d further back
-    back = P ^ box(W - 1, W + 20, py + d, py + d + 10, pz - 10, pz + 10)
-    front = P - back
-    for a in np.arange(-25.0, 0.01, 0.25):
-        L = lever_turn(LEV, a)
-        if (L ^ P).volume() > 1e-3:
-            return (L ^ back).volume() > 1e-3 and (L ^ front).volume() < 1e-3, a
+    """Door short of closed by d: raising the bar from open, the first contact must be
+    on the pin's back half (the hook pulls the door in), not its top or front."""
+    for a in np.arange(-25, 0.01, 0.25):
+        v = bar_turn(BAR, a).translate((0, -d, 0)) ^ PIN
+        if v.volume() > 1e-4: return v.bounding_box()[1] > ky - 0.2, a
     return False, None
-for d in (0.5, 1.0, 1.5, 2.0, 2.5, 3.0):
+for d in (0.5, 1.0, 1.5, 2.0):
     ok, a = catches(d)
-    print(f'door {d:.1f} mm short of closed: tooth hooks behind the post: {ok} (first contact at {a} deg)')
-# door swing with the lever down and with it opened
+    print(f'door {d:.1f} mm short of closed: pushing the bar flush draws it in: {ok} (contact from {a} deg)')
 for a in (0, -20):
-    D = swing(DOOR_ONLY + lever_turn(LEV, a), 0)
+    D = DOOR_ONLY + bar_turn(BAR, a)
     for deg in (2, 5, 15, 30, 60, 90, 110):
-        D = swing(DOOR_ONLY + lever_turn(LEV, a), deg)
-        v = (D ^ FIX).volume()
-        if v > 1e-3: print(f'  lever {a} deg, door {deg} deg: hits cabinet {v:.2f} mm3')
-    print(f'door swing 2..110 deg with lever at {a} deg checked')
+        v = (swing(D, deg) ^ (FIX_NO_PIN + PIN)).volume()
+        assert v < 1e-3, (a, deg, v)
+    print(f'door swing 2..110 deg with the bar at {a} deg: clear')

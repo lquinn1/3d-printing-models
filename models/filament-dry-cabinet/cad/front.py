@@ -46,8 +46,14 @@ ENC_X = (HDR_SPLIT[1] + W) / 2        # 431.4: centre of the right fascia
 ENC_HOLE = 7.2                        # EC11 M7 bushing
 HINGE_Z = (85.0, 362.0)               # hinge centres (left stile side face)
 MAGNET_Z = (85.0, 362.0)              # door catch magnets (right stile front face); the latch is at 250
-LATCH_Z = 250.0                       # latch lever pivot height (door.py)
-LATCH_POST = (20.5, 251.0)            # (y, z) of the M4 latch post on the right stile's outer face
+LATCH_Z = 250.0                       # lift-bar pivot height (door.py)
+# keeper for the lift-bar hook: a pocket in the right stile's front face, outside the seal line,
+# with a steel pin across it (M3 x 16 flat head from the stile's outer side face)
+KEEPER_PIN = (17.0, 251.0)            # (y, z) of the pin axis (along x)
+KEEPER_PIN_R = 1.5                    # M3 shank
+KEEPER_X = (W - 11.0, W - 4.0)        # pocket x (the hook arm is W-10 .. W-5)
+KEEPER_Y1 = 27.0                      # pocket depth (frame back face is at 28)
+KEEPER_Z = (232.0, 258.0)
 MAGNET_D, MAGNET_H = 10.3, 3.2        # 10 x 3 mm neodymium
 REED_Z = 200.0
 LED_SCREW_X = (60.0, 180.0, W - 180.0, W - 60.0)
@@ -77,6 +83,20 @@ def front_bolts(m, x0, x1, z0, z1, y_head):
     return m
 
 # ------------------------------------------------------------------ frame
+def keeper_cut():
+    py, pz = KEEPER_PIN
+    m = box(KEEPER_X[0], KEEPER_X[1], F_Y0 - 1, KEEPER_Y1, KEEPER_Z[0], KEEPER_Z[1])
+    m += cyl_x(py, pz, KEEPER_X[1] - 0.5, W + 1, 1.7)                    # clearance
+    m += mf.Manifold.cylinder(1.75, 1.6, 3.35, 40).transform(              # 90 deg countersink
+        np.array([[0, 0, 1, W - 1.75], [1, 0, 0, py], [0, 1, 0, pz]], float))
+    m += cyl_x(py, pz, W - 16.6, KEEPER_X[0] + 0.5, 1.25)                # pilot (self-tapping)
+    return m
+
+def keeper_pin():
+    """The M3 x 16 flat-head screw shank across the pocket (for checks and renders)."""
+    py, pz = KEEPER_PIN
+    return cyl_x(py, pz, W - 15.4, W, KEEPER_PIN_R, n=32)
+
 def stile(side):
     x0, x1 = (0.0, STILE_W) if side == 'L' else (W - STILE_W, W)
     m = box(x0, x1, F_Y0, F_Y1, Z0, LIP_Z0)
@@ -89,9 +109,9 @@ def stile(side):
         xm = W - 8.0
         for mz in MAGNET_Z:                                # catch magnets, pressed in from the front
             m -= cyl_y(xm, mz, F_Y0 - 1, F_Y0 + MAGNET_H, MAGNET_D/2, n=48)
-        # M4 insert for the latch post (bolt + sleeve stand out of the side face, door.py)
-        py, pz = LATCH_POST
-        m -= cyl_x(py, pz, W - INSERT_DEPTH, W + 1, INSERT_HOLE_D/2)
+        # keeper pocket for the lift-bar hook + its pin: countersink and clearance in the outer
+        # wall, pilot for the screw's thread in the wall on the far side of the pocket
+        m -= keeper_cut()
         # reed switch pocket (2 x 14 mm glass reed) + wire channel up to the header bay
         m -= box(xm - 1.6, xm + 1.6, F_Y0 - 1, F_Y0 + 3.2, REED_Z - 9, REED_Z + 9)
         xc = OPEN_X1 + 6.5

@@ -45,7 +45,7 @@ def write_md(rows):
     total = sum(ext(r) or 0 for r in rows)
     out = ["# Filament dry cabinet: as-built bill of materials",
            "",
-           "One cabinet, spec v0.16. This is the parts list for the first (test) build: "
+           "One cabinet, spec v0.17. This is the parts list for the first (test) build: "
            "it records what is bought, what fits and what changed.",
            "",
            f"**Estimated total: ${total:,.2f}** (USD, prices checked 2026-11-24, before tax and shipping). "

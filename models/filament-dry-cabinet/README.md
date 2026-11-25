@@ -42,14 +42,14 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 | Control | ESP32-S3, SHT45/SHT40, 3.5 in IPS capacitive touchscreen TFT, 480 × 320 (shows the label; touch firmware later) + encoder, ESPHome |
 | NFC | **PN5180 tap pad** in the header for **OpenPrintTag** (ISO 15693) and NTAG tags. Tap a spool and pick a slot, and Spoolman's Location updates. |
 | Power | 120 V IEC C14 fused and switched inlet → Mean Well 24 V PSU in a rear pod outside the chamber |
-| Door | Twin-pane polycarbonate, soft neoprene seal, printed draw latch with magnetic click |
+| Door | Twin-pane polycarbonate, soft neoprene seal, flush lift-bar handle that is also a draw-in latch |
 | Safety | Hardware thermal cutouts (85 °C auto-reset on a heater relay + 102 °C fuse) and firmware interlocks |
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `door.py` (door, hinges, draw latch, tag), `pod.py` (rear pod), `interior.py` (desiccant, plenum, heater and floor ducts, sensor housings), `verify*.py` (assembly and swing checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
+| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `door.py` (door, hinges, lift-bar latch, tag), `render_latch.py` (latch renders and animation), `pod.py` (rear pod), `interior.py` (desiccant, plenum, heater and floor ducts, sensor housings), `verify*.py` (assembly and swing checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
 | [`DESIGN.md`](DESIGN.md) | Full design spec: requirements, layout options, construction, drying, electronics, ESPHome entities, Spoolman scheme, parts list, open questions |
 | [`BOM.md`](BOM.md), [`BOM.csv`](BOM.csv) | As-built bill of materials: links, prices, quantities, where each part is used, status and test results. Generated from `bom/bom_source.csv` by `bom/build_bom.py` |
 | [`QA_REVIEW.md`](QA_REVIEW.md) | Design and CAD QA review: what was fixed, and prioritised recommendations |
@@ -69,6 +69,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.17** (2026-11-24): **Flush lift-bar latch** replaces the side lever. The handle is a bar flush in the right door stile; pull its bottom end and a hidden hook drops off a steel pin in the frame stile, then the door opens. Push the door shut and it latches itself; press the bar flush and it draws the door up to 2 mm onto the seal. Nothing sticks out past the door. Renders: closed, pulled, hidden parts, a 5-step section and an animation. BOM: post, sleeve, insert, washer and M3 × 12 removed; M3 × 25 and M3 × 16 flat heads added. About $931.
 - **v0.16** (2026-11-24): QA fixes in the CAD and a fully broken-out BOM. **Door:** printed **draw latch** after the Clicky-Clack door (lever on the door edge, post on the frame stile, ramp draws the door in about 2 mm, magnetic click), D-pull handle removed; seal changed to 5 × 3 mm soft neoprene at 33 % squeeze (was EPDM at 50 %); one-piece hinge frame leaves, knuckles Ø11. **Interior:** PTFE pads under the heater; heater relay so the KSD301 switches a coil, not 6 A DC. **Tiles:** name debossed on each tile, 3 mm chamfered outside corners, foot base band. LED rail knife edges clipped. **BOM:** 71 lines, each part and passive on its own line, a protoboard for the electronics, an alternate source and link for every part, no auction sites. About $936. HP05-1/22 heater dropped (wrong part); a generic finned PTC is listed until a heater with a known surface temperature is confirmed.
 - **v0.15.1** (2026-11-24): design and CAD **QA review** ([`QA_REVIEW.md`](QA_REVIEW.md)). Fixed: 11 threaded STLs had non-manifold (pinched) edges, now all 66 STLs are watertight when welded and `save()` checks for it; the desiccant lid was exported upside down. BOM: 12 PC4-M10 couplers, not 24 ($781). Open recommendations: lower-temperature PTC and a relay for the KSD301, test the door seal force, one-piece hinge leaves, CPVC rods for 55–60 °C cabinets, part labels on the tiles.
 - **v0.15** (2026-11-24): as-built **bill of materials** for the first test build: [`BOM.md`](BOM.md) / [`BOM.csv`](BOM.csv), 42 lines with links, prices, quantities from the CAD, where each part is used, and status and test columns. About $793 for one cabinet. Filament estimate raised to 7 kg (from the STL volumes). DESIGN §9 now points to it.

@@ -71,6 +71,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.23.1** (2026-11-25): **photoreal render** of two cabinets on a wire shelf next to a Voron 2.4-style printer ([`images/render_photo_shelf.jpg`](images/render_photo_shelf.jpg)), Blender/Cycles from the CAD (`source/render/photo/`).
 - **v0.23** (2026-11-25): **5 V supply is now a Mean Well SD-15B-5** ($14.80, 18–36 V in, 5 V 3 A, protected) in place of the $39.95 Pololu D36V50F5; it sits on `carrier_left` between printed corner stops (checked against the cover, PSU and glands). 5 V budget worked out: about 2 A worst real case. **Controller is now the ESP32-S3-DevKitC-1-N16R8** (16 MB flash; same pinout), firmware set to 16 MB and recompiled. Wiring list, schematic and pod render updated. About $1,018.
 - **v0.22** (2026-11-25): **1 in poplar dowels replace the PVC rods** (Madison Mill 436580, two 48 in dowels per cabinet). One rod type for every plastic, and about 0.3 mm sag loaded against 2 mm or more for PVC at 50 °C, so the CPVC line for hot cabinets is gone. Rod cradles and collars resized for 25.4 mm (collar grip raised for undersize dowels); the cabinet size is unchanged. New prep steps: pre-dry, seal and measure the dowels (§4.3). BOM about $1,043.
 - **v0.21** (2026-11-25): the NFC tap zone is now a **64 × 46 mm rectangle with a phone-and-waves icon and TAP HERE**, and the encoder gets a **printed orange knob** (`encoder_knob`, D-bore for the 6 mm shaft) in place of the aluminium one. Renders and the front layout drawing updated. About $1,026.

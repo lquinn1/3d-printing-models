@@ -50,7 +50,7 @@ for k in range(4):
     INSIDE.append((tm(I.rod(k)), hexc('#eef0f2')))
     INSIDE += [(tm(c), hexc('#b9bec4')) for c in I.collars(k)]
 ORANGE = hexc('#e8833a')
-FRONT_PARTS = [(tm(m), ORANGE if n in ('tft_bezel', 'nfc_tap_overlay') else hexc('#f1f1ee') if 'led' in n else FRAME) for n, m in front_parts().items()]
+FRONT_PARTS = [(tm(m), ORANGE if n in ('tft_bezel', 'nfc_tap_overlay', 'encoder_knob') else hexc('#f1f1ee') if 'led' in n else FRAME) for n, m in front_parts().items()]
 HINGES = [(tm(m), STEEL) for m in fixed_hinges().values()]
 
 (wx, wz), _, _, _ = tft_geometry()
@@ -63,7 +63,7 @@ def screen(band, name, rh):
     labels = [((wx, YL - 1.5, wz + 24.8 - 49.6*110/320), name, 'lblname'),
               ((wx, YL - 1.5, wz + 24.8 - 49.6*270/320), f'47.8°C   {rh}%        Maintain', 'lblstat')]
     return items, labels
-KNOB = [(tm(cyl_y(ENC_X, ZC, -16, 0, 12, n=48)), STEEL)]
+KNOB = []   # encoder_knob is a printed part now (in FRONT_PARTS)
 
 def door_and_glass():
     mv = moving_parts()

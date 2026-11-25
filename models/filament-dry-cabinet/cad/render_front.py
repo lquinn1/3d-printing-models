@@ -11,7 +11,7 @@ IMG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')
 def tm(m):
     o = m.to_mesh(); return trimesh.Trimesh(o.vert_properties[:, :3], o.tri_verts, process=False)
 COL = {'L': '#3b82c4', 'R': '#3b82c4', 'TOP': '#e8833a', 'BOT': '#5aa865', 'BACK': '#8f6fd1'}
-PC = {'tft_bezel': '#e8833a', 'nfc_tap_overlay': '#e8833a', 'frame': '#3a3d42', 'header_chassis': '#3a3d42', 'header_fascia': '#1d1e21', 'led': '#f1f1ee'}
+PC = {'tft_bezel': '#e8833a', 'nfc_tap_overlay': '#e8833a', 'encoder_knob': '#e8833a', 'frame': '#3a3d42', 'header_chassis': '#3a3d42', 'header_fascia': '#1d1e21', 'led': '#f1f1ee'}
 
 tiles = make_tiles()
 shell = [(tm(t.build(simple=True).transform(t.M()[:3])), hexc(COL[t.f.name])) for t in tiles]
@@ -22,7 +22,6 @@ extras = [
     (tm(box(bx - 49 + 6.54, bx - 49 + 91.5, y_l, y_p, bz - 27.75, bz + 27.75)), hexc('#0b0c0e')),   # lens/LCD
     (tm(box(wx - 37, wx + 37, y_l - 0.05, y_l + 0.2, wz + 24.8 - 49.6*220/320, wz + 24.8)), hexc('#1c6dd0')),   # label band (firmware label page)
     (tm(box(bx - 49, bx + 49, y_p, y_p + 1.6, bz - 27.75, bz + 27.75)), hexc('#1f5f3a')),           # PCB
-    (tm(cyl_y(ENC_X, ZC, -16, 0, 12, n=48)), hexc('#9aa0a6')),                                       # knob
     (tm(box(NFC_X - NFC_BOARD[0]/2, NFC_X + NFC_BOARD[0]/2, FAS, FAS + 1.6, ZC - NFC_BOARD[1]/2, ZC + NFC_BOARD[1]/2)), hexc('#b02a2a')),
 ]
 def col(n):
@@ -36,7 +35,7 @@ render([(floor, hexc('#d8d4cc'))] + shell + front + extras, [], [],
 ex = []
 for n, m in pw.items():
     if n.startswith('header_fascia'): ex.append((tm(m.translate((0, -60, 0))), col(n)))
-    elif n in ('tft_bezel', 'nfc_tap_overlay'): ex.append((tm(m.translate((0, -100, 0))), col(n)))
+    elif n in ('tft_bezel', 'nfc_tap_overlay', 'encoder_knob'): ex.append((tm(m.translate((0, -100, 0))), col(n)))
     elif n.startswith('header_chassis') or n.startswith('led'): ex.append((tm(m), col(n)))
 ex += [(tm(e.vertices and m), c) for m, c in []]
 board = [(box(bx - 49 + 6.54, bx - 49 + 91.5, y_l - 30, y_p - 30, bz - 27.75, bz + 27.75), '#0b0c0e'),

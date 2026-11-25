@@ -12,13 +12,13 @@ def tm(m):
     o = m.to_mesh(); return trimesh.Trimesh(o.vert_properties[:, :3], o.tri_verts, process=False)
 COL = {'L': '#3b82c4', 'R': '#3b82c4', 'TOP': '#e8833a', 'BOT': '#5aa865', 'BACK': '#8f6fd1'}
 shell = [(tm(t.build(simple=True).transform(t.M()[:3])), hexc(COL[t.f.name])) for t in make_tiles()]
-front = [(tm(m), hexc('#e8833a' if n in ('tft_bezel', 'nfc_tap_overlay') else '#1d1e21' if 'fascia' in n else '#f1f1ee' if 'led' in n else '#3a3d42')) for n, m in parts_world().items()]
+front = [(tm(m), hexc('#e8833a' if n in ('tft_bezel', 'nfc_tap_overlay', 'encoder_knob') else '#1d1e21' if 'fascia' in n else '#f1f1ee' if 'led' in n else '#3a3d42')) for n, m in parts_world().items()]
 hing = [(tm(m), hexc('#9aa0a6')) for m in fixed_hinges().values()]
 (wx, wz), (bx, bz), holes, win = tft_geometry()
 y_l = FAS + TFT_GAP
 extras = [(tm(box(wx - 37, wx + 37, y_l, y_l + 4, wz - 24.8, wz + 24.8)), hexc('#0b0c0e')),
           (tm(box(wx - 37, wx + 37, y_l - 0.05, y_l + 0.2, wz + 24.8 - 49.6*220/320, wz + 24.8)), hexc('#1c6dd0')),
-          (tm(cyl_y(ENC_X, ZC, -16, 0, 12, n=48)), hexc('#9aa0a6'))]
+          ]
 # rods + a few spools so the door has something to show
 from coupons import cyl
 inside = []

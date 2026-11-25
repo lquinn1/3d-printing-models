@@ -104,25 +104,28 @@ ax.add_patch(Rectangle((-T, -T-FEET), EW, A['eh'], facecolor='#2b2b2b'))
 # door glass and header
 htop = IH + T; hy = htop - HEADER
 ax.add_patch(Rectangle((0, -T+12), IW, hy-4-(-T+12), facecolor='#cfe8fc', alpha=0.9, edgecolor='#111', lw=3))
-# NFC tap pad (PN5180 antenna behind the header)
-ax.add_patch(Rectangle((80, hy+6), 70, HEADER-12, facecolor='#343a40', edgecolor='#7048e8', lw=2))
-for r in (8, 14, 20):
-    ax.add_patch(matplotlib.patches.Arc((103, hy+HEADER/2), r, r*1.3, theta1=-50, theta2=50, color='#b197fc', lw=1.5))
-ax.text(130, hy+HEADER/2, 'TAP', ha='center', va='center', color='#b197fc', fontsize=9, weight='bold')
-ax.text(115, hy+1, 'NFC (OpenPrintTag)', ha='center', va='bottom', fontsize=5.5, color='white')
+# NFC tap zone: orange overlay over the PN5180 antenna (front.py nfc_tap_overlay)
+from matplotlib.patches import FancyBboxPatch
+ax.add_patch(FancyBboxPatch((100-32+3, hy+HEADER/2-23+3), 64-6, 46-6, boxstyle='round,pad=3', facecolor='#e8833a', edgecolor='none'))
+ax.add_patch(FancyBboxPatch((92-4.5, hy+HEADER/2+7.5-9.5), 9, 19, boxstyle='round,pad=1.5', facecolor='none', edgecolor='#9c4a14', lw=1.3))
+for r in (5, 8.5, 12):
+    ax.add_patch(matplotlib.patches.Arc((98.5, hy+HEADER/2+7.5), 2*r, 2*r, theta1=-42, theta2=42, color='#9c4a14', lw=1.3))
+ax.text(100, hy+HEADER/2-13.5, 'TAP HERE', ha='center', va='center', color='#9c4a14', fontsize=6.5, weight='bold')
+ax.text(100, hy+1, 'NFC (OpenPrintTag)', ha='center', va='bottom', fontsize=5.5, color='white')
 # 3.5 in IPS touch TFT, centred: material name on a colour band + status line
 cx, cz = IW/2, hy+HEADER/2
-ax.add_patch(Rectangle((cx-37, cz-24.8), 74, 49.6, facecolor='#050608', edgecolor='#666'))
+ax.add_patch(FancyBboxPatch((cx-37.5-5.5+3, cz-25.3-5.5+3), 75+11-6, 50.6+11-6, boxstyle='round,pad=3', facecolor='#e8833a', edgecolor='none'))   # orange bezel
+ax.add_patch(Rectangle((cx-37, cz-24.8), 74, 49.6, facecolor='#050608', edgecolor='none'))
 # label page as the firmware draws it (firmware/dry-cabinet.yaml): band = top 220 of 320 px
 ax.add_patch(Rectangle((cx-37, cz+24.8-49.6*220/320), 74, 49.6*220/320, facecolor='#1c6dd0'))
 ax.text(cx, cz+24.8-49.6*110/320, 'PETG', ha='center', va='center', color='white', fontsize=17, weight='bold')
 ax.text(cx-33, cz+24.8-49.6*270/320, '47.8°C  18%', ha='left', va='center', color='white', fontsize=5, weight='bold')
 ax.text(cx+33, cz+24.8-49.6*270/320, 'Maintain', ha='right', va='center', color='#8c939c', fontsize=4.5)
 ax.text(cx, hy+0.5, '3.5" IPS touch TFT (label + menu)', ha='center', va='bottom', fontsize=5.5, color='white')
-ax.add_patch(Circle((375, hy+HEADER/2), 14, facecolor='#adb5bd', edgecolor='#111'))
+ax.add_patch(Circle((375, hy+HEADER/2), 12, facecolor='#e8833a', edgecolor='#9c4a14'))
 ax.text(375, hy+1, 'encoder', ha='center', va='bottom', fontsize=6, color='white')
 # flush lift-bar latch in the right door stile
-ax.add_patch(Rectangle((IW-2, 94), 9, 135, facecolor='#495057', edgecolor='#111', lw=0.8))
+ax.add_patch(Rectangle((IW-2, 94), 9, 135, facecolor='#e8833a', edgecolor='#111', lw=0.8))
 ax.text(IW+8, 160, 'lift-bar latch\n(pull the bottom)', fontsize=8, va='center')
 # LED strip just inside, under the header
 ax.add_patch(Rectangle((10, hy-14), IW-20, 6, color='#fab005'))
@@ -145,6 +148,6 @@ ax.text(IW+8, A['rod_front'], '3/4 in PVC rods\n+ index collars', fontsize=8, va
 ax.text(IW+8, IH+T-HEADER-11, 'SK6812 strip\n(5 LEDs per slot)', fontsize=8, va='center')
 ax.set_xlim(-T-10, EW+90); ax.set_ylim(-T-FEET-45, A['eh']-T-FEET+10)
 ax.set_aspect('equal'); ax.axis('off')
-ax.set_title('Front view: slots F1-F6 / B1-B6, NFC tap pad, 3.5" touch TFT (shows the label), encoder', fontsize=12)
+ax.set_title('Front view: slots F1-F6 / B1-B6, NFC tap zone, 3.5" touch TFT (shows the label), encoder', fontsize=12)
 plt.savefig('layout_front.png', dpi=110, bbox_inches='tight')
 print('ok')

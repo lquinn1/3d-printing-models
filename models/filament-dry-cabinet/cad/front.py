@@ -215,7 +215,6 @@ OV_T = 1.2                             # overlay thickness, proud of the fascia
 OV_PEG_D, OV_PEG_L = 2.5, 1.8          # pegs: blind holes 2.1 deep, so nothing pokes out of the 2.4 mm fascia
 BEZEL_BORDER = 5.5                     # orange border round the window
 BEZEL_R = 3.0
-NFC_TAP_D = 46.0
 _wx, _wz = W/2, ZC
 BEZEL_PEGS = [(_wx - 37.52 - BEZEL_BORDER/2, _wz), (_wx + 37.52 + BEZEL_BORDER/2, _wz)]
 NFC_PEGS = [(NFC_X - 17.0, ZC), (NFC_X + 12.0, ZC + 12.0)]       # not symmetric: it only goes on one way up
@@ -245,23 +244,60 @@ def chamfer_ring(cx, cz, w, h, r, c):
                                    rrect_y(cx, cz, w, h, r, -OV_T + c, -OV_T + c + 0.001)])
     return big - keep - rrect_y(cx, cz, w, h, r, -OV_T + c, 1)
 
+NFC_TAP = (64.0, 46.0, 3.0)            # w x h x corner r of the tap zone (covers the PN5180 antenna)
+
+def _text_cs(txt, cap_h, max_w):
+    """Text as a CrossSection (mm), centred on the origin, DejaVu Sans Bold."""
+    from matplotlib.textpath import TextPath
+    from matplotlib.font_manager import FontProperties
+    tp = TextPath((0, 0), txt, size=10, prop=FontProperties(family='DejaVu Sans', weight='bold'))
+    polys = [np.asarray(p, float) for p in tp.to_polygons() if len(p) > 2]
+    allp = np.vstack(polys); x0, y0 = allp.min(0); x1, y1 = allp.max(0)
+    k = min(cap_h / (y1 - y0), max_w / (x1 - x0))
+    polys = [((p - [(x0 + x1)/2, (y0 + y1)/2]) * k).tolist() for p in polys]
+    return mf.CrossSection(polys, mf.FillRule.EvenOdd)
+
+def _deboss(cs, cx, cz, y_front, depth):
+    """Extrude a CrossSection (X right, Y up as seen from the front) into the part from its front face."""
+    h = depth + 1.0
+    return mf.Manifold.extrude(cs, h).transform(np.array([[1, 0, 0, cx], [0, 0, -1, y_front + depth], [0, 1, 0, cz]], float))
+
 def nfc_tap_overlay():
-    """Orange tap zone over the PN5180 antenna: a disc with the tap mark debossed 0.5 mm."""
+    """Orange tap zone over the PN5180 antenna: a phone, signal arcs and TAP HERE, debossed 0.5 mm."""
     cx, cz = NFC_X, ZC
-    m = cyl_y(cx, cz, -OV_T, 0, NFC_TAP_D/2, n=128)
-    big = cyl_y(cx, cz, -OV_T - 1, -OV_T + 0.5, NFC_TAP_D/2 + 1, n=128)
-    keep = mf.Manifold.batch_hull([cyl_y(cx, cz, -OV_T - 0.001, -OV_T, NFC_TAP_D/2 - 0.5, n=128),
-                                   cyl_y(cx, cz, -OV_T + 0.5, -OV_T + 0.501, NFC_TAP_D/2, n=128)])
-    m -= big - keep - cyl_y(cx, cz, -OV_T + 0.5, 1, NFC_TAP_D/2, n=128)
-    d0, d1 = -OV_T - 1, -OV_T + 0.5                                   # deboss depth 0.5
-    for r in (7.0, 11.5, 16.0):
-        arc = cyl_y(cx - 6, cz, d0, d1, r + 0.8, n=96) - cyl_y(cx - 6, cz, d0, d1, r - 0.8, n=96)
-        arc ^= box(cx - 6 + r*0.25, cx + 30, d0, d1, cz - r*0.8, cz + r*0.8)
-        m -= arc
-    m -= cyl_y(cx - 6, cz, d0, d1, 2.6, n=32)
-    for px, pz in NFC_PEGS:
-        m += cyl_y(px, pz, -0.01, OV_PEG_L, OV_PEG_D/2, n=24)
+    w, h, r = NFC_TAP
+    m = rrect_y(cx, cz, w, h, r, -OV_T, 0)
+    m -= chamfer_ring(cx, cz, w, h, r, 0.5)
+    d = 0.5
+    # icon (original artwork, not the NFC Forum N-Mark): phone outline + three arcs
+    px, pz = cx - 8.0, cz + 7.5
+    phone = mf.CrossSection.batch_hull([mf.CrossSection.circle(2.2, 24).translate((sx*3.8, sz*8.3)) for sx in (-1, 1) for sz in (-1, 1)])
+    inner = mf.CrossSection.batch_hull([mf.CrossSection.circle(1.0, 24).translate((sx*3.8, sz*7.0)) for sx in (-1, 1) for sz in (-1, 1)])
+    icon = (phone - inner).translate((px - cx, pz - cz))
+    for rr in (5.0, 8.5, 12.0):
+        ring = mf.CrossSection.circle(rr + 0.75, 96) - mf.CrossSection.circle(rr - 0.75, 96)
+        wedge = mf.CrossSection([[(0, 0), (30, -30*0.9), (30, 30*0.9)]])
+        icon += (ring ^ wedge).translate((px + 6.5 - cx, pz - cz))
+    m -= _deboss(icon, cx, cz, -OV_T, d)
+    m -= _deboss(_text_cs('TAP HERE', 6.0, 50.0), cx, cz - 13.5, -OV_T, d)
+    for qx, qz in NFC_PEGS:
+        m += cyl_y(qx, qz, -0.01, OV_PEG_L, OV_PEG_D/2, n=24)
     return m
+
+# ---------------------------------------------------------------- encoder knob (orange, printed)
+KNOB_D, KNOB_H = 24.0, 15.0            # Bourns PEC11R-4220F: 6 mm shaft, D flat 4.5 mm across
+KNOB_GAP = 1.0                         # clear of the fascia / bushing nut
+def encoder_knob():
+    """Printed knob for the 6 mm D shaft: 24 grip flutes, a pointer groove on the face, D bore 12 deep."""
+    y0, y1 = -KNOB_GAP - KNOB_H, -KNOB_GAP
+    m = cyl_y(ENC_X, ZC, y0 + 0.8, y1, KNOB_D/2, n=96)
+    m += mf.Manifold.batch_hull([cyl_y(ENC_X, ZC, y0, y0 + 0.01, KNOB_D/2 - 0.8, n=96), cyl_y(ENC_X, ZC, y0 + 0.8, y0 + 0.81, KNOB_D/2, n=96)])
+    for k in range(24):
+        a = 2*np.pi*k/24
+        m -= cyl_y(ENC_X + (KNOB_D/2 + 0.55)*np.cos(a), ZC + (KNOB_D/2 + 0.55)*np.sin(a), y0 + 2.5, y1 + 1, 1.1, n=16)
+    m -= box(ENC_X - 0.8, ENC_X + 0.8, y0 - 1, y0 + 0.8, ZC + 3.5, ZC + KNOB_D/2)        # pointer
+    bore = cyl_y(ENC_X, ZC, y1 - 12.0, y1 + 1, 3.0 + 0.1, n=48) ^ box(ENC_X - 4, ENC_X + 4, y1 - 13, y1 + 2, ZC - 4, ZC + 2.25 + 0.1)
+    return m - bore
 
 def nfc_retainer():
     """Strap across the back of the PN5180 module, M2.5 into the fascia bosses."""
@@ -308,12 +344,12 @@ def parts_world():
         'header_chassis_left': chassis(0), 'header_chassis_center': chassis(1), 'header_chassis_right': chassis(2),
         'header_fascia_nfc': fascia(0), 'header_fascia_tft': fascia(1), 'header_fascia_encoder': fascia(2),
         'led_rail_left': led_rail('L'), 'led_rail_right': led_rail('R'),
-        'tft_bezel': tft_bezel(), 'nfc_tap_overlay': nfc_tap_overlay(),
+        'tft_bezel': tft_bezel(), 'nfc_tap_overlay': nfc_tap_overlay(), 'encoder_knob': encoder_knob(),
     }
 
 ORIENT = {'frame_stile': (FACE_DOWN, True), 'frame_rail': (FACE_DOWN, False), 'header_chassis': (BACK_DOWN, False),
           'header_fascia': (FACE_DOWN, False), 'led_rail': (BACK_DOWN, False),
-          'tft_bezel': (FACE_DOWN, False), 'nfc_tap_overlay': (FACE_DOWN, False)}
+          'tft_bezel': (FACE_DOWN, False), 'nfc_tap_overlay': (FACE_DOWN, False), 'encoder_knob': (FACE_DOWN, False)}
 
 if __name__ == '__main__':
     pw = parts_world()

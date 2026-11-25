@@ -1,8 +1,8 @@
 # Filament dry cabinet: as-built bill of materials
 
-One cabinet, spec v0.20. This is the parts list for the first (test) build: it records what is bought, what fits and what changed.
+One cabinet, spec v0.21. This is the parts list for the first (test) build: it records what is bought, what fits and what changed.
 
-**Estimated total: $1,028.88** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed. Every line has a second source; where no product page was confirmed, the link is a search for that exact part on the supplier's site. No auction-site links.
+**Estimated total: $1,025.93** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed. Every line has a second source; where no product page was confirmed, the link is a search for that exact part on the supplier's site. No auction-site links.
 
 The live copy, with status, actual cost and test columns to fill in, is the Sheets artifact. This file is generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`; edit the source, not this file.
 
@@ -76,7 +76,7 @@ The live copy, with status, actual cost and test columns to fill in, is the Shee
 | NFC reader | PN5180 NFC module, ISO 15693 + 14443A, SPI | 1 pcs | 1 | 12.8 | 12.80 | [Elechouse](https://www.elechouse.com/product/pn5180-nfc-module/) | [Amazon](https://www.amazon.com/s?k=PN5180+NFC+module) | PN5180 | header_fascia_nfc + nfc_retainer (§14) | To order | FIT: measure the board against NFC_BOARD 65 × 40 mm. |
 | NFC tags | ICODE SLIX2 (ISO 15693) stickers, Ø21 mm, for spools without OpenPrintTag (min. 10) | 12 pcs | 12 | 0.75 | 9.00 | [Shop NFC](https://shopnfc.com/en/nfc-stickers/724-nfc-stickers-slix2-round-d21mm.html) | [Atlas RFID](https://www.atlasrfidstore.com/avery-dennison-smartrac-block-lite-nfc-hf-rfid-paper-tag-nxp-icode-slix2/) | IL-603074 | One per spool slot | To order | €0.69 each, shown in USD (estimate). |
 | Rotary encoder | Bourns 24-detent mechanical encoder with push switch, 6 mm flatted shaft | 1 pcs | 1 | 2.2 | 2.20 | [Digi-Key](https://www.digikey.com/en/products/detail/bourns-inc/PEC11R-4220F-S0024/4499660) | [LCSC](https://lcsc.com/product-detail/Coded-Rotary-Switches_BOURNS_PEC11R-4220F-S0024_PEC11R-4220F-S0024_C143797.html) | PEC11R-4220F-S0024 | header_fascia_encoder (§14) | To order |  |
-| Encoder knob | Machined aluminium knob, 20 mm, black, 6 mm set-screw bore | 1 pcs | 1 | 2.95 | 2.95 | [Adafruit](https://adafruit.com/product/5527) | [Digi-Key](https://www.digikey.com/en/products/detail/adafruit-industries-llc/5527/16653407) | Adafruit 5527 | Encoder shaft | To order |  |
+| Encoder knob | Machined aluminium knob, 20 mm, black, 6 mm set-screw bore | 0 pcs | 0 | 2.95 | 0.00 | [Adafruit](https://adafruit.com/product/5527) | [Digi-Key](https://www.digikey.com/en/products/detail/adafruit-industries-llc/5527/16653407) | Adafruit 5527 | Alternative to the printed encoder_knob | To order | v0.21: replaced by the printed orange encoder_knob; qty 0. Buy this only if you want a metal knob. |
 | LED strip | SK6812 RGBW addressable strip, 5 V, 60 LED/m (sold per 1 m) | 0.5 m | 1 | 26.95 | 26.95 | [Solarbotics](https://solarbotics.com/?p=88576) | [Amazon (BTF-Lighting)](https://www.amazon.com/s?k=BTF-LIGHTING+SK6812+RGBW+60+5V) | SK6812 RGBW 60/m | led_rail_left + led_rail_right (§14) | To order |  |
 
 ## Sensors
@@ -144,4 +144,4 @@ The live copy, with status, actual cost and test columns to fill in, is the Shee
 | Item | Description | Qty | Buy | $/pack | Ext $ | Supplier | Alt source | Part # | Used in | Status | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | Filament | ABS or ASA, 1.75 mm, 1 kg spool (all printed parts, ~6.2 kg + 10 %) | 7 kg | 7 | 22.99 | 160.93 | [SUNLU](https://sunlu.com/products/1-75mm-sunlu-easy-abs-3d-printer-filament-1kg-roll) | [Newegg Business (SUNLU HS ABS)](https://www.neweggbusiness.com/p/9B-298-00N7-002H6) | SUNLU ABS 1 kg | All STLs in cad/stl | To order | Your usual SUNLU HighSpeed ABS works too. |
-| Accent filament | ABS or ASA, 1.75 mm, orange, 1 kg spool (accent parts, ~0.25 kg) | 1 kg | 1 | 22.99 | 22.99 | [SUNLU](https://sunlu.com/products/1-75mm-sunlu-easy-abs-3d-printer-filament-1kg-roll) | [Newegg Business (SUNLU HS ABS)](https://www.neweggbusiness.com/p/9B-298-00N7-002H6) | SUNLU ABS 1 kg orange | tft_bezel, nfc_tap_overlay, latch_bar, port modules, blank plugs, glands | To order | New in v0.20: orange accents on everything you touch or plug into. |
+| Accent filament | ABS or ASA, 1.75 mm, orange, 1 kg spool (accent parts, ~0.25 kg) | 1 kg | 1 | 22.99 | 22.99 | [SUNLU](https://sunlu.com/products/1-75mm-sunlu-easy-abs-3d-printer-filament-1kg-roll) | [Newegg Business (SUNLU HS ABS)](https://www.neweggbusiness.com/p/9B-298-00N7-002H6) | SUNLU ABS 1 kg orange | tft_bezel, nfc_tap_overlay, encoder_knob, latch_bar, port modules, blank plugs, glands | To order | New in v0.20: orange accents on everything you touch or plug into. |

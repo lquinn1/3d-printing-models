@@ -1,8 +1,8 @@
 # Filament dry cabinet: as-built bill of materials
 
-One cabinet, spec v0.21. This is the parts list for the first (test) build: it records what is bought, what fits and what changed.
+One cabinet, spec v0.22. This is the parts list for the first (test) build: it records what is bought, what fits and what changed.
 
-**Estimated total: $1,025.93** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed. Every line has a second source; where no product page was confirmed, the link is a search for that exact part on the supplier's site. No auction-site links.
+**Estimated total: $1,042.60** (USD, prices checked 2026-11-24, before tax and shipping). Prices marked *estimate* in the notes are not confirmed. Every line has a second source; where no product page was confirmed, the link is a search for that exact part on the supplier's site. No auction-site links.
 
 The live copy, with status, actual cost and test columns to fill in, is the Sheets artifact. This file is generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`; edit the source, not this file.
 
@@ -108,8 +108,8 @@ The live copy, with status, actual cost and test columns to fill in, is the Shee
 | Port O-rings | 22 × 2 mm EPDM O-ring, 70 duro (50-pack) | 26 pcs | 1 × 50 | 11.0 | 11.00 | [Zoro](https://www.zoro.com/mr-o-ring-epdm-70-duro-black-o-ring-cs-200-mm-0079-in-id-2200-mm-0866-in-e200x022/i/G714272189/) | [Amazon](https://www.amazon.com/s?k=22mm+x+2mm+EPDM+o-ring) | E200X022 | All 26 port modules incl. 2 glands (§12-13, §19) | Tested OK | O-ring fit verified. The groove was loose; tightened to ID 22.6 × 2.5 × 1.5 mm. Reprint and retest. |
 | PTFE couplers | PC4-M10 push-fit couplers (10-pack) | 12 pcs | 2 × 10 | 17.99 | 35.98 | [Newegg](https://www.newegg.com/p/298-00N0-000H0) | [3D Printing Canada](https://3dprintingcanada.com/products/stainless-steel-pneumatic-push-in-fitting-pc4-01) | PC4-M10 | port_ptfe_module ×12 (§4.6) | Ordered | Arriving; fit test pending. 12 in use at once (top OR back ports). |
 | PTFE tube | 4 mm OD / 2 mm ID PTFE tube, 1 m | 1 m | 1 | 11.99 | 11.99 | [Capricorn](https://store11330852.ecwid.com/1-Meter-TL-Translucent-1-75mm-Bowden-Tubing-p82190771) | [3DJake](https://www.3djake.com/capricorn/tl-transparent-ptfe-bowden) | Capricorn TL 1 m | Port modules to printer | To order | Length depends on your runs. |
-| Spool rods | 3/4 in Schedule 40 PVC pipe, 10 ft (1.050 in OD): PLA / PETG / TPU cabinets | 1.992 m | 1 × 3.048 | 9.31 | 9.31 | [Home Depot](https://www.homedepot.com/p/Charlotte-Pipe-3-4-in-x-10-ft-PVC-Schedule-40-Pressure-Plain-End-Pipe-PVC-04007-0600/100348472) | [Lowe's](https://www.lowes.com/search?searchTerm=3%2F4+in+schedule+40+pvc+pipe+10+ft) | PVC 04007 0600 | 4 rods × 498 mm (§13) | Received | Measured 1.05 in OD. |
-| Spool rods, hot cabinets | 3/4 in Schedule 80 CPVC pipe (grey, IPS 1.050 in OD) for 55–60 °C cabinets only | 0 m | 0 × 1.524 | 25.0 | 0.00 | [Zoro](https://www.zoro.com/search?q=3%2F4%20schedule%2080%20CPVC%20pipe) | [McMaster-Carr](https://www.mcmaster.com/products/cpvc-pipe/) | Sch 80 CPVC 3/4 in | 4 rods × 498 mm, ABS/ASA and nylon cabinets | To order | Price estimate. Qty 0 for this (PETG) build. Not the orange CTS CPVC (0.875 in OD). |
+| Spool rods | 1 in × 48 in round poplar dowel: each cuts into two 498 mm rods | 2 pcs | 2 | 6.99 | 13.98 | [Menards](https://www.menards.com/main/doors-windows-millwork/dowels-wooden-pins-plugs/madison-mill-round-poplar-dowels/436580/p-1444438758591-c-12188.htm) | [Do it Best](https://www.doitbest.com/product/180524/madison-mill-1-in-x-48-in-poplar-dowel-rod-180524/) | Madison Mill 436580 | rod ×4 in rod_cradle_front / rod_cradle_rear (§4.3) | To order | Price estimate (Zoro lists $6.99 each). v0.22: replaces 3/4 in Sch 40 PVC and the hot-cabinet CPVC. Pick straight ones; pre-dry, seal and measure them (§4.3). |
+| Dowel sealer | Oil-based wipe-on polyurethane, clear satin, small can (two thin coats on the dried rods) | 1 pcs | 1 | 12 | 12.00 | [Home Depot](https://www.homedepot.com/s/minwax%20wipe-on%20poly) | [Menards](https://www.menards.com/main/search.html?search=wipe-on%20poly) | Minwax Wipe-On Poly (or any oil-based poly) | Spool rods (§4.3) | To order | Price estimate. Skip it if you already have an oil-based finish. |
 
 ## Fasteners
 

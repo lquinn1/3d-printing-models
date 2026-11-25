@@ -47,7 +47,7 @@ POD = [(tm(pw['pod_base']), PART), (tm(pw['pod_cover']), PART),
 INSIDE = [(tm(m), hexc('#3a3d42') if 'duct' in n or 'plenum' in n else hexc('#ececec')) for n, m in I.parts_world().items()]
 INSIDE += [(tm(cradle_world(s, k)), PART) for s in 'LR' for k in range(4)]
 for k in range(4):
-    INSIDE.append((tm(I.rod(k)), hexc('#eef0f2')))
+    INSIDE.append((tm(I.rod(k)), hexc('#d8bf8f')))     # poplar dowel
     INSIDE += [(tm(c), hexc('#b9bec4')) for c in I.collars(k)]
 ORANGE = hexc('#e8833a')
 FRONT_PARTS = [(tm(m), ORANGE if n in ('tft_bezel', 'nfc_tap_overlay', 'encoder_knob') else hexc('#f1f1ee') if 'led' in n else FRAME) for n, m in front_parts().items()]

@@ -6,12 +6,15 @@ IN = 25.4
 SPOOL_D, SPOOL_W = 200.0, 75.0          # 1 kg spool, widest common width
 SPOOL_CLR = 7.0                         # min gap between spool rims
 PITCH = 80.0                            # slot pitch across the width
-# rods: 3/4 in Sch 40 PVC
-ROD_OD = 1.050 * IN                     # 26.67
+# rods: 1 in poplar dowel (v0.22; was 3/4 in Sch 40 PVC, 26.67 OD)
+ROD_OD = 1.000 * IN                     # 25.4 nominal: measure yours and put it here
 ROD_CC = 110.0                          # spacing of the two rods under each row
 # spool centre height above rod centres (rim resting on both rods)
 R = SPOOL_D / 2
 C_ABOVE_RODS = math.sqrt((R + ROD_OD/2)**2 - (ROD_CC/2)**2)
+# the shell was sized with 26.67 mm PVC rods; keep that envelope so tiles and door panes don't change
+# (dowel-borne spools sit 0.7 mm lower, which is 0.7 mm more lift room)
+C_SIZING = math.sqrt((R + 1.050*IN/2)**2 - (ROD_CC/2)**2)
 # shell
 WALL = 15.7                             # 2.4 skin + 1/2 in XPS + 0.6 (cad/params.py)
 DOOR = 28.0                             # door frame with twin-wall polycarbonate
@@ -30,7 +33,7 @@ def stadium(n_across, h_offset, lift_access=True):
     top_back = cb + R
     top_front = cf + R
     lift = max(0.0, (top_front + 5) - (cb - R)) if lift_access else 0.0
-    ih = top_back + lift + 10 + (HEADER - 60.0)
+    ih = top_back + (C_SIZING - C_ABOVE_RODS) + lift + 10 + (HEADER - 60.0)
     ew, ed, eh = iw + 2*WALL, idepth + WALL + DOOR, ih + 2*WALL + FEET
     return dict(n=2*n_across, iw=iw, idepth=idepth, ih=ih, ew=ew, ed=ed, eh=eh,
                 d=d, cf=cf, cb=cb, rod_front=rod_z_front, rod_back=rod_z_front+h_offset,

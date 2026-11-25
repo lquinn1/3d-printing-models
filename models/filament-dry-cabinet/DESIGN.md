@@ -8,7 +8,7 @@ This spec is for review before any CAD. v0.2 includes your answers to the open q
 |---|-------------|------------------------------|
 | R1 | Filament storage that also dehumidifies | Sealed, insulated chamber with a **low-voltage PTC heater**, a circulation fan and **pull-out silica gel cartridges** (§5) |
 | R2 | Modular, looks like the concept picture | **Printed tile panels** (each ≤ 330 mm, to fit the 350 mm bed) bolted together, a dark frame and a full-width glass door (§4) |
-| R3 | PVC or other hardware-store parts as spool shelves | Spools roll on **3/4 in Sch 40 PVC pipe** (26.7 mm OD) set in printed cradles (§4.3) |
+| R3 | PVC or other hardware-store parts as spool shelves | Spools roll on **1 in poplar dowels** (25.4 mm) set in printed cradles (§4.3). Same rods in every cabinet, whatever the plastic (v0.22, was 3/4 in Sch 40 PVC) |
 | R4 | ESPHome (ESP32) with local controls and status | ESP32-S3, a **3.5 in IPS touch TFT and rotary encoder** for setpoints, plus the HA API and a local web page (§6, §7) |
 | R5 | SK6812 LED lighting | **SK6812 RGBW** strip under the front header, 5 LEDs per slot, so it can **light up a single slot** (§6.4) |
 | R6 | Front label, and an index position for each spool that Spoolman can manage | **The material label is shown on the 3.5 in TFT** (v0.8, replaces the printed plate), set from the menu or HA, plus a small printed backup tag on the door rail. **Slot IDs F1–F6 and B1–B6** on the door rail (§8). |
@@ -36,7 +36,7 @@ Renders are drawn from the spec dimensions (§3). The original inspiration image
 
 ![Front view](images/layout_front.png)
 
-**Spools roll on two PVC rods per row**, with their axles running side to side, so their faces point out the door like in the concept picture. Two rods 110 mm apart put a 200 mm spool's centre **99 mm above the rod centres**.
+**Spools roll on two dowel rods per row**, with their axles running side to side, so their faces point out the door like in the concept picture. Two rods 110 mm apart put a 200 mm spool's centre **98.4 mm above the rod centres**.
 
 **The back row is raised 120 mm.** This lets the two rows overlap in depth (centres 169 mm apart instead of 207 mm). The back spools show above the front ones, so you can read them through the door. It also leaves a **service void under the back row, about 184 × 142 × 500 mm**, which holds the heater, fan duct and desiccant cartridges without adding any height. In v0.2 the front rods sit 30 mm above the floor, so the void is 137 mm tall.
 
@@ -83,9 +83,16 @@ Earlier versions said a back spool could be lifted *over* a front spool that's s
 - A **reed switch** detects when the door is open. It turns the lights on and pauses the heater and fan.
 
 ### 4.3 Spool rods, cradles and index collars
-- **4 × 3/4 in Sch 40 PVC rods**, each cut to about 498 mm (interior width minus 2 mm). Two carry the front row and two carry the back row.
+- **4 × 1 in poplar dowel rods** (Madison Mill 436580, 1 × 48 in), each cut to about 498 mm (interior width minus 2 mm), so **two dowels make all four**. Two carry the front row and two carry the back row.
+- **Why dowels (v0.22):** one rod type for every cabinet, and no sag. Loaded with six 1.25 kg spools, a solid 1 in poplar rod bends about **0.3 mm**. The 3/4 in Sch 40 PVC it replaces bent about 1.4 mm at room temperature, **2 mm at 50 °C**, and kept creeping toward 4 mm in the hot cabinets. That's why the BOM used to need a separate CPVC rod for 55–60 °C. Wood doesn't soften at 60 °C, so the PLA and Nylon cabinets now use the same rods.
+- **Prepare the dowels before they go in (wood holds water):** at shop humidity, poplar is about 8–10 % water. In a 15–20 % RH cabinet it dries to about 3 %, so four rods would give up about **30 g of water** into the desiccant, a big share of one charge. So:
+  1. **Pick straight dowels** (sight down them in the store) and cut the four rods to length.
+  2. **Pre-dry them:** 4 h in an oven at 70 °C (160 °F), or run the cabinet empty on *Dry (timed)* for 12 h with the rods in, then recharge the desiccant.
+  3. **Seal them while dry:** two thin coats of oil-based wipe-on polyurethane, ends included. It slows the wood taking water back up each time the door opens, and makes the surface smoother for the spools to turn on. Let it cure a few days (out of the cabinet) before the first heated run.
+  4. **Measure the dried diameter** in a few places. Dowels often run a little under 1 in and shrink about 1 % as they dry. Put the average into `ROD_OD` in `source/layout.py` before printing the cradles and collars.
+- Poplar is fine at 60 °C (wood is used far hotter); the sealed surface turns smoothly in the ABS cradles.
 - **Printed U-cradles** on the side walls let the rods turn, so spools spin freely and can feed out. The rods also lift straight out for cleaning. The back-row cradles sit on printed risers, 120 mm higher.
-- **Index collars:** printed 46 mm rings, 5 mm wide, every **80 mm** (75 mm spool plus 5 mm gap). They **slide on from the rod end** (the rods lift out) and **three spring tabs grip the PVC**, so they can be moved. A split ring that clips on sideways would be too stiff at this size (v0.7). They keep spools in their slots. Slot numbers are on the door rail, since the rods turn.
+- **Index collars:** printed 46 mm rings, 5 mm wide, every **80 mm** (75 mm spool plus 5 mm gap). They **slide on from the rod end** (the rods lift out) and **three spring tabs grip the dowel**, so they can be moved. A split ring that clips on sideways would be too stiff at this size (v0.7). They keep spools in their slots. Slot numbers are on the door rail, since the rods turn.
 
 ### 4.4 Front header and on-screen label
 - A **68 mm header** above the door (v0.9; was 60 mm, grown for the screen) holds, from left to right:
@@ -339,7 +346,7 @@ The slot map on the cabinet is rebuilt from Spoolman's Location fields at startu
 
 ## 9. Bill of materials (one cabinet, as built)
 
-The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). Every part has its own line, down to each resistor, capacitor and screw size, with a second source and link for each (no auction sites). The electronics go on two **custom PCBs** (§18), with the ESP32 in socket headers. The estimated total for one cabinet is about **$1,026** (prices checked 2026-11-24, before tax and shipping).
+The full parts list is in **[`BOM.md`](BOM.md)** (also [`BOM.csv`](BOM.csv)), generated from [`bom/bom_source.csv`](bom/bom_source.csv) by `python3 bom/build_bom.py`. It has a link, price, quantity, pack size, the CAD part or section each item is used in, and a status and test-result column for the first build. Quantities come from the CAD (§12–17). Every part has its own line, down to each resistor, capacitor and screw size, with a second source and link for each (no auction sites). The electronics go on two **custom PCBs** (§18), with the ESP32 in socket headers. The estimated total for one cabinet is about **$1,043** (prices checked 2026-11-24, before tax and shipping).
 
 The live copy, where status, actual cost and test results are filled in as parts arrive, is the Sheets artifact "Filament Dry Cabinet — As-Built BOM". When a part is measured, update `bom/bom_source.csv` and the FIT value in `cad/params.py` together.
 
@@ -395,7 +402,7 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 |---|---|---|
 | `port_socket_coupon` | Three M20 × 2 sockets with **0.15 / 0.25 / 0.35 mm** radial clearance (marked on the plate) | Which one the plug turns into by hand, snug with no wobble |
 | `port_blank_plug`, `port_ptfe_module` | Hex-flange modules, 22 × 2 O-ring face groove; the PTFE module has a 9.0 mm hole for a PC4-M10 coupler and a 4.4 mm bore | Does the PC4-M10 thread in firmly? Does the O-ring seat and seal? |
-| `rod_cradle` | U-cradle, 0.6 mm radial clearance on 26.67 mm PVC, two M4 counterbored holes | Does the rod turn freely without rattling? Your pipe's measured OD |
+| `rod_cradle` | U-cradle, 0.6 mm radial clearance on the 25.4 mm dowel, two M4 counterbored holes | Does the dried, sealed rod turn freely without rattling? Your dowel's measured OD |
 | `index_collar` | Slide-on collar with three spring tabs (0.35 mm grip) | Slides with firm hand pressure and stays put? |
 | `tile_joint_a` + `_b` | V tongue and groove (0.2 mm clearance), two M4 × 8.1 heat-set inserts (5.6 mm holes), foam pocket depth | Joint closes flush? Inserts go in cleanly? Foam sits flush with the rim? |
 | `coupon_latch_door` + `coupon_latch_frame` + `latch_bar` (v0.17) | The lift-bar latch, cut straight from the real right door stile and frame stile (z 96–262). The door section slides front to back between rails on the frame section's base. | Does it click shut on its own when you push the door section in? Does pressing the bar flush pull it 1.5–2 mm further onto the seal? Does the bar release cleanly at about 40 mm of pull? Is the bar too loose or too stiff in its recess? |
@@ -406,7 +413,7 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 
 **Latch coupon:** print the door section front face down, the frame section on its base, and the bar on its right side (as in the STLs). Fit an M3 × 25 flat head as the pivot (from the door section's right edge), an M3 × 16 flat head as the keeper pin (from the frame section's outer side face), the two click magnets (attracting), and about 170 mm of the 5 × 3 mm door seal on the frame section's face, in the band closest to the opening (x 507.4–516.4). Hold the door section upright while you try it: it's a slice of a door, so it will tip if you let go. Rebuild with `python3 cad/latch_coupon.py`; it re-runs the fit checks first.
 
-**Hardware for the test:** 2 × M4 × 12 socket-head bolts, 2 × M4 heat-set inserts (M4 × 8.1, 5.6 mm hole), 1 × PC4-M10 coupler, 2 × 22 × 2 mm O-rings, an offcut of 3/4 in Sch 40 PVC, a scrap of the 1/2 in XPS.
+**Hardware for the test:** 2 × M4 × 12 socket-head bolts, 2 × M4 heat-set inserts (M4 × 8.1, 5.6 mm hole), 1 × PC4-M10 coupler, 2 × 22 × 2 mm O-rings, an offcut of the 1 in dowel (dried and sealed), a scrap of the 1/2 in XPS.
 
 **Rebuild:** `python3 cad/coupons.py` writes the STLs to `cad/stl/`; `python3 cad/preview.py` redraws the two images.
 
@@ -417,7 +424,7 @@ All CAD lives in [`cad/`](cad/). **[`cad/params.py`](cad/params.py)** is the one
 | Port socket | **0.25 mm** clearance is the fit | `PORT_CLR_SEL = 0.25` |
 | Tile joint | Aligned well, but loose | The v0.7 groove wasn't a true offset of the V tongue (gap about 0 at the face, about 0.2 mm at the tip). It's now an even **0.05 mm on each flank** (±0.07 mm vertical play). **Reprint `tile_joint_b`** to confirm. |
 | Foam | 0.5 in, as specified | unchanged (13.3 mm pocket) |
-| PVC | 1.05 in measured OD, same as nominal | unchanged (26.67 mm) |
+| PVC | 1.05 in measured OD, same as nominal | unchanged (26.67 mm). **Superseded in v0.22 by the 1 in dowel: measure it after drying** |
 | O-ring | 22 × 2 ring fits, but sat **very loose** in the groove (22.0 ID × 2.7 wide) | Groove now **22.6 ID × 2.5 wide × 1.5 deep**: the ring stretches about 3 % onto the inner wall so it stays put, with 84 % groove fill and 25 % squeeze. Plug and PTFE module regenerated; thread fit rechecked. |
 | Inserts, PC4-M10, cradle, collar | not reported yet | unchanged |
 

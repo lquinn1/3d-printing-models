@@ -31,9 +31,9 @@ BOLT_HEAD_D, BOLT_HEAD_H = 7.4, 4.2     # M4 socket head + clearance
 BOSS = 11.0                 # square boss around an insert
 
 # ---------------------------------------------------------------- rods
-ROD_OD = L.ROD_OD           # 26.67: measured 1.05 in, matches nominal   TESTED
+ROD_OD = L.ROD_OD           # 25.4: 1 in poplar dowel, nominal; dowels run up to ~0.6 mm under   FIT
 CRADLE_CLR = 0.6            # radial clearance so the rod turns freely     FIT
-COLLAR_GRIP = 0.35          # collar ID = ROD_OD - 2*grip (snaps on)       FIT
+COLLAR_GRIP = 0.55          # collar ID = ROD_OD - 2*grip: more reach for undersize dowels   FIT
 COLLAR_OD = 46.0            # stands 9.7 mm proud of the rod: keeps flanges apart
 COLLAR_W = 5.0              # 80 mm pitch = 75 mm spool + 5 mm collar
 SLOT_PITCH = L.PITCH

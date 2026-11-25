@@ -13,7 +13,7 @@ COL = {'L': '#3b82c4', 'R': '#3b82c4', 'TOP': '#e8833a', 'BOT': '#5aa865', 'BACK
 items = [(sbox(-1500, 2000, -1500, 2000, -1, 0), hexc('#d8d4cc'))]
 items += [(tm(t.build(simple=True).transform(t.M()[:3])), hexc(COL[t.f.name])) for t in make_tiles() if t.f.name in ('L', 'BOT', 'BACK')]
 items += [(tm(cradle_world(s, k)), hexc('#c9c9c9')) for s in ('L', 'R') for k in range(4)]
-items += [(tm(rod(k)), hexc('#eef0f2')) for k in range(4)] + [(tm(c), hexc('#9aa0a6')) for k in range(4) for c in collars(k)]
+items += [(tm(rod(k)), hexc('#d8bf8f')) for k in range(4)] + [(tm(c), hexc('#9aa0a6')) for k in range(4) for c in collars(k)]
 SP = ['#ff7a1a', '#7b4fd6', '#e84393', '#11a3a3', '#8d99ae', '#f1f1ee']
 items += [(tm(spool(1, i)), hexc(SP[i])) for i in (1, 2, 3, 4)]            # back row, slots 2-5 (1 and 6 out to show the cartridges)
 items += [(tm(spool(0, i)), hexc('#d62828')) for i in (4,)]

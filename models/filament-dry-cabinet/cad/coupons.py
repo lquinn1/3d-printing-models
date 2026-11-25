@@ -4,7 +4,7 @@
   port_socket_coupon   three threaded sockets, radial clearance 0.15 / 0.25 / 0.35
   port_blank_plug      hex-flange blank plug with O-ring face groove
   port_ptfe_module     same, with a PC4-M10 hole and a PTFE bore
-  rod_cradle           U-cradle for one end of a 3/4 in PVC rod
+  rod_cradle           U-cradle for one end of a 1 in poplar dowel rod
   index_collar         slide-on slot collar with three spring tabs
   tile_joint_a / _b    tile edge pair: V tongue and groove, M4 insert bosses, foam pocket
 
@@ -143,8 +143,8 @@ def rod_cradle():
     return cq_to_mf(b.val())
 
 def index_collar():
-    """Slides on from the rod end; three spring tabs grip the PVC."""
-    ri = ROD_OD/2 + 0.5                       # bore clears the pipe
+    """Slides on from the rod end; three spring tabs grip the dowel."""
+    ri = ROD_OD/2 + 0.5                       # bore clears the dowel
     c = cq.Workplane().circle(COLLAR_OD/2).circle(ri).extrude(COLLAR_W)
     c = c.edges().chamfer(0.5)
     m = cq_to_mf(c.val())

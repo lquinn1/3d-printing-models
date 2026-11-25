@@ -4,7 +4,7 @@ category: Storage
 status: Design
 material: ABS / ASA
 printer: Voron 2.4 R2 350
-tags: [filament, dry-box, dehumidifier, esphome, esp32, sk6812, spoolman, openprinttag, nfc, pvc, modular, stackable, ptfe]
+tags: [filament, dry-box, dehumidifier, esphome, esp32, sk6812, spoolman, openprinttag, nfc, dowel, modular, stackable, ptfe]
 summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one per material). ESPHome control, SK6812 lighting, closable PTFE ports and Spoolman slot IDs. Under 20 in deep and tall.
 ---
 
@@ -34,7 +34,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 |---|---|
 | Capacity | 12 spools: two rows of 6, with the back row raised 120 mm |
 | Size | 531 W × 442 D (492 with rear control pod) × 494 H mm (20.9 × 17.4 / 19.4 × 19.4 in) |
-| Shelves | 3/4 in Sch 40 PVC rods in printed cradles, with printed index collars every 80 mm |
+| Shelves | 1 in poplar dowel rods (same in every cabinet) in printed cradles, with printed index collars every 80 mm |
 | Shell | Printed ABS/ASA tile panels (≤ 330 mm) with 1/2 in XPS foam, and a twin-pane polycarbonate door |
 | PTFE ports | 12 on top (one per slot) + 12 on the back. Each one takes a PTFE pass-through module (PC4-M10) or a sealed blank plug. |
 | Stacking | Feet nest into pockets in the cabinet below, with optional side links. Stacks of 2–3. |
@@ -71,6 +71,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.22** (2026-11-25): **1 in poplar dowels replace the PVC rods** (Madison Mill 436580, two 48 in dowels per cabinet). One rod type for every plastic, and about 0.3 mm sag loaded against 2 mm or more for PVC at 50 °C, so the CPVC line for hot cabinets is gone. Rod cradles and collars resized for 25.4 mm (collar grip raised for undersize dowels); the cabinet size is unchanged. New prep steps: pre-dry, seal and measure the dowels (§4.3). BOM about $1,043.
 - **v0.21** (2026-11-25): the NFC tap zone is now a **64 × 46 mm rectangle with a phone-and-waves icon and TAP HERE**, and the encoder gets a **printed orange knob** (`encoder_knob`, D-bore for the 6 mm shaft) in place of the aluminium one. Renders and the front layout drawing updated. About $1,026.
 - **v0.20** (2026-11-25): **orange accents.** New `tft_bezel` (orange frame round the screen) and `nfc_tap_overlay` (orange Ø46 tap zone over the NFC reader), glued on the fascia and located by pegs. The fascia's old debossed NFC ring and its window chamfer are replaced by them. The latch handle, port plugs, PTFE modules and cable glands are printed in orange too. BOM: a 1 kg spool of orange ABS/ASA for the accents (about $1,029). Renders updated.
 - **v0.19.1** (2026-11-25): **all renders redone from the current CAD.** The front, rear and stacked presentation views were still the v0.6 concept model (NFC box on the face, side handle, old door); they now come from `cad/render_hero.py` using the real tiles, frame, door with the lift-bar, pod, glands, interior and spools, with the screen showing the firmware's label page. Every `cad_*` render, the layout drawings (seal, latch, screen, 494 mm height), the schematic and the wiring diagram were re-run.

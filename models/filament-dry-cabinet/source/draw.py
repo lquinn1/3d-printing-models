@@ -144,7 +144,7 @@ for i in range(6):
 for z in (A['rod_front'], A['rod_back']):
     ax.add_patch(Rectangle((0, z-ROD_OD/2), IW, ROD_OD, facecolor='white', edgecolor='#888', alpha=0.9))
 ax.text(IW/2, -T-FEET-28, f"{A['ew']:.0f} mm ({A['ew']/IN:.1f} in) wide x {round(A['eh']+0.5):.0f} mm ({A['eh']/IN:.1f} in) tall", ha='center', fontsize=10)
-ax.text(IW+8, A['rod_front'], '3/4 in PVC rods\n+ index collars', fontsize=8, va='center')
+ax.text(IW+8, A['rod_front'], '1 in poplar dowel rods\n+ index collars', fontsize=8, va='center')
 ax.text(IW+8, IH+T-HEADER-11, 'SK6812 strip\n(5 LEDs per slot)', fontsize=8, va='center')
 ax.set_xlim(-T-10, EW+90); ax.set_ylim(-T-FEET-45, A['eh']-T-FEET+10)
 ax.set_aspect('equal'); ax.axis('off')

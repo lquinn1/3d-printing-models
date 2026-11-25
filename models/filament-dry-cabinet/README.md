@@ -10,11 +10,13 @@ summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one pe
 
 # Filament Dry Cabinet
 
+![Door closed (CAD)](images/cad_door_closed.jpg)
+
 ![Concept render](images/render_front.jpg)
 
 A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.4 in deep and 19.4 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
 
-**Status: CAD phase 3. The shell (§13) and the front frame and header (§14) are ready**, and the fit-test coupons are in §12. The door and the rear pod are next. See **[DESIGN.md](DESIGN.md)** for the full spec.
+**Status: CAD phase 4. The shell (§13), the front frame and header (§14) and the door (§15) are ready**, and the fit-test coupons are in §12. The rear pod is next. See **[DESIGN.md](DESIGN.md)** for the full spec.
 
 ![Two cabinets stacked (PLA under PETG)](images/render_stack.jpg)
 
@@ -46,7 +48,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 | File | Description |
 |------|-------------|
-| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `verify.py` / `verify_front.py` (assembly checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
+| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `door.py` (door, hinges, handle, tag), `verify*.py` (assembly and swing checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
 | [`DESIGN.md`](DESIGN.md) | Full design spec: requirements, layout options, construction, drying, electronics, ESPHome entities, Spoolman scheme, parts list, open questions |
 | [`images/render_front.jpg`](images/render_front.jpg), [`render_stack.jpg`](images/render_stack.jpg), [`render_rear.jpg`](images/render_rear.jpg) | Concept renders (front, stacked pair, rear) |
 | [`images/wiring.png`](images/wiring.png) | Electrical block diagram |
@@ -64,6 +66,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.12** (2026-11-24): CAD phase 4, the door. 30 mm members with twin polycarbonate panes (488.4 × 372.5 mm each) in grooves, rails in halves with a welded tenon, printed hinges with M3 pins, 4 magnets (catch + reed), D-pull, slot numbers 1–6 and the backup tag. Swing checked clear to 110°, and the seal loop is fully backed. Details in DESIGN §15.
 - **v0.11** (2026-11-24): CAD phase 3, the front frame and header. The frame ring is two stiles, a split bottom rail and the header lip, with hinge inserts, magnet and reed pockets and a reed wire channel. The header is 3 chassis pieces and 3 fascias (NFC pad, 3.5 in TFT bezel with standoffs, encoder), plus 2 LED rails inside. The door opening is 480 × 377.8 mm. Verified against the shell. Parts, hardware and print notes are in DESIGN §14.
 - **v0.10.1** (2026-11-24): O-ring groove on the port modules tightened (22.6 ID × 2.5 wide, was 22.0 × 2.7) after the test ring sat loose. The ring now stretches onto the groove's inner wall.
 - **v0.10** (2026-11-23): CAD phase 2, the full shell: 20 tiles (all ≤ 299 × 226 mm) with port sockets, stacking pockets, cradle, pod and foot inserts, plus 4 feet and 8 rod cradles. Top and bottom span the full width so the walls carry the load. Assembly verified in CAD (no overlaps, every bolt station clear, rods and stacking fit). Parts list, hardware, foam sizes and assembly order are in DESIGN §13.

@@ -4,7 +4,7 @@ import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'source', 'render'))
 import numpy as np, trimesh, manifold3d as mf
 from scene import render, hexc, box as sbox
-from tiles import make_tiles, SOCKETS, GLAND, Y1
+from tiles import make_tiles, SOCKETS, GLANDS, Y1
 from coupons import port_module
 from pod import *
 IMG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')
@@ -15,7 +15,7 @@ shell = [(tm(t.build(simple=True).transform(t.M()[:3])), hexc(COL[t.f.name])) fo
 plug = port_module('plug'); gl = port_module('gland')
 mods = []
 for face, p in SOCKETS:
-    m = gl if (face == 'BACK' and abs(p[0] - GLAND[0]) < 1 and abs(p[2] - GLAND[1]) < 1) else plug
+    m = gl if (face == 'BACK' and any(abs(p[0] - gx) < 1 and abs(p[2] - gz) < 1 for gx, gz in GLANDS)) else plug
     if face == 'BACK':
         M = np.array([[1, 0, 0, p[0]], [0, 0, -1, Y1], [0, 1, 0, p[2]]], float)
     else:

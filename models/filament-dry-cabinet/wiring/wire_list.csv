@@ -1,0 +1,26 @@
+Wire,From,To,Carries,Wire type,Colour,Length,Route,Notes
+W1,IEC inlet L (after its switch and fuse),PSU L,120 V line,18 AWG UL1015,black,0.3 m,pod (mains side),Ferrules on both ends
+W2,IEC inlet N,PSU N,120 V neutral,18 AWG UL1015,white,0.3 m,pod (mains side),Ferrules
+W3,IEC inlet earth,PSU FG (earth),protective earth,18 AWG UL1015,green,0.3 m,pod (mains side),"Ferrules. Mains stays on this side, zip-tied to the left-wall anchors"
+W4,PSU +V,Controller J1-1,+24 V,18 AWG silicone,red,0.25 m,pod,"Ferrules. The board fuse (F1, 10 A) is on this feed"
+W5,PSU −V,Controller J1-2,GND,18 AWG silicone,black,0.25 m,pod,Ferrules
+W6,Controller J5-1,Buck VIN,+24 V,20 AWG silicone,red,0.15 m,pod,Buck on carrier_left
+W7,Controller J5-2,Buck GND (input side),GND,20 AWG silicone,black,0.15 m,pod,
+W8,Buck VOUT,Controller J5-3,+5 V,20 AWG silicone,"red, marked ""5V""",0.15 m,pod,Mark it with a band of tape: it is not 24 V
+W9,Buck GND (output side),Controller J5-4,GND,20 AWG silicone,black,0.15 m,pod,
+W10,Controller J2-1,"TCO, then heater lead A",HTR+ (switched 24 V),18 AWG silicone,red,0.8 m,"gland 1, back wall, plenum","Join the TCO with crimp butt splices + heat-shrink, never solder (heat trips it). TCO at the duct outlet"
+W11,Heater lead B,Controller J2-2,HTR− (to MOSFET),18 AWG silicone,black,0.8 m,gland 1,Carries 6.3 A: keep W10/W11 18 AWG
+W12,Controller J3-1,KSD301 tab 1,+24 V to the relay coil,20 AWG silicone,red,0.8 m,gland 1,6.3 mm insulated female quick-connects (high-temp)
+W13,KSD301 tab 2,Controller J3-2,coil feed (TSTAT_OUT),20 AWG silicone,black,0.8 m,gland 1,KSD301 clipped to the heater frame
+W14,Controller J4 (4-pin),Fan,"24 V, GND, tach, PWM",4-pin PWM fan extension,fan colours,0.6 m,gland 1,"Fan pinout: 1 GND, 2 +24 V, 3 tach, 4 PWM"
+W15,Controller J9-1 / J9-2,Heater NTC (both leads),"NTC, GND",22 AWG 4-core (2 used),"red, black",0.8 m,gland 1,Splice to the NTC leads with heat-shrink; NTC epoxied in the duct hole
+W16,Controller J7-1..4,SHT45 chamber sensor,"3V3, GND, SDA_A, SCL_A",22 AWG 4-core,"red 3V3, black GND, white SDA, green SCL",0.7 m,"gland 1, up the back wall","Splice to a cut STEMMA QT lead at the sensor (red 3V3, black GND, blue SDA, yellow SCL)"
+W17,Controller J8-1..4,SHT40 plenum sensor,"3V3, GND, SDA_B, SCL_B",22 AWG 4-core,"red 3V3, black GND, white SDA, green SCL",0.5 m,gland 1,Same splice as W16
+W18,Controller J10,Front breakout J1,"display, NFC, encoder, touch, reed, LED data, 5 V, 3V3","26-way flat ribbon, 1.27 mm","grey, red stripe = pin 1",1.5 m,"gland 2, back wall, ceiling, header slot","Pass it through the gland and the slot first, then crimp both IDC sockets (pin 1 to the red stripe at both ends)"
+W19,Controller J6-1,Front breakout J6-1,LED_5V (fused 3 A),20 AWG silicone,"red, marked ""5V""",1.5 m,"gland 2, alongside the ribbon",
+W20,Controller J6-2,Front breakout J6-2,GND,20 AWG silicone,black,1.5 m,gland 2,
+W21,Front breakout J2 (14 pins),TFT 14-pin header,TFT + touch,14 × female-female jumpers,any,0.15 m,header bay,Same order at both ends: pin 1 to pin 1 (VCC)
+W22,Front breakout J3 (9 pins),PN5180 header,"5V, 3V3, RST, NSS, MOSI, MISO, SCK, BUSY, GND",9 × female-female jumpers,any,0.15 m,header bay,J3 follows the common PN5180 board order; check the labels on yours and match by name
+W23,Front breakout J4 (5 pins),EC11 encoder,"A, GND (C), B, SW, GND",5 × 26 AWG,any,0.15 m,header bay,Solder at the encoder; female jumper ends on J4
+W24,Front breakout J5,Door reed switch,"REED, GND",2 × 26 AWG,any,0.4 m,right frame stile channel into the header,"Glass reed: bend its leads only away from the glass, and sleeve them"
+W25,Front breakout J7-1..3,LED strip input,"LED_5V, LED data, GND","20 AWG (5 V, GND) + 26 AWG (data)","red, white, black",0.2 m,header bay to under the lip,Solder to the strip pads; data goes to the DIN end

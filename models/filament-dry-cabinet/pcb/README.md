@@ -5,13 +5,15 @@ Replaces the Perma-Proto protoboard. Everything is through-hole, so it can all b
 | Board | Size | Where | What's on it |
 |---|---|---|---|
 | **DCC-MAIN** (`dcc_main/`) | 170 × 60 mm, 2 layers, **2 oz copper** | Rear pod, on `carrier_main` (4 × M3, 160 × 50 mm: on the carrier's 10 mm grid) | ESP32-S3-DevKitC-1 in sockets, 10 A blade fuse, heater relay (G5LE) + MOSFET, fan driver with tach input and its own 0.5 A PTC fuse, 5 V distribution with a 3 A PTC for the LEDs, I²C pull-ups, NTC divider, door-reed input, ribbon header |
-| **DCC-FRONT** (`dcc_front/`) | 80 × 44 mm, 2 layers, 1 oz | Header bay, behind the display | Ribbon header, display / NFC / encoder headers, 74AHCT125 LED level shifter with 330 Ω and 1000 µF at the strip, encoder pull-ups and filters, door-reed terminal |
+| **DCC-FRONT** (`dcc_front/`) | 80 × 44 mm, 2 layers, 1 oz | Header bay back plate, between the display and the encoder (x 335–415), over the cable slot | Ribbon header, display / NFC / encoder headers, 74AHCT125 LED level shifter with 330 Ω and 1000 µF at the strip, encoder pull-ups and filters, door-reed terminal |
 
 ![Controller board](../images/pcb_main.png)
 
 ![Front breakout](../images/pcb_front.png)
 
 Schematic: [`schematic.pdf`](schematic.pdf) (also [`../images/pcb_schematic.png`](../images/pcb_schematic.png)).
+
+Wiring between the boards and everything else: [`../wiring/wire_list.csv`](../wiring/wire_list.csv) and DESIGN.md §19.
 
 ## Ordering
 

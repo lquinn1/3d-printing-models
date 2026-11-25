@@ -10,7 +10,7 @@ Mains never leaves the pod.
 import os, numpy as np, manifold3d as mf, cadquery as cq
 from params import *
 from coupons import cyl, save, cq_to_mf, port_module
-from tiles import T, Y1, FLOOR, POD_PX0, POD_PTS, GLAND
+from tiles import T, Y1, FLOOR, POD_PX0, POD_PTS, GLAND, GLANDS
 from front import box, cyl_x, cyl_y, cyl_z, M3_INSERT_D, M3_INSERT_L, M3_CLR
 
 FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
@@ -43,7 +43,8 @@ def pod_base():
     for x, z in POD_PTS:
         m -= cyl_y(x, z, PY0 - 1, PY0 + PW + 1, BOLT_CLEAR_D/2)
     # opening round the gland module (hex flange 30 AF + room for a spanner)
-    m -= cyl_y(GLAND[0], GLAND[1], PY0 - 1, PY0 + PW + 1, 21.0, n=64)
+    for gx, gz in GLANDS:
+        m -= cyl_y(gx, gz, PY0 - 1, PY0 + PW + 1, 21.0, n=64)
     # PSU rails (5 mm air gap behind the metal case) and clamp posts
     for z in (PSU['z0'] + 12, PSU['z1'] - 12):
         m += box(PSU['x0'] + 5, PSU['x1'] - 5, PY0 + PW - 0.01, PSU['y0'], z - 4, z + 4)
@@ -139,8 +140,8 @@ def check():
     psu = box(PSU['x0'], PSU['x1'], PSU['y0'], PSU['y0'] + PSU['h'], PSU['z0'], PSU['z1'])
     yc, zc = IEC_C
     iec = box(PX1 - IEC_PANEL - 45, PX1 - IEC_PANEL, yc - 15, yc + 15, zc - 25, zc + 25)
-    glandm = port_module('gland').transform(np.array([[1, 0, 0, GLAND[0]], [0, 0, -1, Y1], [0, 1, 0, GLAND[1]]], float))
-    for n, env in (('PSU 215x115x30', psu), ('IEC inlet body (45 deep)', iec), ('gland module', glandm)):
+    glandm = [port_module('gland').transform(np.array([[1, 0, 0, gx], [0, 0, -1, Y1], [0, 1, 0, gz]], float)) for gx, gz in GLANDS]
+    for n, env in (('PSU 215x115x30', psu), ('IEC inlet body (45 deep)', iec), ('gland module 1', glandm[0]), ('gland module 2', glandm[1])):
         print(f'{n:26s} clashes with pod parts: {(env ^ solid).volume():.3f} mm3')
     blocked = sum((mf.Manifold.sphere(1.0, 16).translate((x, Y1 + 1.5, z)) ^ solid).volume() > 1e-4 for x, z in POD_PTS)
     print(f'pod bolt holes blocked: {blocked} of {len(POD_PTS)}')

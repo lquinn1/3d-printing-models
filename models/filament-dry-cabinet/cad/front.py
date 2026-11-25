@@ -57,6 +57,8 @@ KEEPER_Z = (232.0, 258.0)
 MAGNET_D, MAGNET_H = 10.3, 3.2        # 10 x 3 mm neodymium
 REED_Z = 200.0
 LED_SCREW_X = (60.0, 180.0, W - 180.0, W - 60.0)
+BRK_SLOT = (340.0, 380.0)            # x of the cable slot under the front breakout PCB (v0.18)
+BRK_BOARD = (335.0, 415.0, 439.0, 483.0)   # front breakout PCB outline on the back plate (x0, x1, z0, z1)
 LED_Z = (LIP_Z0 + HDR_Z0) / 2
 
 def box(x0, x1, y0, y1, z0, z1):
@@ -155,9 +157,10 @@ def chassis(i):
     for xs in LED_SCREW_X:
         if x0 + 6 < xs < x1 - 6:
             m -= cyl_y(xs, LED_Z, F_Y1 - M3_INSERT_L, F_Y1 + 1, M3_INSERT_D/2)
-    if i == 0:                                                         # LED wires into the chamber
-        m -= cyl_y(32.0, HDR_Z0 + 8, BAY_Y1 - 1, F_Y1 + 1, 5.0)     # 10 mm: LED + header cable bundle (RTV seal)
     if i == 2:
+        # v0.18: 40 x 7 slot under the front breakout PCB (x 335..415): the flat 26-way ribbon and
+        # the LED 5 V pair come up from the chamber here; seal it with RTV after wiring
+        m -= box(BRK_SLOT[0], BRK_SLOT[1], BAY_Y1 - 1, F_Y1 + 1, HDR_Z0 + 4, HDR_Z0 + 11)
         xc = OPEN_X1 + 6.5                                             # reed wires up from the stile
         m -= box(xc - 2, xc + 2, 18, 22, LIP_Z0 - 1, HDR_Z0 + WALL_H + 1)
         m -= box(W - WALL_H - 1, W + 1, 8, 18, ZC - 7, ZC + 7)         # cable exit to the rear pod

@@ -64,7 +64,9 @@ Y_FRONT_ROW, Y_BACK_ROW = Y0 + A['y_front'], Y0 + A['y_back']
 TOP_PORTS = [(x, y) for y in (Y_FRONT_ROW, Y_BACK_ROW) for x in X_SLOT]
 BACK_PORTS = [(x + (-14 if k == 0 else 14), FLOOR + A['ih'] + dz)
               for x in X_SLOT for k, dz in enumerate((-62, -36))]
-GLAND = (T + 150, FLOOR + 150)                                          # pod -> chamber wiring
+GLAND = (T + 150, FLOOR + 150)                                          # pod -> chamber wiring: power + sensors
+GLAND2 = (T + 150, FLOOR + 205)                                         # pod -> chamber wiring: front ribbon + LED 5 V (v0.18)
+GLANDS = [GLAND, GLAND2]
 POCKET_XY = [(x, y) for x in (35.0, W-35.0) for y in (Y0+45, Y1-50)]     # roof pockets = foot spots
 POD_PX0 = T + 85.0                                                       # rear pod: 330 x 230, see pod.py
 POD_PTS = [(POD_PX0 + u, FLOOR + 10 + v) for u in (10, 110, 220, 320) for v in (10, 220)]
@@ -89,7 +91,7 @@ for s in ('L', 'R'):
 HARD += [('BACK', (x, Y1, z), 'out', 16.0) for x, z in POD_PTS]
 HARD += [('BOT', (x, y, Z0), 'out', 50.0) for x, y in POCKET_XY]
 SOCKETS = [('TOP', (x, y, Z1)) for x, y in TOP_PORTS] + \
-          [('BACK', (x, Y1, z)) for x, z in BACK_PORTS + [GLAND]]
+          [('BACK', (x, Y1, z)) for x, z in BACK_PORTS + GLANDS]
 POCKETS = [('TOP', (x, y, Z1)) for x, y in POCKET_XY]
 KEEP = [np.array(p, float) for _, p, _, _ in HARD] + [np.array(p, float) for _, p in SOCKETS]
 

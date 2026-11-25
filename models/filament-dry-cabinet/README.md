@@ -16,7 +16,7 @@ summary: Modular, stackable, heated and desiccant-dried 12-spool cabinet (one pe
 
 A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-voltage **PTC heater** circulates warm air through **pull-out silica gel cartridges**. An **ESP32 running ESPHome** controls it, with a local display and knob for setpoints, and integrates with Home Assistant. **SK6812** lighting can highlight individual slots. Each spool position has an ID (`PETG-F3`, for example) for Spoolman's Location field. You'll build **one cabinet per material**. It plugs in through an **IEC C14 fused inlet** (120 V). At **19.4 in deep and 19.4 in tall**, it fits standard 20 in shelves. Cabinets **stack**, and **closable PTFE ports** on the top and back can feed a printer straight from any slot.
 
-**Status: CAD phase 5. The structure is complete:** the shell (§13), front frame and header (§14), door (§15) and rear pod (§16), plus the fit-test coupons (§12). The interior parts (heater duct, desiccant cartridges, sensor mounts) and the ESPHome firmware are next. See **[DESIGN.md](DESIGN.md)** for the full spec.
+**Status: CAD complete.** The shell (§13), front frame and header (§14), door (§15), rear pod (§16) and interior drying unit (§17), plus the fit-test coupons (§12). The ESPHome firmware and the PN5180 component are next. See **[DESIGN.md](DESIGN.md)** for the full spec.
 
 ![Two cabinets stacked (PLA under PETG)](images/render_stack.jpg)
 
@@ -48,7 +48,7 @@ A modular cabinet that stores **12 × 1 kg spools** and keeps them dry. A low-vo
 
 | File | Description |
 |------|-------------|
-| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `door.py` (door, hinges, handle, tag), `pod.py` (rear pod), `verify*.py` (assembly and swing checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
+| [`cad/`](cad/) | Parametric CAD: `params.py` (all dimensions), `coupons.py` (fit-test parts), `tiles.py` (20 shell tiles, feet, cradles), `front.py` (frame, header, LED rails), `door.py` (door, hinges, handle, tag), `pod.py` (rear pod), `interior.py` (desiccant, plenum, heater and floor ducts, sensor housings), `verify*.py` (assembly and swing checks), `preview.py` / `render_tiles.py` (images); STLs in `cad/stl/` |
 | [`DESIGN.md`](DESIGN.md) | Full design spec: requirements, layout options, construction, drying, electronics, ESPHome entities, Spoolman scheme, parts list, open questions |
 | [`images/render_front.jpg`](images/render_front.jpg), [`render_stack.jpg`](images/render_stack.jpg), [`render_rear.jpg`](images/render_rear.jpg) | Concept renders (front, stacked pair, rear) |
 | [`images/wiring.png`](images/wiring.png) | Electrical block diagram |
@@ -66,6 +66,7 @@ See [`LICENSE.md`](LICENSE.md).
 
 ## Revision History
 
+- **v0.14** (2026-11-24): CAD phase 6, the interior: two lift-out desiccant cartridges (645 cm³ each) under back slots 1 and 6, a plenum with the 80 mm fan, a stepped heater duct (KSD301, TCO, NTC), a floor duct to the door, and sensor housings. **Correction:** a back spool comes out only after the front spool in its slot is removed (the earlier spec said it could go over the front spool). Removal paths are simulated in CAD. The 85 mm of headroom is kept, and the cabinet stays 19.4 in tall.
 - **v0.13** (2026-11-24): CAD phase 5, the rear control pod. It's 330 × 230 × 50 mm: LRS-200-24 on rails with clamp bars, a snap-in IEC inlet in the side wall, two drillable carrier plates, a vented cover with the mains warning, and a gland module in the 13th back socket. The pod inserts in the back tiles moved to suit it. The header cable now runs through the chamber to the gland (header pass-through enlarged to Ø10). All assembly checks re-run clean. Details in DESIGN §16.
 - **v0.12** (2026-11-24): CAD phase 4, the door. 30 mm members with twin polycarbonate panes (488.4 × 372.5 mm each) in grooves, rails in halves with a welded tenon, printed hinges with M3 pins, 4 magnets (catch + reed), D-pull, slot numbers 1–6 and the backup tag. Swing checked clear to 110°, and the seal loop is fully backed. Details in DESIGN §15.
 - **v0.11** (2026-11-24): CAD phase 3, the front frame and header. The frame ring is two stiles, a split bottom rail and the header lip, with hinge inserts, magnet and reed pockets and a reed wire channel. The header is 3 chassis pieces and 3 fascias (NFC pad, 3.5 in TFT bezel with standoffs, encoder), plus 2 LED rails inside. The door opening is 480 × 377.8 mm. Verified against the shell. Parts, hardware and print notes are in DESIGN §14.

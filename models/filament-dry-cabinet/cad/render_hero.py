@@ -20,7 +20,7 @@ IMG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'images')
 def tm(m):
     o = m.to_mesh(); return trimesh.Trimesh(o.vert_properties[:, :3], o.tri_verts, process=False)
 
-SHELL, FRAME, DOOR, BAR, PART = hexc('#2e3136'), hexc('#1b1c1f'), hexc('#2b2d31'), hexc('#3d4148'), hexc('#3a3e44')
+SHELL, FRAME, DOOR, BAR, PART = hexc('#2e3136'), hexc('#1b1c1f'), hexc('#2b2d31'), hexc('#e8833a'), hexc('#3a3e44')
 STEEL = hexc('#9aa0a6')
 tiles = [t.build(simple=True).transform(t.M()[:3]) for t in make_tiles()]
 TILE = tm(mf.Manifold.batch_boolean(tiles, mf.OpType.Add))
@@ -34,7 +34,8 @@ def ports():
         g = face == 'BACK' and any(abs(p[0] - gx) < 1 and abs(p[2] - gz) < 1 for gx, gz in GLANDS)
         M = np.array([[1, 0, 0, p[0]], [0, 0, -1, Y1], [0, 1, 0, p[2]]] if face == 'BACK' else
                      [[1, 0, 0, p[0]], [0, 1, 0, p[1]], [0, 0, -1, p[2]]], float)
-        out.append(tm((gland if g else plug).transform(M)))
+        nudge = (0, 0.4, 0) if face == 'BACK' else (0, 0, 0.4)     # render only: lift the flush flange off the tile face
+        out.append(tm((gland if g else plug).transform(M).translate(nudge)))
     return out
 PORTS = ports()
 
@@ -88,7 +89,7 @@ def spools(cols):
 
 def cabinet(dz=0.0, band='#1c6dd0', name='PETG', rh=18, cols=PETG):
     sc, lab = screen(band, name, rh)
-    items = [(TILE, SHELL)] + [(f, hexc('#141414')) for f in FEET] + [(p, hexc('#4b5058')) for p in PORTS] + POD + FRONT_PARTS + HINGES + \
+    items = [(TILE, SHELL)] + [(f, hexc('#141414')) for f in FEET] + [(p, hexc('#e8833a')) for p in PORTS] + POD + FRONT_PARTS + HINGES + \
             KNOB + INSIDE + spools(cols) + DOOR_ITEMS + sc
     items = [(m.copy().apply_translation((0, 0, dz)), c) for m, c in items]
     glass = [g.copy().apply_translation((0, 0, dz)) for g in PANES]

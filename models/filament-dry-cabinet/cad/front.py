@@ -45,7 +45,9 @@ NFC_X = HDR_SPLIT[0] / 2              # 100: centre of the left fascia
 ENC_X = (HDR_SPLIT[1] + W) / 2        # 431.4: centre of the right fascia
 ENC_HOLE = 7.2                        # EC11 M7 bushing
 HINGE_Z = (85.0, 362.0)               # hinge centres (left stile side face)
-MAGNET_Z = (85.0, 250.0, 362.0)       # door catch magnets (right stile front face)
+MAGNET_Z = (85.0, 362.0)              # door catch magnets (right stile front face); the latch is at 250
+LATCH_Z = 250.0                       # latch lever pivot height (door.py)
+LATCH_POST = (20.5, 251.0)            # (y, z) of the M4 latch post on the right stile's outer face
 MAGNET_D, MAGNET_H = 10.3, 3.2        # 10 x 3 mm neodymium
 REED_Z = 200.0
 LED_SCREW_X = (60.0, 180.0, W - 180.0, W - 60.0)
@@ -87,6 +89,9 @@ def stile(side):
         xm = W - 8.0
         for mz in MAGNET_Z:                                # catch magnets, pressed in from the front
             m -= cyl_y(xm, mz, F_Y0 - 1, F_Y0 + MAGNET_H, MAGNET_D/2, n=48)
+        # M4 insert for the latch post (bolt + sleeve stand out of the side face, door.py)
+        py, pz = LATCH_POST
+        m -= cyl_x(py, pz, W - INSERT_DEPTH, W + 1, INSERT_HOLE_D/2)
         # reed switch pocket (2 x 14 mm glass reed) + wire channel up to the header bay
         m -= box(xm - 1.6, xm + 1.6, F_Y0 - 1, F_Y0 + 3.2, REED_Z - 9, REED_Z + 9)
         xc = OPEN_X1 + 6.5
@@ -202,8 +207,11 @@ def led_rail(half):
     """Prism under the lip, inside the chamber. Strip face 45 deg down-and-back, 12 mm strip."""
     x0, x1 = (OPEN_X0, W/2) if half == 'L' else (W/2, OPEN_X1)
     # profile in (t = y - F_Y1, s = z - LIP_Z0): mounting face t = 0, top s = LIP_H, slope face
-    prof = mf.CrossSection([[(0.0, 0.0), (LIP_H + 2, LIP_H), (0.0, LIP_H)]])
-    if prof.area() < 0: prof = mf.CrossSection([[(0.0, 0.0), (0.0, LIP_H), (LIP_H + 2, LIP_H)]])
+    # triangle with its two sharp corners clipped 1 mm (no knife edges to curl on the bed)
+    k = (LIP_H + 2) / LIP_H
+    pts = [(0.0, 1.0), (k, 1.0), (LIP_H + 1, (LIP_H + 1) / k), (LIP_H + 1, LIP_H), (0.0, LIP_H)]
+    prof = mf.CrossSection([pts])
+    if prof.area() < 0: prof = mf.CrossSection([pts[::-1]])
     pr = mf.Manifold.extrude(prof, x1 - x0)                            # X=t, Y=s, Z=x
     m = pr.transform(np.array([[0, 0, 1, x0], [1, 0, 0, F_Y1], [0, 1, 0, LIP_Z0]], float))
     for xs in LED_SCREW_X:

@@ -75,4 +75,4 @@ hz0 = FAN_Z - HEATER[1]/2
 heater = box(FAN_X - HEATER[0]/2, FAN_X + HEATER[0]/2, HD_Y1 - HEATER_BACK_GAP - HEATER[2], HD_Y1 - HEATER_BACK_GAP, hz0, hz0 + HEATER[1])
 for n, env in (('fan 80x80x25', fan), ('PTC heater', heater)):
     print(f'{n:14s} clashes: ' + str({k: round((env ^ m).volume(), 2) for k, m in inner.items() if (env ^ m).volume() > 0.01} or 'none'))
-print('heater sits on its ledges:', all((box(x - 1, x + 1, HD_Y1 - HEATER_BACK_GAP - 15, HD_Y1 - HEATER_BACK_GAP - 14, hz0 - 0.5, hz0 - 0.1) ^ inner['heater_duct']).volume() > 0 for x in (HD_X0 + DW + 2, HD_X1 - DW - 2)))
+print('heater sits on PTFE pads on its ledges:', all((box(x - 1, x + 1, HD_Y1 - HEATER_BACK_GAP - 15, HD_Y1 - HEATER_BACK_GAP - 14, hz0 - HEATER_PAD - 0.5, hz0 - HEATER_PAD - 0.1) ^ inner['heater_duct']).volume() > 0 for x in (HD_X0 + DW + 2, HD_X1 - DW - 2)))

@@ -14,9 +14,9 @@ Construction (all mm, world frame: x across the width, y front->back, z up):
 Every tile is printed skin-down (outside face on the bed); foam goes in the open pocket.
 """
 import os, sys, math, json
-import numpy as np, manifold3d as mf, trimesh
+import numpy as np, manifold3d as mf, trimesh, cadquery as cq
 from params import *
-from coupons import to_mf, cyl, socket_cut, save, OUT
+from coupons import to_mf, cyl, socket_cut, save, OUT, cq_to_mf
 
 A = L.stadium(6, 120)
 W, Y0, Y1, Z0, Z1, T = A['ew'], L.DOOR, A['ed'], L.FEET, A['eh'], WALL
@@ -26,6 +26,8 @@ FRONT_W = 12.0
 TG_W = 10.0                                         # bolt height in TG joints (from the skin)
 BOSS_D = 7.0                                        # B-side boss depth behind the rib
 CHAMFER = 0.8
+BOX_CHAMFER = 3.0                                   # outside box edges (LAND corners)
+FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 SEAM_GAP, END_GAP, SPACING, KEEPOUT = 25.0, 30.0, 75.0, 24.0
 
 # ---------------------------------------------------------------- faces
@@ -291,8 +293,56 @@ class Tile:
              (0, 0, c), (uw, 0, c), (uw, vw, c), (0, vw, c)]])
         clip = clip + box(-5, uw+5, -5, vw+5, c, T+1)
         m = m ^ clip
+        # outside box edges: 3 mm chamfer where this tile is the corner (LAND edges, v0.16)
+        cb = BOX_CHAMFER
+        for e, kind in s.edges.items():
+            if kind != 'LAND': continue
+            L = (vw if e[0] == 'u' else uw) + 2
+            tri = mf.CrossSection([[(-1.0, -1.0), (cb + 1.0, -1.0), (-1.0, cb + 1.0)]])   # (inward, w)
+            pr = mf.Manifold.extrude(tri, L)                 # X = inward, Y = w, Z = along the edge
+            M = {'umin': [[1, 0, 0, 0], [0, 0, 1, -1], [0, 1, 0, 0]],
+                 'umax': [[-1, 0, 0, uw], [0, 0, 1, -1], [0, 1, 0, 0]],
+                 'vmin': [[0, 0, 1, -1], [1, 0, 0, 0], [0, 1, 0, 0]],
+                 'vmax': [[0, 0, 1, -1], [-1, 0, 0, vw], [0, 1, 0, 0]]}[e]
+            m = m - pr.transform(np.array(M, float))
+        if not simple:
+            m = m - s.label_cut()
         s.m = m
         return m
+
+    def label_cut(s):
+        """Part name debossed 0.6 mm in the top (inside) face of the widest edge strip, in the
+        longest gap between its bolt holes, so the tile can be told apart before and after foam."""
+        uw, vw = s.uw, s.vw
+        width = {'TG_A': RIB, 'TG_B': RIB, 'BUTT': RIB, 'LAND': LAND_W, 'FRONT': FRONT_W}
+        e = max(s.edges, key=lambda k: (width[s.edges[k]], vw if k[0] == 'u' else uw))
+        wd = width[s.edges[e]]
+        along = 1 if e[0] == 'u' else 0                 # local axis that runs along the edge
+        slen = vw if along == 1 else uw
+        holes = [0.0, slen]
+        for lst in (JOINTS, TGS, FRONTS, HARD):
+            for it in lst:
+                p = next(x for x in it if isinstance(x, (tuple, list, np.ndarray)) and len(x) == 3)
+                if not s.inside(p): continue
+                q = s.loc(p)
+                across = q[0] if along == 1 else q[1]
+                lim = {'umin': (0, wd), 'umax': (uw - wd, uw), 'vmin': (0, wd), 'vmax': (vw - wd, vw)}[e]
+                if lim[0] - 6 <= across <= lim[1] + 6: holes.append(q[along])
+        holes = sorted(holes)
+        g = max(zip(holes, holes[1:]), key=lambda ab: ab[1] - ab[0])
+        txt = s.name.upper().replace('_', ' ')
+        h = 3.2 if wd < 8 else 5.0
+        t = cq.Workplane('XY').text(txt, h, 1.0, fontPath=FONT, halign='center', valign='center')
+        tm = cq_to_mf(t.val())
+        tb = tm.bounding_box()
+        if tb[3] - tb[0] > (g[1] - g[0]) - 8:            # too long for the gap: shrink to fit
+            k = ((g[1] - g[0]) - 8) / (tb[3] - tb[0]); tm = tm.scale((k, k, 1)); tb = tm.bounding_box()
+        mid_across = {'umin': wd/2, 'umax': uw - wd/2, 'vmin': wd/2, 'vmax': vw - wd/2}[e]
+        mid_along = (g[0] + g[1]) / 2
+        tm = tm.translate((0, 0, -tb[2]))                # text 0..1 in z
+        if along == 1: tm = tm.rotate((0, 0, 90))
+        x, y = (mid_across, mid_along) if along == 1 else (mid_along, mid_across)
+        return tm.translate((x, y, T - 0.6))
 
 def make_tiles():
     tiles = []
@@ -308,6 +358,10 @@ def foot():
     """Printed upside down (big face on the bed). Bolts up into the bottom-tile insert."""
     o, fl, h = 20.5, 10.0, 10.0
     pts = [(sx*o, sy*o, 0) for sx in (-1, 1) for sy in (-1, 1)] + [(sx*fl, sy*fl, h) for sx in (-1, 1) for sy in (-1, 1)]
+    # trim the knife edge on the bed: the outer 1 mm of the taper becomes a straight 1 mm band
+    o2 = o - (o - fl) / h
+    pts = [(sx*o2, sy*o2, 0) for sx in (-1, 1) for sy in (-1, 1)] + [(sx*o2, sy*o2, 1.0) for sx in (-1, 1) for sy in (-1, 1)] + \
+          [(sx*fl, sy*fl, h) for sx in (-1, 1) for sy in (-1, 1)]
     m = mf.Manifold.hull_points([list(map(float, p)) for p in pts])
     m -= cyl(BOLT_CLEAR_D/2, -1, h+1, n=40)
     m -= cyl(BOLT_HEAD_D/2, h - BOLT_HEAD_H, h + 1, n=40)

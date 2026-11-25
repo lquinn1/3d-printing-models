@@ -11,7 +11,7 @@
    "vmin": "BUTT",
    "vmax": "TG_B"
   },
-  "volume_cm3": 134.4
+  "volume_cm3": 134.3
  },
  {
   "name": "side_left_front_upper",
@@ -25,7 +25,7 @@
    "vmin": "TG_A",
    "vmax": "BUTT"
   },
-  "volume_cm3": 128.0
+  "volume_cm3": 127.9
  },
  {
   "name": "side_left_rear_lower",
@@ -39,7 +39,7 @@
    "vmin": "BUTT",
    "vmax": "TG_B"
   },
-  "volume_cm3": 308.6
+  "volume_cm3": 307.6
  },
  {
   "name": "side_left_rear_upper",
@@ -53,7 +53,7 @@
    "vmin": "TG_A",
    "vmax": "BUTT"
   },
-  "volume_cm3": 275.3
+  "volume_cm3": 274.3
  },
  {
   "name": "side_right_rear_lower",
@@ -67,7 +67,7 @@
    "vmin": "BUTT",
    "vmax": "TG_B"
   },
-  "volume_cm3": 310.9
+  "volume_cm3": 309.9
  },
  {
   "name": "side_right_rear_upper",
@@ -81,7 +81,7 @@
    "vmin": "TG_A",
    "vmax": "BUTT"
   },
-  "volume_cm3": 277.5
+  "volume_cm3": 276.6
  },
  {
   "name": "side_right_front_lower",
@@ -123,7 +123,7 @@
    "vmin": "LAND",
    "vmax": "TG_B"
   },
-  "volume_cm3": 334.3
+  "volume_cm3": 332.3
  },
  {
   "name": "top_left_front",
@@ -137,7 +137,7 @@
    "vmin": "TG_A",
    "vmax": "FRONT"
   },
-  "volume_cm3": 288.1
+  "volume_cm3": 287.3
  },
  {
   "name": "top_right_rear",
@@ -151,7 +151,7 @@
    "vmin": "LAND",
    "vmax": "TG_B"
   },
-  "volume_cm3": 332.0
+  "volume_cm3": 329.9
  },
  {
   "name": "top_right_front",
@@ -165,7 +165,7 @@
    "vmin": "TG_A",
    "vmax": "FRONT"
   },
-  "volume_cm3": 286.6
+  "volume_cm3": 285.7
  },
  {
   "name": "bottom_left_front",
@@ -179,7 +179,7 @@
    "vmin": "FRONT",
    "vmax": "TG_B"
   },
-  "volume_cm3": 278.2
+  "volume_cm3": 277.3
  },
  {
   "name": "bottom_left_rear",
@@ -193,7 +193,7 @@
    "vmin": "TG_A",
    "vmax": "LAND"
   },
-  "volume_cm3": 320.0
+  "volume_cm3": 318.0
  },
  {
   "name": "bottom_right_front",
@@ -207,7 +207,7 @@
    "vmin": "FRONT",
    "vmax": "TG_B"
   },
-  "volume_cm3": 276.6
+  "volume_cm3": 275.8
  },
  {
   "name": "bottom_right_rear",
@@ -221,7 +221,7 @@
    "vmin": "TG_A",
    "vmax": "LAND"
   },
-  "volume_cm3": 317.7
+  "volume_cm3": 315.7
  },
  {
   "name": "back_left_lower",
@@ -249,7 +249,7 @@
    "vmin": "TG_A",
    "vmax": "BUTT"
   },
-  "volume_cm3": 195.2
+  "volume_cm3": 195.1
  },
  {
   "name": "back_right_lower",
@@ -263,7 +263,7 @@
    "vmin": "BUTT",
    "vmax": "TG_B"
   },
-  "volume_cm3": 244.6
+  "volume_cm3": 244.5
  },
  {
   "name": "back_right_upper",

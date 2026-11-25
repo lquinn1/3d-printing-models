@@ -101,6 +101,7 @@ HD_X0, HD_X1 = FAN_X - 45.0, FAN_X + 45.0
 HD_Y1 = PL_Y0                                   # butts against the plenum front wall
 HEATER = (80.0, 52.0, 30.0)                     # PTC element w x h x depth in flow (measure yours)  FIT
 HEATER_BACK_GAP = 2.0                           # heater back face to the duct's open back
+HEATER_PAD = 3.2                                # 1/8 in PTFE strip on each ledge: keeps the element off the ABS
 DW = 2.5
 STEPS = [(222.0, FLOOR + 40.0), (230.0, FLOOR + 76.0), (240.0, FLOOR + 86.0)]   # (front y, top z) - clears the front spools
 HD_TOP = STEPS[-1][1]
@@ -115,8 +116,8 @@ def heater_duct():
     # the heater slides in from the open back (fan side) before the duct is pushed onto the plenum
     # outlet into the floor duct (bottom of the front wall)
     m -= box(FD_X0 + 2, FD_X1 - 2, STEPS[0][0] - 1, STEPS[0][0] + DW + 1, FLOOR, FLOOR + FD_H - 2)
-    # heater ledges (element sits 3 mm off the duct walls)
-    hz0 = FAN_Z - HEATER[1]/2
+    # heater ledges (element sits 3 mm off the duct walls, on PTFE pads, never on bare ABS)
+    hz0 = FAN_Z - HEATER[1]/2 - HEATER_PAD
     for xs in (HD_X0 + DW - 0.01, HD_X1 - DW - 4):
         m += box(xs, xs + 4.01, HD_Y1 - HEATER_BACK_GAP - HEATER[2], HD_Y1 - HEATER_BACK_GAP, FLOOR + DW - 0.01, hz0)
     # KSD301 thermostat through the front wall (Ø17 body, flange screws 24 mm apart, M3 inserts)

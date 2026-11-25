@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: MIT
 """Door for the dry cabinet: 4 printed members (2 stiles, 2 rails split in halves),
-twin polycarbonate panes in grooves, M3-pinned hinges, catch magnets and a pull handle.
+twin polycarbonate panes in grooves, M3-pinned hinges, corner catch magnets and a
+draw-in lever latch (inspired by the Clicky-Clack fridge door) that doubles as the handle.
 
 World frame as in tiles.py / front.py. Closed, the door sits in front of the frame ring:
-    x DX0 .. DX1, z DZ0 .. DZ1, y DY0 .. DY1  (DY1 = 12.5: EPDM on the ring, 3 mm squeezed to 1.5)
+    x DX0 .. DX1, z DZ0 .. DZ1, y DY0 .. DY1  (DY1 = 13.0: 3 mm foam seal on the ring, squeezed to 2.0)
 Member cross-section (door depth t = y - DY0, 0 = front):
     front lip 1.6 | front pane slot 2.6 | spacer 5.6 | back pane slot 2.6 | back lip 1.6   = 14
 """
@@ -12,13 +13,14 @@ from params import *
 from coupons import cyl, save, cq_to_mf, OUT
 from tiles import W, X_SLOT, Z0
 from front import (box, cyl_x, cyl_y, cyl_z, F_Y0, HDR_Z0, HINGE_Z, MAGNET_Z, REED_Z, MAGNET_D, MAGNET_H,
+                   LATCH_Z, LATCH_POST,
                    M3_INSERT_D, M3_INSERT_L, M3_CLR, STILE_W, OPEN_X0, OPEN_X1, LIP_Z0)
 
 FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
-EPDM_T, EPDM_SQ = 3.0, 1.5
-DY1 = F_Y0 - EPDM_T + EPDM_SQ         # 12.5: door back face when closed
+EPDM_T, EPDM_SQ = 3.0, 2.0           # 33 % squeeze: what a soft foam seal is made for (was 50 %)
+DY1 = F_Y0 - EPDM_T + EPDM_SQ         # 13.0: door back face when latched
 DT = 14.0
-DY0 = DY1 - DT                        # -1.5: door front (1.5 mm proud of the header)
+DY0 = DY1 - DT                        # -1.0: door front (1.0 mm proud of the header)
 DX0, DX1 = 1.0, W - 1.0
 DZ0, DZ1 = Z0 + 1.0, HDR_Z0 - 1.0     # 11 .. 424.5
 B = 30.0                              # member width
@@ -29,10 +31,8 @@ SLOTS_T = [(LIPF, LIPF + PANE_T), (LIPF + PANE_T + SPACER, LIPF + 2*PANE_T + SPA
 Y_MID = DY0 + LIPF + PANE_T + SPACER/2          # screw line between the panes
 PANE_CLR = 0.5
 HINGE_AXIS = (-4.5, DY0 - 4.5)        # outside the front-left corner
-KN_R, PIN_D = 4.5, 3.3
+KN_R, PIN_D = 5.5, 3.3                # knuckle Ø11 (was Ø9)
 MAG_X = W - 8.0
-HANDLE_Z = (175.0, 305.0)
-HANDLE_X = W - 12.0
 CORNER_SCREW_DZ = (7.0, 23.0)         # from the outer edge of each rail
 TAG_TEXT = 'PETG'
 
@@ -66,9 +66,9 @@ def stile(side):
     else:
         for mz in list(MAGNET_Z) + [REED_Z]:                 # catch magnets + reed trigger, from the back
             m -= cyl_y(MAG_X, mz, DY1 - MAGNET_H, DY1 + 1, MAGNET_D/2, n=48)
-        for hz in HANDLE_Z:                                  # handle screws from the back, heads flush
-            m -= cyl_y(HANDLE_X, hz, DY0 - 1, DY1 + 1, M3_CLR/2)
-            m -= cyl_y(HANDLE_X, hz, DY1 - 3.2, DY1 + 1, 3.1)
+        # latch: M3 insert in the edge for the lever's pivot screw, click magnet in the front face
+        m -= cyl_x(LP_Y, LATCH_Z, DX1 - M3_INSERT_L, DX1 + 1, M3_INSERT_D/2)
+        m -= cyl_y(CLICK_X, CLICK_Z, DY0 - 1, DY0 + MAGNET_H, MAGNET_D/2, n=48)
     return m
 
 def rail(which, half):
@@ -119,6 +119,9 @@ def hinge_frame_leaf(hz):
         k += box(-3.2, 0, ay, 28.0, z0, z1)                                   # leaf along the stile side
         k += box(ax, -3.2 + 0.01, ay - KN_R + 1.2, ay + KN_R, z0, z1) ^ box(ax, 0, ay - 1, ay + KN_R, z0, z1)
         m = k if m is None else m + k
+    # one piece: a web behind the door (y 14.5..28) joins the two knuckle leaves, so both
+    # screws hold the whole leaf and it can't turn on either screw (v0.16)
+    m += box(-3.2, 0, 14.5, 28.0, hz - 20, hz + 20)
     m -= cyl_z(ax, ay, hz - 21, hz + 21, PIN_D/2, n=32)
     for dz in (-12.0, 12.0):                                                  # into the stile's M3 inserts
         zz = hz + dz
@@ -137,17 +140,72 @@ def hinge_door_leaf(hz):
     m -= cyl_x(Y_MID, hz, -5, -3.4 + 1.2, 3.1)
     return m
 
-def handle():
-    """D-pull on the right stile: two posts and a grip bar, M3 inserts in the posts."""
-    xh = HANDLE_X; L_ = HANDLE_Z[1] - HANDLE_Z[0]
-    m = None
-    for hz in HANDLE_Z:
-        p = box(xh - 6, xh + 6, DY0 - 24, DY0, hz - 6, hz + 6)
-        m = p if m is None else m + p
-    m += box(xh - 6, xh + 6, DY0 - 24, DY0 - 14, HANDLE_Z[0] - 6, HANDLE_Z[1] + 6)
-    for hz in HANDLE_Z:
-        m -= cyl_y(xh, hz, DY0 - M3_INSERT_L, DY0 + 1, M3_INSERT_D/2)
+# ------------------------------------------------------------------ latch (draw-in lever)
+# The lever turns on an M3 screw in the door's right edge (axis along x). Its arm runs back
+# along the cabinet's side; a tooth at the end hooks behind an M4 post (bolt + sleeve) in
+# the frame stile. Closing the door, the post rides up the tooth's ramp and drops into the
+# notch (the click). Pressing the handle home draws the door onto the seal; a magnet pair
+# holds it there. Pull the handle forward and the same motion unhooks and opens the door.
+LP_Y = 6.0                             # pivot axis (y, z = LATCH_Z), inside the door's depth
+LV_X0, LV_X1 = W + 1.0, W + 7.0        # lever plate (beside the cabinet's side face)
+LV_ARM = (LATCH_Z - 8.0, LATCH_Z + 4.0)  # arm z band
+POST_R = 3.0                           # 6 mm OD sleeve on an M4 bolt
+SLEEVE_L = 8.0
+CLICK_X, CLICK_Z = W - 13.4, 184.0     # click magnets: door front face / lever grip
+GRIP = (W - 40.0, LV_X1, DY0 - 8.0, DY0 - 1.2, 172.0, 196.0)   # x0, x1, y0, y1, z0, z1
+TOOTH_SLOPE = 0.6                      # tooth face lean (dy/dz): the draw-in ramp (about 2 mm)
+
+def _tooth_face():
+    """Line of the tooth's contact face (closed pose): it just touches the post."""
+    py, pz = LATCH_POST
+    n = np.array([1.0, -TOOTH_SLOPE]); n /= np.linalg.norm(n)      # from the post toward the face
+    q = np.array([py, pz]) + POST_R * n
+    return q, np.array([TOOTH_SLOPE, 1.0])                            # point, direction (y, z)
+
+def latch_lever():
+    py, pz = LATCH_POST
+    za, zb = LV_ARM
+    q, d = _tooth_face()
+    yf = lambda z: q[0] + (z - q[1]) * d[0] / d[1]                   # face y at height z
+    floor = pz - POST_R - 0.3
+    top = pz + POST_R - 0.5
+    # side plate: hub + arm + tooth, as a y-z polygon extruded along x
+    poly = [(LP_Y - 7, za), (34.0, za), (34.0, 244.0), (yf(top) + 0.6, top), (yf(top), top),
+            (yf(floor), floor), (py - POST_R - 0.6, floor), (py - POST_R - 0.6, zb), (LP_Y + 7, zb),
+            (LP_Y + 7, LATCH_Z + 7), (LP_Y - 7, LATCH_Z + 7)]
+    cs = mf.CrossSection([poly])
+    if cs.area() < 0: cs = mf.CrossSection([poly[::-1]])
+    plate = mf.Manifold.extrude(cs, LV_X1 - LV_X0).transform(
+        np.array([[0, 0, 1, LV_X0], [1, 0, 0, 0], [0, 1, 0, 0]], float))   # (y, z, x) -> world
+    m = plate + cyl_x(LP_Y, LATCH_Z, LV_X0, LV_X1, 7.0, n=48)            # round hub
+    m += cyl_x(LP_Y, LATCH_Z, DX1 + 0.4, LV_X0 + 0.01, 4.0, n=40)        # boss: bears on the door edge
+    # stem down to the grip, beside the door edge
+    m += box(LV_X0, LV_X1, -1.0, 8.0, GRIP[4], LATCH_Z)
+    # grip in front of the door, with a finger lip at the free end
+    g0, g1, gy0, gy1, gz0, gz1 = GRIP
+    m += box(g0, g1, gy0, gy1, gz0, gz1)
+    m += box(LV_X0, LV_X1, gy0, 8.0, gz0, gz1)
+    m += box(g0, g0 + 8, gy0 - 5, gy1, gz0, gz1) - box(g0 - 1, g0 + 9, gy0 - 6, gy0 - 2, gz0 + 4, gz1 - 4)
+    # pivot screw: clearance + counterbore on the outside face
+    m -= cyl_x(LP_Y, LATCH_Z, DX1, LV_X1 + 1, M3_CLR/2)
+    m -= cyl_x(LP_Y, LATCH_Z, LV_X1 - 3.0, LV_X1 + 1, 3.1)
+    # click magnet in the grip's back face
+    m -= cyl_y(CLICK_X, CLICK_Z, gy1 - MAGNET_H, gy1 + 1, MAGNET_D/2, n=48)
     return m
+
+def latch_post_sleeve():
+    """6 mm OD sleeve for the M4 post bolt; stands SLEEVE_L out of the stile side face."""
+    py, pz = LATCH_POST
+    return cyl_x(py, pz, W, W + SLEEVE_L, POST_R, n=48) - cyl_x(py, pz, W - 1, W + SLEEVE_L + 1, 2.2, n=32)
+
+def latch_post_world():
+    """The bolt head too, for clearance checks."""
+    py, pz = LATCH_POST
+    return latch_post_sleeve() + cyl_x(py, pz, W + SLEEVE_L, W + SLEEVE_L + 4.0, 3.5, n=32)
+
+def lever_turn(m, deg):
+    """Turn a lever-attached solid about the pivot; negative = opening (grip comes forward)."""
+    return m.translate((0, -LP_Y, -LATCH_Z)).rotate((deg, 0, 0)).translate((0, LP_Y, LATCH_Z))
 
 # ------------------------------------------------------------------ assembly / print
 def door_parts():
@@ -158,11 +216,13 @@ def door_parts():
 def moving_parts():
     d = door_parts()
     for i, hz in enumerate(HINGE_Z): d[f'hinge_door_leaf_{i}'] = hinge_door_leaf(hz)
-    d['door_handle'] = handle()
+    d['latch_lever'] = latch_lever()
     return d
 
 def fixed_hinges():
-    return {f'hinge_frame_leaf_{i}': hinge_frame_leaf(hz) for i, hz in enumerate(HINGE_Z)}
+    d = {f'hinge_frame_leaf_{i}': hinge_frame_leaf(hz) for i, hz in enumerate(HINGE_Z)}
+    d['latch_post'] = latch_post_world()
+    return d
 
 def swing(m, deg):
     """Open the door by deg (free edge comes toward the user, -y)."""
@@ -182,8 +242,9 @@ if __name__ == '__main__':
         e = t.bounds[1] - t.bounds[0]; assert e[0] <= 345 and e[1] <= 345, (name, e)
     save(to_print(hinge_frame_leaf(HINGE_Z[0])), 'hinge_frame_leaf')
     save(to_print(hinge_door_leaf(HINGE_Z[0])), 'hinge_door_leaf')
-    save(to_print(handle(), np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]], float).dot(np.eye(4))[:3] if False else
-                  np.array([[0, 0, 1, 0], [0, 1, 0, 0], [-1, 0, 0, 0]], float)), 'door_handle')
+    # lever: outside face down (the x+ face), so the plate's layers run along the arm
+    save(to_print(latch_lever(), np.array([[0, 1, 0, 0], [0, 0, 1, 0], [-1, 0, 0, 0]], float)), 'latch_lever')
+    save(to_print(latch_post_sleeve(), np.array([[0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0]], float)), 'latch_post_sleeve')
     save(backup_tag(), 'backup_tag')
     print(f'pane (cut 2): {PANE[0]:.1f} x {PANE[1]:.1f} mm  ({PANE[0]/25.4:.2f} x {PANE[1]/25.4:.2f} in)')
     print(f'visible glass {XR0-XL1:.1f} x {ZT0-ZB1:.1f}; door {DX1-DX0:.1f} x {DZ1-DZ0:.1f} x {DT} mm, y {DY0}..{DY1}')

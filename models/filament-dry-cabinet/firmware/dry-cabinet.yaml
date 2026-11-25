@@ -1,0 +1,1124 @@
+# SPDX-License-Identifier: MIT
+# Filament dry cabinet: ESPHome firmware for the DCC-MAIN controller board (pcb/).
+# One file per cabinet: copy it, change the substitutions at the top, flash.
+#
+# Pins come from pcb/circuit.py (GPIO table). Don't change them unless the board changes.
+# Built and validated against ESPHome 2026.11.
+
+substitutions:
+  name: dry-cabinet-petg              # host name: one per cabinet
+  friendly_name: PETG cabinet
+  default_preset: PETG                # PLA, PETG, ABS/ASA, TPU, Nylon/PC
+  # --- safety limits (firmware layer; the KSD301 at 85 °C and TCO at 102 °C sit below this in hardware)
+  heater_outlet_limit: "80.0"         # °C at the duct outlet NTC: heater off above this
+  chamber_over_margin: "5.0"          # °C above the max chamber temp: fault
+  sensor_timeout_ms: "60000"          # no reading for this long: fault
+  fan_min_rpm: "400"                  # below this while heating: fault
+  # --- PID start values (replaced by autotune; kept across reboots once tuned)
+  pid_kp: "0.08"
+  pid_ki: "0.0004"
+  pid_kd: "0.0"
+  # --- display (FIT: check on the first power-up, see firmware/README.md)
+  tft_rotation: "90"
+  tft_invert: "true"
+  tft_color_order: BGR
+  # --- LEDs
+  led_count: "30"                     # 5 per slot column x 6 columns, left to right
+
+  # GPIO (pcb/circuit.py)
+  pin_reed: GPIO4
+  pin_led: GPIO5
+  pin_sda_b: GPIO6
+  pin_scl_b: GPIO7
+  pin_sda_a: GPIO8
+  pin_scl_a: GPIO9
+  pin_tft_cs: GPIO10
+  pin_mosi: GPIO11
+  pin_sck: GPIO12
+  pin_miso: GPIO13
+  pin_tft_dc: GPIO14
+  pin_tft_bl: GPIO15
+  pin_nfc_nss: GPIO16
+  pin_nfc_busy: GPIO17
+  pin_nfc_rst: GPIO18
+  pin_ntc: GPIO1
+  pin_fan_pwm: GPIO2
+  pin_fan_tach: GPIO3
+  pin_enc_a: GPIO39
+  pin_front_rst: GPIO40
+  pin_ctp_int: GPIO41
+  pin_enc_b: GPIO42
+  pin_htr_pwm: GPIO45
+  pin_relay: GPIO46
+  pin_enc_sw: GPIO47
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  project:
+    name: lquinn1.filament-dry-cabinet
+    version: "0.18"
+  on_boot:
+    - priority: 600
+      then:
+        # safe state first: relay open, heater and fan off
+        - switch.turn_off: heater_relay
+        - output.set_level: { id: heater_pwm, level: 0 }
+        - output.set_level: { id: fan_pwm, level: 0 }
+    - priority: -100
+      then:
+        - lambda: |-
+            // restore tuned PID values, if autotune has run before
+            if (id(kp_saved) > 0) {
+              id(heater_pid).set_kp(id(kp_saved));
+              id(heater_pid).set_ki(id(ki_saved));
+              id(heater_pid).set_kd(id(kd_saved));
+            }
+            id(last_chamber_ms) = millis();
+            id(last_ntc_ms) = millis();
+        - script.execute: wake_display
+
+esp32:
+  variant: esp32s3
+  board: esp32-s3-devkitc-1
+  flash_size: 8MB
+  framework:
+    type: esp-idf
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+logger:
+  level: INFO
+
+api:
+  actions:
+    # lets a Home Assistant script light a slot (Spoolman "find my spool")
+    - action: find_slot
+      variables:
+        slot: string
+      then:
+        - select.set: { id: find_slot_sel, option: !lambda "return slot;" }
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: ${name}
+
+captive_portal:
+
+web_server:
+  port: 80
+  version: 3
+
+time:
+  - platform: homeassistant
+    id: ha_time
+
+# ----------------------------------------------------------------------------- buses
+i2c:
+  - id: bus_a                 # chamber SHT45 + display touch (FT6336U, phase 6)
+    sda: ${pin_sda_a}
+    scl: ${pin_scl_a}
+    frequency: 100kHz
+  - id: bus_b                 # plenum SHT40 (same address as the SHT45, so its own bus)
+    sda: ${pin_sda_b}
+    scl: ${pin_scl_b}
+    frequency: 100kHz
+
+spi:
+  - id: spi_bus
+    clk_pin: ${pin_sck}
+    mosi_pin: ${pin_mosi}
+    miso_pin: ${pin_miso}     # PN5180 only; the display's SDO is not connected
+
+# ----------------------------------------------------------------------------- globals
+globals:
+  - { id: last_chamber_ms, type: uint32_t, initial_value: "0" }
+  - { id: last_ntc_ms, type: uint32_t, initial_value: "0" }
+  - { id: fault_latched, type: bool, initial_value: "false" }
+  - { id: heating, type: bool, initial_value: "false" }        # control loop wants heat
+  - { id: fan_low_since, type: uint32_t, initial_value: "0" }
+  - { id: no_heat_since, type: uint32_t, initial_value: "0" }  # "heater not heating" watchdog
+  - { id: dry_end_ms, type: uint32_t, initial_value: "0" }
+  - { id: page, type: int, initial_value: "0" }                # 0 label, 1 detail
+  - { id: confirm_until, type: uint32_t, initial_value: "0" }  # menu double-press confirm window
+  - { id: confirm_what, type: int, initial_value: "0" }        # 1 autotune, 2 desiccant reset
+  - { id: autotuning, type: bool, initial_value: "false" }
+  - { id: light_by_door, type: bool, initial_value: "false" }
+  - { id: desiccant_hours, type: float, restore_value: true, initial_value: "0" }
+  - { id: kp_saved, type: float, restore_value: true, initial_value: "0" }
+  - { id: ki_saved, type: float, restore_value: true, initial_value: "0" }
+  - { id: kd_saved, type: float, restore_value: true, initial_value: "0" }
+  - { id: last_fault, type: std::string, initial_value: '"none"' }
+  - { id: pid_level, type: float, initial_value: "0" }        # what the PID asks for (0-1)
+  - { id: heater_level, type: float, initial_value: "0" }     # what reaches the heater after limits
+  - { id: fan_level, type: float, initial_value: "0" }
+  - { id: kp_before, type: float, initial_value: "0" }
+  - { id: ki_before, type: float, initial_value: "0" }
+
+# ----------------------------------------------------------------------------- sensors
+sensor:
+  - platform: sht4x
+    i2c_id: bus_a
+    update_interval: 10s
+    temperature:
+      id: chamber_t
+      name: Chamber temperature
+      on_value:
+        - lambda: id(last_chamber_ms) = millis();
+    humidity:
+      id: chamber_rh
+      name: Chamber humidity
+
+  - platform: sht4x
+    i2c_id: bus_b
+    update_interval: 10s
+    temperature:
+      id: plenum_t
+      name: Desiccant outlet temperature
+    humidity:
+      id: plenum_rh
+      name: Desiccant outlet humidity
+
+  - platform: absolute_humidity
+    id: chamber_ah
+    name: Chamber absolute humidity
+    temperature: chamber_t
+    humidity: chamber_rh
+
+  - platform: absolute_humidity
+    id: plenum_ah
+    name: Desiccant outlet absolute humidity
+    temperature: plenum_t
+    humidity: plenum_rh
+
+  - platform: template
+    id: chamber_dew
+    name: Chamber dew point
+    unit_of_measurement: °C
+    device_class: temperature
+    accuracy_decimals: 1
+    update_interval: 10s
+    lambda: |-
+      // Magnus formula
+      float t = id(chamber_t).state, rh = id(chamber_rh).state;
+      if (isnan(t) || isnan(rh) || rh <= 0) return NAN;
+      float g = logf(rh / 100.0f) + 17.62f * t / (243.12f + t);
+      return 243.12f * g / (17.62f - g);
+
+  - platform: template
+    id: desiccant_eff
+    name: Desiccant pickup
+    unit_of_measurement: g/m³
+    accuracy_decimals: 2
+    update_interval: 60s
+    lambda: |-
+      // water the desiccant takes out of the air on its way through: chamber in, outlet out
+      if (isnan(id(chamber_ah).state) || isnan(id(plenum_ah).state)) return NAN;
+      return id(chamber_ah).state - id(plenum_ah).state;
+
+  # heater outlet NTC: 3V3 -> R14 10k -> ADC -> NTC -> GND
+  - platform: adc
+    id: ntc_v
+    pin: ${pin_ntc}
+    attenuation: 12db
+    update_interval: 5s
+    internal: true
+  - platform: resistance
+    id: ntc_r
+    sensor: ntc_v
+    configuration: DOWNSTREAM
+    resistor: 10kOhm
+    reference_voltage: 3.3V
+    internal: true
+  - platform: ntc
+    id: heater_t
+    sensor: ntc_r
+    name: Heater outlet temperature
+    calibration:
+      b_constant: 3950
+      reference_temperature: 25°C
+      reference_resistance: 10kOhm
+    on_value:
+      - lambda: id(last_ntc_ms) = millis();
+
+  - platform: pulse_counter
+    id: fan_rpm
+    name: Fan speed
+    pin:
+      number: ${pin_fan_tach}
+      ignore_strapping_warning: true   # JTAG-select strap, unused unless an eFuse is burned
+    unit_of_measurement: RPM
+    update_interval: 5s
+    filters:
+      - multiply: 0.5          # two tach pulses per turn
+
+  - platform: template
+    id: heater_pct
+    name: Heater power
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 5s
+    lambda: return id(heater_level) * 100.0f;
+
+  - platform: template
+    id: desiccant_days
+    name: Desiccant days since recharge
+    unit_of_measurement: d
+    accuracy_decimals: 1
+    update_interval: 60s
+    lambda: return id(desiccant_hours) / 24.0f;
+
+  - platform: template
+    id: dry_remaining
+    name: Dry time remaining
+    unit_of_measurement: h
+    accuracy_decimals: 1
+    update_interval: 30s
+    lambda: |-
+      if (id(mode_sel).current_option() != "Dry (timed)") return 0;
+      int32_t ms = (int32_t)(id(dry_end_ms) - millis());
+      return ms > 0 ? ms / 3600000.0f : 0.0f;
+
+  - platform: pid
+    climate_id: heater_pid
+    id: pid_kp_s
+    name: PID kp
+    type: KP
+    entity_category: diagnostic
+  - platform: pid
+    climate_id: heater_pid
+    id: pid_ki_s
+    name: PID ki
+    type: KI
+    entity_category: diagnostic
+  - platform: pid
+    climate_id: heater_pid
+    id: pid_kd_s
+    name: PID kd
+    type: KD
+    entity_category: diagnostic
+
+  - platform: rotary_encoder
+    id: knob
+    pin_a: ${pin_enc_a}         # 10k pull-ups and 10 nF on the front board
+    pin_b: ${pin_enc_b}
+    resolution: 1
+    internal: true
+    on_clockwise:
+      - script.execute: wake_display
+      - lambda: |-
+          if (id(menu).is_active()) { id(menu).down(); id(menu_timeout).execute(); }
+          else { id(page) = 1 - id(page); id(tft).update(); }
+    on_anticlockwise:
+      - script.execute: wake_display
+      - lambda: |-
+          if (id(menu).is_active()) { id(menu).up(); id(menu_timeout).execute(); }
+          else { id(page) = 1 - id(page); id(tft).update(); }
+
+  - platform: wifi_signal
+    id: wifi_db
+    name: Wi-Fi signal
+    entity_category: diagnostic
+
+binary_sensor:
+  - platform: gpio
+    id: door
+    name: Door
+    device_class: door
+    pin: ${pin_reed}           # reed closed (door shut) pulls it low; R15 pulls it up
+    filters:
+      - delayed_on_off: 50ms
+    on_press:
+      - script.execute: wake_display
+      - lambda: |-
+          if (!id(cab_light).remote_values.is_on()) {
+            id(light_by_door) = true;
+            auto call = id(cab_light).turn_on();
+            call.set_brightness(1.0f);
+            call.perform();
+          }
+    on_release:
+      - delay: 10s
+      - if:
+          condition:
+            lambda: return id(light_by_door) && !id(door).state;
+          then:
+            - light.turn_off: cab_light
+            - lambda: id(light_by_door) = false;
+
+  - platform: gpio
+    id: enc_button
+    pin:
+      number: ${pin_enc_sw}
+      inverted: true           # R3 on the front board pulls it up; pressing pulls it low
+    filters:
+      - delayed_on_off: 20ms
+    on_press:
+      - script.execute: wake_display
+      - lambda: |-
+          if (id(menu).is_active()) id(menu).enter();
+          else { id(menu).show_main(); id(menu).show(); }
+      - script.execute: menu_timeout
+
+  - platform: template
+    id: desiccant_outlet_spent
+    internal: true
+    lambda: |-
+      // the outlet air is barely drier than the chamber while the fan moves air
+      return !isnan(id(desiccant_eff).state) && id(desiccant_eff).state < 0.3f
+             && id(fan_level) > 0.15f && !id(heating);
+    filters:
+      - delayed_on: 2h
+  - platform: template
+    id: desiccant_due
+    name: Desiccant needs recharge
+    device_class: problem
+    lambda: |-
+      return id(desiccant_days).state >= id(recharge_days).state || id(desiccant_outlet_spent).state;
+
+  - platform: template
+    id: fault_active
+    name: Fault
+    device_class: problem
+    lambda: return id(fault_latched);
+
+text_sensor:
+  - platform: template
+    id: fault_text
+    name: Last fault
+    lambda: return id(last_fault);
+    update_interval: 5s
+  - platform: template
+    id: status_text
+    name: Status
+    update_interval: 5s
+    lambda: |-
+      if (id(fault_latched)) return {"Fault"};
+      if (id(door).state) return {"Door open"};
+      if (id(autotuning)) return {"Autotune"};
+      if (id(mode_sel).current_option() == "Off") return {"Off"};
+      return {id(heating) ? "Heating" : "Holding"};
+  - platform: wifi_info
+    ip_address:
+      id: ip_addr
+      name: IP address
+      entity_category: diagnostic
+  # NFC (PN5180) is phase 5: an external component. These stay empty until then.
+  - platform: template
+    id: nfc_uid
+    name: NFC last tag
+    lambda: return {""};
+    update_interval: never
+
+# ----------------------------------------------------------------------------- outputs
+output:
+  - platform: slow_pwm
+    id: heater_pwm
+    pin:
+      number: ${pin_htr_pwm}
+      ignore_strapping_warning: true   # R4 holds it low at reset, as the strap needs
+    period: 5s
+  - platform: ledc
+    id: fan_pwm
+    pin: ${pin_fan_pwm}
+    frequency: 25000Hz
+    inverted: true                     # Q3 is an open collector: on = PWM pin low
+  - platform: ledc
+    id: backlight_pwm
+    pin: ${pin_tft_bl}
+    frequency: 5000Hz
+  # PID writes here; the control loop decides what actually reaches the heater
+  - platform: template
+    id: pid_out
+    type: float
+    write_action:
+      - lambda: id(pid_level) = state;
+
+switch:
+  - platform: gpio
+    id: heater_relay
+    name: Heater relay
+    pin:
+      number: ${pin_relay}
+      ignore_strapping_warning: true   # R2 holds it low at reset
+    restore_mode: ALWAYS_OFF
+    internal: true
+
+button:
+  - platform: template
+    name: Clear fault
+    on_press:
+      - lambda: id(fault_latched) = false; id(last_fault) = "cleared";
+  - platform: template
+    name: Desiccant recharged
+    on_press:
+      - lambda: id(desiccant_hours) = 0;
+      - component.update: desiccant_days
+  - platform: restart
+    name: Restart
+
+# ----------------------------------------------------------------------------- settings
+number:
+  - platform: template
+    id: target_rh
+    name: Target humidity
+    unit_of_measurement: "%"
+    min_value: 5
+    max_value: 50
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: 20
+  - platform: template
+    id: max_temp
+    name: Max chamber temperature
+    unit_of_measurement: °C
+    min_value: 25
+    max_value: 60                      # nylon/PC preset; the ABS shell is not for more
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: 50
+    on_value:
+      - lambda: |-
+          if (id(heating)) {
+            auto call = id(heater_pid).make_call();
+            call.set_target_temperature(x);
+            call.perform();
+          }
+  - platform: template
+    id: fan_min
+    name: Fan minimum
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 5
+    optimistic: true
+    restore_value: true
+    initial_value: 25
+  - platform: template
+    id: fan_heat
+    name: Fan speed while heating
+    unit_of_measurement: "%"
+    min_value: 30
+    max_value: 100
+    step: 5
+    optimistic: true
+    restore_value: true
+    initial_value: 70
+  - platform: template
+    id: heater_max
+    name: Heater max power
+    unit_of_measurement: "%"
+    min_value: 10
+    max_value: 100
+    step: 5
+    optimistic: true
+    restore_value: true
+    initial_value: 100
+  - platform: template
+    id: dry_hours
+    name: Dry timer
+    unit_of_measurement: h
+    min_value: 1
+    max_value: 24
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: 6
+  - platform: template
+    id: recharge_days
+    name: Desiccant recharge interval
+    unit_of_measurement: d
+    min_value: 7
+    max_value: 180
+    step: 1
+    optimistic: true
+    restore_value: true
+    initial_value: 60
+  - platform: template
+    id: idle_brightness
+    name: Display idle brightness
+    unit_of_measurement: "%"
+    min_value: 10                      # never off: the screen is the label
+    max_value: 100
+    step: 5
+    optimistic: true
+    restore_value: true
+    initial_value: 30
+  - { platform: template, id: custom_r, name: Custom colour red, min_value: 0, max_value: 255, step: 1, optimistic: true, restore_value: true, initial_value: 255, on_value: [script.execute: apply_light_colour] }
+  - { platform: template, id: custom_g, name: Custom colour green, min_value: 0, max_value: 255, step: 1, optimistic: true, restore_value: true, initial_value: 140, on_value: [script.execute: apply_light_colour] }
+  - { platform: template, id: custom_b, name: Custom colour blue, min_value: 0, max_value: 255, step: 1, optimistic: true, restore_value: true, initial_value: 0, on_value: [script.execute: apply_light_colour] }
+
+select:
+  - platform: template
+    id: mode_sel
+    name: Mode
+    options: ["Off", "Maintain", "Dry (timed)"]
+    optimistic: true
+    restore_value: true
+    initial_option: Maintain
+    on_value:
+      - lambda: |-
+          if (x == "Dry (timed)")
+            id(dry_end_ms) = millis() + (uint32_t)(id(dry_hours).state * 3600000.0f);
+  - platform: template
+    id: preset_sel
+    name: Material preset
+    options: ["PLA", "PETG", "ABS/ASA", "TPU", "Nylon/PC", "Custom"]
+    optimistic: true
+    restore_value: true
+    initial_option: ${default_preset}
+    on_value:
+      - lambda: |-
+          // defaults from DESIGN.md §5 (storage, not hard drying)
+          float t = NAN, rh = NAN;
+          if (x == "PLA") { t = 40; rh = 30; }
+          else if (x == "PETG") { t = 50; rh = 20; }
+          else if (x == "ABS/ASA") { t = 55; rh = 20; }
+          else if (x == "TPU") { t = 40; rh = 20; }
+          else if (x == "Nylon/PC") { t = 60; rh = 12; }
+          if (!isnan(t)) {
+            auto a = id(max_temp).make_call(); a.set_value(t); a.perform();
+            auto b = id(target_rh).make_call(); b.set_value(rh); b.perform();
+          }
+  - platform: template
+    id: label_colour_sel
+    name: Label colour
+    options: ["Auto", "Same as lights", "White", "Red", "Orange", "Amber", "Yellow", "Green", "Cyan", "Blue", "Purple", "Magenta"]
+    optimistic: true
+    restore_value: true
+    initial_option: Auto
+  - platform: template
+    id: light_colour_sel
+    name: Light colour
+    options: ["White", "Warm white", "Red", "Orange", "Amber", "Yellow", "Green", "Cyan", "Blue", "Purple", "Magenta", "Custom"]
+    optimistic: true
+    restore_value: true
+    initial_option: White
+    on_value:
+      - script.execute: apply_light_colour
+  - platform: template
+    id: find_slot_sel
+    name: Find slot
+    options: ["-", "F1", "F2", "F3", "F4", "F5", "F6", "B1", "B2", "B3", "B4", "B5", "B6"]
+    optimistic: true
+    initial_option: "-"
+    on_value:
+      - if:
+          condition:
+            lambda: return x != "-";
+          then:
+            - script.execute: find_slot
+
+text:
+  - platform: template
+    id: cab_name
+    name: Cabinet name
+    mode: text
+    max_length: 8
+    optimistic: true
+    restore_value: true
+    initial_value: ${default_preset}
+
+# ----------------------------------------------------------------------------- heater
+climate:
+  - platform: pid
+    id: heater_pid
+    name: Chamber heater
+    sensor: chamber_t
+    default_target_temperature: 50°C
+    heat_output: pid_out
+    visual:
+      min_temperature: 25
+      max_temperature: 60
+    control_parameters:
+      kp: ${pid_kp}
+      ki: ${pid_ki}
+      kd: ${pid_kd}
+      output_averaging_samples: 3
+      derivative_averaging_samples: 3
+
+# ----------------------------------------------------------------------------- lights
+light:
+  - platform: esp32_rmt_led_strip
+    id: cab_light
+    name: Cabinet light
+    pin: ${pin_led}
+    num_leds: ${led_count}
+    chipset: SK6812
+    channel_colors: GRBW
+    restore_mode: RESTORE_DEFAULT_OFF
+    default_transition_length: 300ms
+    effects:
+      - pulse:
+          name: Find
+          transition_length: 400ms
+          update_interval: 400ms
+  - platform: partition
+    id: col1
+    name: Slots column 1
+    segments: [{ id: cab_light, from: 0, to: 4 }]
+  - platform: partition
+    id: col2
+    name: Slots column 2
+    segments: [{ id: cab_light, from: 5, to: 9 }]
+  - platform: partition
+    id: col3
+    name: Slots column 3
+    segments: [{ id: cab_light, from: 10, to: 14 }]
+  - platform: partition
+    id: col4
+    name: Slots column 4
+    segments: [{ id: cab_light, from: 15, to: 19 }]
+  - platform: partition
+    id: col5
+    name: Slots column 5
+    segments: [{ id: cab_light, from: 20, to: 24 }]
+  - platform: partition
+    id: col6
+    name: Slots column 6
+    segments: [{ id: cab_light, from: 25, to: 29 }]
+  - platform: monochromatic
+    id: backlight
+    name: Display backlight
+    output: backlight_pwm
+    restore_mode: ALWAYS_ON
+    default_transition_length: 500ms
+    entity_category: config
+
+# ----------------------------------------------------------------------------- control loop
+interval:
+  - interval: 2s
+    then:
+      - lambda: |-
+          const uint32_t now = millis();
+          const std::string mode = std::string(id(mode_sel).current_option().c_str());
+          const float tmax = id(max_temp).state;
+          const float t = id(chamber_t).state, rh = id(chamber_rh).state, th = id(heater_t).state;
+
+          // ---- interlocks (DESIGN.md §6.3, firmware layer)
+          std::string trip = "";
+          if (now < 30000) return;   // first readings arrive within 10 s of boot; outputs stay off until then
+          if (isnan(t) || isnan(rh) || now - id(last_chamber_ms) > ${sensor_timeout_ms}) trip = "Chamber sensor lost";
+          else if (isnan(th) || now - id(last_ntc_ms) > ${sensor_timeout_ms}) trip = "Heater NTC lost";
+          else if (t > tmax + ${chamber_over_margin}) trip = "Chamber over temperature";
+          else if (th > ${heater_outlet_limit}) trip = "Heater outlet over temperature";
+          // fan must turn while the heater runs (15 s grace after it starts)
+          if (trip.empty() && id(heater_level) > 0.05f && id(fan_rpm).state < ${fan_min_rpm}) {
+            if (id(fan_low_since) == 0) id(fan_low_since) = now;
+            else if (now - id(fan_low_since) > 15000) trip = "Fan stalled while heating";
+          } else id(fan_low_since) = 0;
+          // heater flat out for 20 min but the chamber stays 15 °C short: heater or sensor fault
+          if (trip.empty() && id(heater_level) > 0.9f && t < tmax - 15.0f) {
+            if (id(no_heat_since) == 0) id(no_heat_since) = now;
+            else if (now - id(no_heat_since) > 20UL * 60UL * 1000UL) trip = "Heater not heating";
+          } else id(no_heat_since) = 0;
+          if (!trip.empty() && !id(fault_latched)) {
+            id(fault_latched) = true;
+            id(last_fault) = trip;
+            ESP_LOGW("control", "FAULT: %s", trip.c_str());
+            id(wake_display).execute();
+          }
+
+          // ---- what does the mode want?
+          bool want_heat = false;
+          if (mode == "Dry (timed)") {
+            if ((int32_t)(id(dry_end_ms) - now) <= 0) {
+              auto c = id(mode_sel).make_call(); c.set_option("Maintain"); c.perform();
+            } else want_heat = true;
+          }
+          if (mode == "Maintain" && !isnan(rh)) {
+            // hysteresis: start above target, stop 3 % below it
+            if (rh > id(target_rh).state) want_heat = true;
+            else if (rh < id(target_rh).state - 3.0f) want_heat = false;
+            else want_heat = id(heating);
+          }
+          if (id(autotuning)) want_heat = true;
+          const bool paused = id(door).state;                 // door open: hold off
+          const bool allow = want_heat && !id(fault_latched) && !paused && mode != "Off";
+
+          // ---- PID on/off
+          if (allow != id(heating)) {
+            auto call = id(heater_pid).make_call();
+            call.set_mode(allow ? climate::CLIMATE_MODE_HEAT : climate::CLIMATE_MODE_OFF);
+            call.set_target_temperature(tmax);
+            call.perform();
+            id(heating) = allow;
+          }
+
+          // ---- heater: relay on the high side, slow PWM on the low side
+          float duty = allow ? std::min(id(pid_level), id(heater_max).state / 100.0f) : 0.0f;
+          if (duty < 0) duty = 0;
+          id(heater_level) = duty;
+          id(heater_pwm).set_level(duty);
+          if (allow && !id(heater_relay).state) id(heater_relay).turn_on();
+          if (!allow && id(heater_relay).state) id(heater_relay).turn_off();
+
+          // ---- fan: heating speed, idle circulation, off with the door open or the cabinet off
+          float fan = 0;
+          if (paused || mode == "Off") fan = 0;
+          else if (allow) fan = id(fan_heat).state / 100.0f;
+          else fan = id(fan_min).state / 100.0f;
+          if (id(fault_latched) && id(last_fault) != "Fan stalled while heating") fan = 1.0f;   // cool down
+          id(fan_level) = fan;
+          id(fan_pwm).set_level(fan);
+
+          // ---- autotune finished? (ESPHome applies the new kp/ki/kd when it is done)
+          if (id(autotuning) && (id(heater_pid).get_kp() != id(kp_before) || id(heater_pid).get_ki() != id(ki_before))) {
+            id(autotuning) = false;
+            id(kp_saved) = id(heater_pid).get_kp();
+            id(ki_saved) = id(heater_pid).get_ki();
+            id(kd_saved) = id(heater_pid).get_kd();
+            ESP_LOGI("control", "Autotune done: kp=%.5f ki=%.6f kd=%.5f (saved)", id(kp_saved), id(ki_saved), id(kd_saved));
+          }
+
+  - interval: 1h
+    then:
+      - lambda: id(desiccant_hours) += 1.0f;
+
+# ----------------------------------------------------------------------------- scripts
+script:
+  - id: wake_display
+    mode: restart
+    then:
+      - light.turn_on: { id: backlight, brightness: 100% }
+      - delay: 60s
+      - light.turn_on:
+          id: backlight
+          brightness: !lambda return id(idle_brightness).state / 100.0f;
+      - lambda: id(page) = 0;
+      - component.update: tft
+
+  - id: menu_timeout
+    mode: restart
+    then:
+      - delay: 30s
+      - lambda: id(menu).hide();
+      - component.update: tft
+
+  - id: apply_light_colour
+    then:
+      - lambda: |-
+          const std::string c = std::string(id(light_colour_sel).current_option().c_str());
+          float r = 0, g = 0, b = 0, w = 0;
+          if (c == "White") w = 1;
+          else if (c == "Warm white") { r = 1; g = 0.55; b = 0.1; w = 0.6; }
+          else if (c == "Red") r = 1;
+          else if (c == "Orange") { r = 1; g = 0.35; }
+          else if (c == "Amber") { r = 1; g = 0.55; }
+          else if (c == "Yellow") { r = 1; g = 0.9; }
+          else if (c == "Green") g = 1;
+          else if (c == "Cyan") { g = 1; b = 1; }
+          else if (c == "Blue") b = 1;
+          else if (c == "Purple") { r = 0.6; b = 1; }
+          else if (c == "Magenta") { r = 1; b = 1; }
+          else { r = id(custom_r).state / 255.0f; g = id(custom_g).state / 255.0f; b = id(custom_b).state / 255.0f; }
+          auto call = id(cab_light).make_call();
+          call.set_state(id(cab_light).remote_values.is_on());
+          call.set_color_mode(light::ColorMode::RGB_WHITE);
+          call.set_red(r); call.set_green(g); call.set_blue(b); call.set_white(w);
+          call.perform();
+
+  - id: find_slot
+    mode: restart
+    then:
+      - script.execute: wake_display
+      - lambda: |-
+          // columns 1-6 left to right; front and back slots share a column of LEDs,
+          // so the screen says which row
+          const char *s = id(find_slot_sel).current_option().c_str();
+          int col = s[1] - '0';
+          light::LightState *cols[6] = {id(col1), id(col2), id(col3), id(col4), id(col5), id(col6)};
+          for (int i = 0; i < 6; i++) {
+            auto call = cols[i]->make_call();
+            call.set_state(i == col - 1);
+            if (i == col - 1) {
+              call.set_brightness(1.0f);
+              call.set_color_mode(light::ColorMode::RGB_WHITE);
+              // contrast with the cabinet colour: cyan on white light, white otherwise
+              bool white = id(light_colour_sel).current_option() == "White";
+              call.set_red(0); call.set_green(white ? 1 : 0); call.set_blue(white ? 1 : 0); call.set_white(white ? 0 : 1);
+              call.set_effect("Find");
+            }
+            call.perform();
+          }
+      - component.update: tft
+      - delay: 30s
+      - select.set: { id: find_slot_sel, option: "-" }
+      - script.execute: apply_light_colour
+
+  - id: confirm_or_arm
+    parameters:
+      what: int
+    then:
+      - lambda: |-
+          if (id(confirm_what) == what && millis() < id(confirm_until)) {
+            id(confirm_what) = 0;
+            if (what == 1) id(start_autotune).execute();
+            if (what == 2) { id(desiccant_hours) = 0; id(desiccant_days).update(); }
+          } else {
+            id(confirm_what) = what;
+            id(confirm_until) = millis() + 8000;
+          }
+      - component.update: tft
+
+  - id: start_autotune
+    then:
+      - lambda: |-
+          id(kp_before) = id(heater_pid).get_kp();
+          id(ki_before) = id(heater_pid).get_ki();
+          id(autotuning) = true;
+          auto call = id(heater_pid).make_call();
+          call.set_mode(climate::CLIMATE_MODE_HEAT);
+          call.set_target_temperature(id(max_temp).state);
+          call.perform();
+          id(heating) = true;
+      - climate.pid.autotune:
+          id: heater_pid
+          noiseband: 0.25
+          positive_output: 1.0
+          negative_output: 0.0
+
+# ----------------------------------------------------------------------------- display + menu
+font:
+  - id: f_name
+    file: fonts/DejaVuSans-Bold.ttf
+    size: 104
+    glyphs: " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+/._"
+  - id: f_big
+    file: fonts/DejaVuSans-Bold.ttf
+    size: 30
+    glyphs: " !%()+,-./0123456789:;=?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz°³µ>←"
+  - id: f_small
+    file: fonts/DejaVuSans.ttf
+    size: 20
+    glyphs: " !%()+,-./0123456789:;=?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz°³µ>←"
+
+color:
+  - { id: c_white, hex: FFFFFF }
+  - { id: c_black, hex: "000000" }
+  - { id: c_grey, hex: 8C939C }
+  - { id: c_dark, hex: 1B1E23 }
+  - { id: c_red, hex: E03131 }
+  - { id: c_amber, hex: F59F00 }
+  - { id: c_menu_bg, hex: 101318 }
+
+display:
+  - platform: mipi_spi
+    id: tft
+    model: ST7796
+    spi_id: spi_bus
+    cs_pin: ${pin_tft_cs}
+    dc_pin: ${pin_tft_dc}
+    reset_pin: ${pin_front_rst}       # shared with the touch controller's reset
+    data_rate: 10MHz                  # 1.5 m ribbon: keep it at 10 MHz or less
+    rotation: ${tft_rotation}
+    invert_colors: ${tft_invert}
+    color_order: ${tft_color_order}
+    update_interval: 2s
+    lambda: |-
+      const int W = it.get_width(), H = it.get_height();
+      if (id(menu).is_active()) { it.menu(0, 0, id(menu), W, H); return; }
+
+      // ---- label colour band
+      Color band;
+      std::string lc = std::string(id(label_colour_sel).current_option().c_str());
+      std::string preset = std::string(id(preset_sel).current_option().c_str());
+      if (lc == "Same as lights") lc = std::string(id(light_colour_sel).current_option().c_str());
+      if (lc == "Auto") {
+        if (preset == "PLA") band = Color(46, 158, 68);
+        else if (preset == "PETG") band = Color(28, 109, 208);
+        else if (preset == "ABS/ASA") band = Color(232, 89, 12);
+        else if (preset == "TPU") band = Color(132, 94, 247);
+        else band = Color(134, 142, 150);
+      }
+      else if (lc == "Red") band = Color(224, 49, 49);
+      else if (lc == "Orange") band = Color(232, 89, 12);
+      else if (lc == "Amber" || lc == "Warm white") band = Color(245, 159, 0);
+      else if (lc == "Yellow") band = Color(250, 210, 0);
+      else if (lc == "Green") band = Color(46, 158, 68);
+      else if (lc == "Cyan") band = Color(21, 170, 191);
+      else if (lc == "Blue") band = Color(28, 109, 208);
+      else if (lc == "Purple") band = Color(132, 94, 247);
+      else if (lc == "Magenta") band = Color(214, 51, 108);
+      else if (lc == "Custom") band = Color(id(custom_r).state, id(custom_g).state, id(custom_b).state);
+      else band = Color(230, 230, 230);
+      const bool light_band = (band.red + band.green + band.blue) > 500;
+      const Color ink = light_band ? Color(20, 20, 20) : Color(255, 255, 255);
+
+      const float t = id(chamber_t).state, rh = id(chamber_rh).state;
+      std::string mode = std::string(id(mode_sel).current_option().c_str());
+
+      if (id(page) == 0) {
+        // ---- label page: the name, big, on the colour band; a status line underneath
+        it.fill(id(c_dark));
+        it.filled_rectangle(0, 0, W, 220, band);
+        std::string name = id(cab_name).state;
+        for (auto &ch : name) ch = toupper(ch);
+        it.print(W / 2, 110, id(f_name), ink, TextAlign::CENTER, name.c_str());
+        // find-slot banner
+        std::string fs = std::string(id(find_slot_sel).current_option().c_str());
+        if (fs != "-") {
+          it.filled_rectangle(0, 220, W, 100, Color(255, 255, 255));
+          it.printf(W / 2, 270, id(f_big), Color(0, 0, 0), TextAlign::CENTER, "%s-%s  (%s row, column %c)",
+                    name.c_str(), fs.c_str(), fs[0] == 'F' ? "front" : "back", fs[1]);
+          return;
+        }
+        it.printf(20, 270, id(f_big), id(c_white), TextAlign::CENTER_LEFT, "%.1f°C   %.0f%%", t, rh);
+        it.printf(W - 20, 270, id(f_small), id(c_grey), TextAlign::CENTER_RIGHT, "%s", mode.c_str());
+        // icons: fault (red), desiccant due (amber)
+        if (id(fault_latched)) {
+          it.filled_circle(W - 40, 30, 18, id(c_red));
+          it.print(W - 40, 30, id(f_big), id(c_white), TextAlign::CENTER, "!");
+        }
+        if (id(desiccant_due).state) {
+          it.filled_circle(W - (id(fault_latched) ? 84 : 40), 30, 18, id(c_amber));
+          it.print(W - (id(fault_latched) ? 84 : 40), 30, id(f_big), id(c_black), TextAlign::CENTER, "D");
+        }
+      } else {
+        // ---- detail page
+        it.fill(id(c_dark));
+        it.filled_rectangle(0, 0, W, 44, band);
+        std::string name = id(cab_name).state;
+        for (auto &ch : name) ch = toupper(ch);
+        it.printf(14, 22, id(f_big), ink, TextAlign::CENTER_LEFT, "%s   %s", name.c_str(), id(status_text).state.c_str());
+        int y = 64; const int dy = 30;
+        auto row = [&](const char *k, const char *v) {
+          it.print(18, y, id(f_small), id(c_grey), TextAlign::TOP_LEFT, k);
+          it.print(W - 18, y, id(f_small), id(c_white), TextAlign::TOP_RIGHT, v);
+          y += dy;
+        };
+        char buf[48];
+        snprintf(buf, sizeof buf, "%.1f °C  /  max %.0f °C", t, id(max_temp).state); row("Chamber", buf);
+        snprintf(buf, sizeof buf, "%.0f %%  /  target %.0f %%", rh, id(target_rh).state); row("Humidity", buf);
+        snprintf(buf, sizeof buf, "%.2f g/m³   dew %.1f °C", id(chamber_ah).state, id(chamber_dew).state); row("Absolute / dew point", buf);
+        snprintf(buf, sizeof buf, "%.0f %%   outlet %.0f °C", id(heater_level) * 100, id(heater_t).state); row("Heater", buf);
+        snprintf(buf, sizeof buf, "%.0f %%   %.0f rpm", id(fan_level) * 100, id(fan_rpm).state); row("Fan", buf);
+        snprintf(buf, sizeof buf, "%.1f d   pickup %.2f g/m³", id(desiccant_days).state, id(desiccant_eff).state); row("Desiccant", buf);
+        if (mode == "Dry (timed)") { snprintf(buf, sizeof buf, "%.1f h left", id(dry_remaining).state); row("Dry cycle", buf); }
+        row("Last fault", id(last_fault).c_str());
+      }
+
+graphical_display_menu:
+  id: menu
+  display: tft
+  font: f_big
+  active: false
+  mode: rotary
+  on_redraw:
+    then:
+      - component.update: tft
+  on_leave:
+    then:
+      - component.update: tft
+  items:
+    - type: select
+      text: Mode
+      select: mode_sel
+    - type: menu
+      text: Setpoints
+      items:
+        - { type: number, text: Target humidity %, number: target_rh, format: "%.0f" }
+        - { type: number, text: Max chamber °C, number: max_temp, format: "%.0f" }
+        - { type: number, text: Fan minimum %, number: fan_min, format: "%.0f" }
+        - { type: number, text: Fan while heating %, number: fan_heat, format: "%.0f" }
+        - { type: number, text: Heater max %, number: heater_max, format: "%.0f" }
+        - { type: number, text: Dry timer h, number: dry_hours, format: "%.0f" }
+        - type: back
+          text: Back
+    - type: select
+      text: Material preset
+      select: preset_sel
+    - type: menu
+      text: Label
+      items:
+        - { type: select, text: Label colour, select: label_colour_sel }
+        - { type: number, text: Idle brightness %, number: idle_brightness, format: "%.0f" }
+        - type: label
+          text: Name is set from Home Assistant
+        - type: back
+          text: Back
+    - type: menu
+      text: Lights
+      items:
+        - type: command
+          text: !lambda 'return id(cab_light).remote_values.is_on() ? std::string("Lights: on") : std::string("Lights: off");'
+          on_value:
+            - light.toggle: cab_light
+            - lambda: id(light_by_door) = false;
+        - { type: select, text: Colour, select: light_colour_sel }
+        - type: menu
+          text: Custom colour
+          items:
+            - { type: number, text: Red, number: custom_r, format: "%.0f" }
+            - { type: number, text: Green, number: custom_g, format: "%.0f" }
+            - { type: number, text: Blue, number: custom_b, format: "%.0f" }
+            - type: back
+              text: Back
+        - { type: select, text: Find slot, select: find_slot_sel }
+        - type: back
+          text: Back
+    - type: menu
+      text: Desiccant
+      items:
+        - type: label
+          text: !lambda 'char b[40]; snprintf(b, sizeof b, "%.1f days since recharge", id(desiccant_days).state); return std::string(b);'
+        - { type: number, text: Recharge every d, number: recharge_days, format: "%.0f" }
+        - type: command
+          text: !lambda 'return (id(confirm_what) == 2 && millis() < id(confirm_until)) ? std::string("Press again to confirm") : std::string("Reset after recharge");'
+          on_value:
+            - script.execute: { id: confirm_or_arm, what: 2 }
+        - type: back
+          text: Back
+    - type: menu
+      text: Tuning
+      items:
+        - type: command
+          text: !lambda 'return id(autotuning) ? std::string("Autotune running...") : ((id(confirm_what) == 1 && millis() < id(confirm_until)) ? std::string("Press again to start") : std::string("PID autotune: start"));'
+          on_value:
+            - if:
+                condition:
+                  lambda: return !id(autotuning);
+                then:
+                  - script.execute: { id: confirm_or_arm, what: 1 }
+        - type: command
+          text: Abort autotune
+          on_value:
+            - lambda: |-
+                id(autotuning) = false;
+                auto call = id(heater_pid).make_call(); call.set_mode(climate::CLIMATE_MODE_OFF); call.perform();
+                id(heating) = false;
+        - type: label
+          text: !lambda 'char b[48]; snprintf(b, sizeof b, "kp %.4f  ki %.5f  kd %.3f", id(heater_pid).get_kp(), id(heater_pid).get_ki(), id(heater_pid).get_kd()); return std::string(b);'
+        - type: back
+          text: Back
+    - type: menu
+      text: Info
+      items:
+        - type: label
+          text: !lambda 'return std::string("IP ") + id(ip_addr).state;'
+        - type: label
+          text: !lambda 'char b[32]; snprintf(b, sizeof b, "Wi-Fi %.0f dBm", id(wifi_db).state); return std::string(b);'
+        - type: label
+          text: Firmware 0.18
+        - type: label
+          text: !lambda 'return std::string("Fault: ") + id(last_fault);'
+        - type: command
+          text: Clear fault
+          on_value:
+            - lambda: id(fault_latched) = false; id(last_fault) = "cleared";
+        - type: back
+          text: Back
+    - type: command
+      text: Exit
+      on_value:
+        - lambda: id(menu).hide();
+        - component.update: tft

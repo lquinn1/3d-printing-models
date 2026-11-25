@@ -253,7 +253,9 @@ There's also a **"Dry" mode** that runs a timed cycle at the cabinet's maximum t
 - **Display controller: ST7796(S)** (confirmed by the seller's information). Touch controller: **FT6336U**. In ESPHome the display uses the ST7796 model and touch uses the `ft63x6` platform (phase 6). If the first test shows a blank or scrambled screen, the fallback is the ILI9488 model.
 - **Memory:** a full 480 × 320 colour frame buffer is about 300 KB, so it goes in the PSRAM of the ESP32-S3 N16R8.
 
-## 7. ESPHome (planned entities)
+## 7. ESPHome entities
+
+**Status (v0.19):** written and compiling: [`firmware/dry-cabinet.yaml`](firmware/dry-cabinet.yaml), setup and checks in [`firmware/README.md`](firmware/README.md). Everything in this section is in it except the NFC rows and the Spools menu (PN5180 component, later phase), touch, and editing the name with the knob (set it from HA or the web page). Autotune results are now saved and reapplied automatically, so they don't need copying into the YAML.
 
 | Entity | Type | Notes |
 |---|---|---|
